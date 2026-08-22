@@ -21,8 +21,8 @@
   --rojo-error:#B91C1C; --rojo-suave:#FBE9E9;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}
-html,body{width:100%;min-height:100%;overflow-x:hidden;}
-body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:13px;zoom:75%;-webkit-user-zoom:fixed;-moz-user-zoom:fixed;-ms-user-zoom:fixed;-o-user-zoom:fixed;user-zoom:fixed;}
+html{font-size:clamp(12px, 2vw, 16px);}
+body{width:100%;min-height:100vh;overflow-x:hidden;font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:1rem;-webkit-user-zoom:fixed;-moz-user-zoom:fixed;-ms-user-zoom:fixed;-o-user-zoom:fixed;user-zoom:fixed;}
 .serif{font-family:'Space Grotesk',sans-serif;}
 i.fi{display:inline-flex;vertical-align:middle;}
 ::-webkit-scrollbar{display:none;}
@@ -35,27 +35,27 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .marca-p.mini span{font-size:1.4rem;}
 
 /* ====== LOGIN ====== */
-#pantalla-login{position:fixed;inset:0;background:radial-gradient(1200px 800px at 50% 30%, #151B26 0%, #10141B 50%, #090C11 100%);z-index:9000;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:26px;overflow:hidden;}
+#pantalla-login{position:fixed;inset:0;background:radial-gradient(1200px 800px at 50% 30%, #151B26 0%, #10141B 50%, #090C11 100%);z-index:9000;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(16px, 5vw, 26px);overflow:hidden;}
 #pantalla-login .login-caja{box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 40px rgba(201,162,75,.08);border-color:rgba(201,162,75,.3);}
-.login-caja{position:relative;width:100%;max-width:380px;background:var(--papel);border:1px solid var(--linea);border-radius:4px;padding:34px 28px 26px 28px;box-shadow:0 30px 70px rgba(23,20,18,.13);text-align:center;}
-.login-caja::before{content:'';position:absolute;top:10px;left:10px;right:10px;bottom:10px;border:1px solid var(--linea);border-radius:2px;pointer-events:none;}
-.login-marca{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:8px;}
-.login-nombre{font-size:1.9rem;font-weight:600;letter-spacing:1px;}
-.login-desde{font-size:.64rem;letter-spacing:3.5px;color:var(--oro);font-weight:600;text-transform:uppercase;}
-.login-sub{font-size:.8rem;color:var(--piedra);margin:10px 0 20px 0;line-height:1.5;}
-.login-lbl{display:block;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--piedra);font-weight:600;margin:12px 0 5px 2px;}
-.login-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:12px;font-family:'Inter';font-size:.92rem;color:var(--tinta);outline:none;-webkit-user-zoom:auto;-moz-user-zoom:auto;}
+.login-caja{position:relative;width:100%;max-width:clamp(300px, 90vw, 380px);background:var(--papel);border:1px solid var(--linea);border-radius:clamp(4px, 2vw, 8px);padding:clamp(24px, 6vw, 34px) clamp(20px, 5vw, 28px);box-shadow:0 30px 70px rgba(23,20,18,.13);text-align:center;}
+.login-caja::before{content:'';position:absolute;top:clamp(8px, 1.5vw, 12px);left:clamp(8px, 1.5vw, 12px);right:clamp(8px, 1.5vw, 12px);bottom:clamp(8px, 1.5vw, 12px);border:1px solid var(--linea);border-radius:2px;pointer-events:none;}
+.login-marca{display:flex;flex-direction:column;align-items:center;gap:clamp(8px, 2vw, 12px);margin-bottom:clamp(4px, 1.5vw, 8px);}
+.login-nombre{font-size:clamp(1.4rem, 5vw, 1.9rem);font-weight:600;letter-spacing:clamp(0.5px, 1vw, 1px);}
+.login-desde{font-size:clamp(0.55rem, 1.5vw, 0.64rem);letter-spacing:clamp(2px, 1vw, 3.5px);color:var(--oro);font-weight:600;text-transform:uppercase;}
+.login-sub{font-size:clamp(0.7rem, 2vw, 0.8rem);color:var(--piedra);margin:clamp(8px, 2vw, 20px) 0;line-height:1.5;}
+.login-lbl{display:block;text-align:left;font-size:clamp(0.6rem, 1.5vw, 0.68rem);letter-spacing:clamp(1px, 1vw, 1.5px);text-transform:uppercase;color:var(--piedra);font-weight:600;margin:clamp(8px, 1.5vw, 12px) 0 clamp(3px, 1vw, 5px) 2px;}
+.login-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:clamp(3px, 1vw, 6px);padding:clamp(10px, 2.5vw, 14px);font-family:'Inter';font-size:clamp(0.9rem, 2vw, 1rem);color:var(--tinta);outline:none;-webkit-user-zoom:auto;-moz-user-zoom:auto;}
 .login-inp:focus{border-color:var(--carmin);}
 @supports (-webkit-touch-callout: none) {
     .login-inp { font-size: 16px; }
 }
-.btn-ingresar{width:100%;margin-top:18px;background:var(--carmin);color:#fff;border:none;border-radius:3px;padding:14px;font-family:'Inter';font-size:.9rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+.btn-ingresar{width:100%;margin-top:clamp(14px, 3vw, 18px);background:var(--carmin);color:#fff;border:none;border-radius:clamp(3px, 1vw, 6px);padding:clamp(12px, 3vw, 16px);font-family:'Inter';font-size:clamp(0.8rem, 2vw, 0.9rem);font-weight:600;letter-spacing:clamp(0.5px, 1vw, 1.5px);text-transform:uppercase;cursor:pointer;transition:background .2s;}
 .btn-ingresar:hover{background:var(--carmin-prof);}
-.login-roles{display:flex;gap:8px;margin-top:14px;}
-.rol-chip{flex:1;border:1px solid var(--linea);background:var(--papel);border-radius:3px;padding:9px 6px;font-size:.72rem;font-weight:600;color:var(--piedra);cursor:pointer;transition:all .2s;}
+.login-roles{display:flex;gap:clamp(6px, 1.5vw, 8px);margin-top:clamp(10px, 2.5vw, 14px);}
+.rol-chip{flex:1;border:1px solid var(--linea);background:var(--papel);border-radius:clamp(3px, 1vw, 5px);padding:clamp(7px, 1.5vw, 9px) clamp(4px, 1vw, 6px);font-size:clamp(0.65rem, 1.5vw, 0.72rem);font-weight:600;color:var(--piedra);cursor:pointer;transition:all .2s;}
 .rol-chip.activo{border-color:var(--carmin);color:var(--carmin);background:var(--carmin-suave);}
-.login-proto{margin-top:18px;font-size:.66rem;color:var(--piedra);letter-spacing:.5px;}
-.sello-proto{display:inline-block;margin-top:8px;border:1.5px solid var(--oro);color:var(--oro);font-size:.6rem;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:2px;transform:rotate(-2deg);text-transform:uppercase;}
+.login-proto{margin-top:clamp(12px, 2vw, 18px);font-size:clamp(0.6rem, 1.5vw, 0.66rem);color:var(--piedra);letter-spacing:.5px;}
+.sello-proto{display:inline-block;margin-top:clamp(6px, 1.5vw, 8px);border:1.5px solid var(--oro);color:var(--oro);font-size:clamp(0.55rem, 1vw, 0.6rem);font-weight:700;letter-spacing:clamp(1px, 1vw, 2px);padding:clamp(3px, 1vw, 4px) clamp(8px, 2vw, 12px);border-radius:2px;transform:rotate(-2deg);text-transform:uppercase;}
 
 /* ====== LOADER ====== */
 #cargador{position:fixed;inset:0;background:radial-gradient(1200px 800px at 50% 30%, #151B26 0%, #10141B 50%, #090C11 100%);z-index:9500;display:none;flex-direction:column;justify-content:center;align-items:center;gap:16px;transition:opacity .5s,visibility .5s;overflow:hidden;}
@@ -72,7 +72,7 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .carg-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#F0D48B);border-radius:99px;transition:width .3s;box-shadow:0 0 10px rgba(201,162,75,.6);}
 
 /* ====== APP SHELL ====== */
-#app{display:none;width:100%;max-width:640px;min-height:100vh;padding-bottom:96px;position:relative;
+#app{display:none;width:100%;max-width:clamp(320px, 100vw, 700px);min-height:100vh;padding-bottom:clamp(60px, 12vh, 120px);position:relative;
 background-color:var(--marfil);
 background-image:
  radial-gradient(700px 420px at 88% -60px, rgba(179,18,38,.045), transparent 60%),
@@ -80,9 +80,9 @@ background-image:
  linear-gradient(rgba(18,22,28,.028) 1px, transparent 1px),
  linear-gradient(90deg, rgba(18,22,28,.028) 1px, transparent 1px);
 background-size:auto,auto,44px 44px,44px 44px;background-attachment:fixed;}
-.topbar{position:sticky;top:0;z-index:500;background:var(--tinta);color:var(--marfil);padding:12px 16px;display:flex;align-items:center;gap:11px;}
-.topbar .titulo{font-size:1.3rem;font-weight:600;letter-spacing:.5px;line-height:1;}
-.topbar .subt{font-size:.6rem;letter-spacing:2.5px;color:var(--oro);text-transform:uppercase;margin-top:3px;}
+.topbar{position:sticky;top:0;z-index:500;background:var(--tinta);color:var(--marfil);padding:clamp(10px, 2vh, 16px) clamp(12px, 3vw, 20px);display:flex;align-items:center;gap:clamp(8px, 2vw, 12px);}
+.topbar .titulo{font-size:clamp(1rem, 4vw, 1.3rem);font-weight:600;letter-spacing:clamp(0.3px, 0.5vw, 0.5px);line-height:1;}
+.topbar .subt{font-size:clamp(0.5rem, 1.5vw, 0.6rem);letter-spacing:clamp(1.5px, 1vw, 2.5px);color:var(--oro);text-transform:uppercase;margin-top:clamp(2px, 0.5vh, 3px);}
 .topbar .der{margin-left:auto;text-align:right;}
 .usuario-pill{font-size:.66rem;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);padding:5px 10px;border-radius:2px;letter-spacing:.5px;cursor:pointer;}
 .usuario-pill b{color:var(--oro);}
@@ -92,8 +92,9 @@ background-size:auto,auto,44px 44px,44px 44px;background-attachment:fixed;}
 .fid-btn.activo .fid-punto{background:var(--oro);}
 .fid-punto{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--linea);margin-right:5px;vertical-align:middle;}
 
-.vista{display:none;padding:14px 16px;}
-.vista.activa{display:block;}
+.vista{display:none;padding:14px 16px;opacity:0;transition:opacity 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);transform:scale(0.98);}
+.vista.activa{display:block;opacity:1;transform:scale(1);}
+.vista.salida-suave{opacity:0;transform:scale(0.97);}
 .tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:4px;padding:16px;margin-bottom:13px;}
 .encabezado-seccion{display:flex;align-items:baseline;gap:9px;margin:6px 0 13px 0;}
 .encabezado-seccion h2{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;font-weight:600;}
@@ -767,32 +768,192 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
 
 /* ====== RESPONSIVIDAD ====== */
 /* Móvil pequeño (320px - 480px) */
-@media(max-width:480px){
-  body{zoom:75%;}
-  #app{max-width:100vw;padding-bottom:80px;}
-  .topbar{padding:10px 12px;gap:8px;}
-  .login-caja{max-width:95vw;padding:28px 20px 22px 20px;}
-  .tarjeta{padding:12px;}
+/* ====== RESPONSIVIDAD FLUIDA ====== */
+
+/* Móvil muy pequeño (320px - 360px) */
+@media(max-width:360px){
+  #app{max-width:100vw;padding-bottom:clamp(60px, 15vh, 100px);}
+  .topbar{padding:clamp(8px, 2vh, 12px) clamp(10px, 3vw, 14px);gap:clamp(6px, 1vw, 8px);}
+  .login-caja{max-width:95vw;padding:clamp(20px, 5vw, 28px);}
+  .tarjeta{padding:clamp(10px, 2.5vw, 14px);}
+  .splash-barra{width:clamp(180px, 70vw, 240px);}
 }
 
-/* Tablet (481px - 900px) */
-@media(min-width:481px) and (max-width:899px){
-  body{zoom:80%;}
-  #app{max-width:100vw;}
+/* Móvil pequeño (361px - 480px) */
+@media(min-width:361px) and (max-width:480px){
+  #app{max-width:100vw;padding-bottom:clamp(70px, 15vh, 100px);}
+  .topbar{padding:clamp(10px, 2.5vh, 14px) clamp(12px, 3vw, 16px);gap:clamp(8px, 1.5vw, 10px);}
+  .login-caja{max-width:95vw;padding:clamp(24px, 5vw, 28px);}
+  .tarjeta{padding:clamp(12px, 3vw, 16px);}
+  .splash-barra{width:clamp(200px, 75vw, 260px);}
 }
 
-/* Desktop (900px+) */
-@media(min-width:900px){
-  .topbar{border-bottom:1px solid rgba(201,162,75,.35);box-shadow:0 1px 0 rgba(201,162,75,.15), 0 6px 24px rgba(0,0,0,.35);}
+/* Móvil grande (481px - 600px) */
+@media(min-width:481px) and (max-width:600px){
+  html{font-size:13px;}
+  #app{max-width:100%;padding-bottom:clamp(80px, 15vh, 120px);}
+  .topbar{padding:clamp(12px, 2.5vh, 16px) clamp(14px, 4vw, 18px);}
+  .login-caja{max-width:480px;padding:clamp(26px, 5vw, 30px);}
+  .tarjeta{padding:clamp(14px, 3.5vw, 18px);}
+}
+
+/* Tablet pequeña (601px - 768px) */
+@media(min-width:601px) and (max-width:768px){
+  html{font-size:14px;}
+  #app{max-width:100%;padding-bottom:clamp(90px, 12vh, 140px);}
+  .topbar{padding:clamp(14px, 2vh, 18px) clamp(16px, 4vw, 20px);border-bottom:1px solid rgba(201,162,75,.35);}
+  .login-caja{max-width:520px;padding:clamp(30px, 4vw, 34px);}
+  .tarjeta{padding:clamp(16px, 3vw, 20px);}
+  .fila-2{grid-template-columns:1fr 1fr;gap:clamp(10px, 2vw, 16px);}
+}
+
+/* Tablet mediana (769px - 1024px) */
+@media(min-width:769px) and (max-width:1024px){
+  html{font-size:15px;}
+  #app{max-width:100%;padding-bottom:clamp(100px, 12vh, 160px);}
+  .topbar{padding:clamp(14px, 2.5vh, 18px) clamp(18px, 5vw, 24px);border-bottom:1px solid rgba(201,162,75,.35);}
+  .login-caja{max-width:560px;padding:clamp(32px, 4vw, 38px);}
+  .tarjeta{padding:clamp(16px, 2.5vw, 22px);}
+  .fila-2{grid-template-columns:1fr 1fr;gap:clamp(12px, 3vw, 20px);}
+  .sidebar{border-right:1px solid rgba(201,162,75,.25);}
+}
+
+/* Desktop pequeño (1025px - 1366px) */
+@media(min-width:1025px) and (max-width:1366px){
+  html{font-size:15px;}
+  #app{max-width:680px;padding-bottom:clamp(100px, 10vh, 140px);}
+  .topbar{padding:clamp(14px, 1.5vh, 18px) clamp(20px, 3vw, 24px);border-bottom:1px solid rgba(201,162,75,.35);box-shadow:0 1px 0 rgba(201,162,75,.15), 0 6px 24px rgba(0,0,0,.35);}
+  .login-caja{max-width:600px;}
+  .tarjeta{padding:clamp(16px, 2vw, 24px);}
+  .fila-2{grid-template-columns:1fr 1fr;gap:clamp(14px, 2vw, 20px);}
+  .sidebar{border-right:1px solid rgba(201,162,75,.25);}
+}
+
+/* Desktop grande (1367px+) */
+@media(min-width:1367px){
+  html{font-size:16px;}
+  #app{max-width:700px;padding-bottom:clamp(100px, 8vh, 120px);}
+  .topbar{padding:16px 24px;border-bottom:1px solid rgba(201,162,75,.35);box-shadow:0 1px 0 rgba(201,162,75,.15), 0 6px 24px rgba(0,0,0,.35);}
+  .login-caja{max-width:640px;}
+  .tarjeta{padding:20px 24px;}
+  .fila-2{grid-template-columns:1fr 1fr;gap:20px;}
   .sidebar{border-right:1px solid rgba(201,162,75,.25);}
   .sidebar .nav-item.activo{box-shadow:inset 3px 0 0 var(--oro), 0 0 16px rgba(201,162,75,.12);}
 }
 
-/* Landscape vs Portrait */
+/* Orientación Landscape - menos altura */
 @media(orientation:landscape){
-  body{zoom:65%;}
-  #app{padding-bottom:60px;}
+  body{min-height:100vh;overflow-y:auto;}
+  #app{padding-bottom:clamp(50px, 10vh, 80px);}
+  .topbar{padding:clamp(8px, 1vh, 12px) clamp(12px, 3vw, 18px);}
+  .splash-barra{width:clamp(200px, 70vw, 300px);}
 }
+
+/* Altura mínima para dispositivos con teclado (mobile con teclado abierto) */
+@media(max-height:500px){
+  #app{padding-bottom:clamp(50px, 8vh, 80px);}
+  .topbar{padding:clamp(8px, 1vh, 10px) clamp(10px, 2vw, 14px);}
+}
+
+/* Alto muy reducido (< 400px) - típicamente landscape en móvil */
+@media(max-height:400px){
+  #app{padding-bottom:40px;min-height:100vh;}
+  .topbar{padding:6px 12px;gap:6px;}
+  .tarjeta{padding:8px 12px;}
+}
+
+/* ====== INSTALACIÓN PWA ====== */
+#modal-instalar{position:fixed;bottom:0;left:0;right:0;z-index:9700;background:linear-gradient(135deg, rgba(201,162,75,0.98) 0%, rgba(176,141,62,0.95) 100%);border-top:2px solid rgba(0,0,0,0.1);box-shadow:0 -8px 32px rgba(0,0,0,0.2);backdrop-filter:blur(10px);display:none;flex-direction:column;gap:clamp(12px, 2vw, 16px);padding:clamp(16px, 4vw, 24px);max-height:85vh;overflow-y:auto;animation:subirInstalar 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);position:relative;}
+@keyframes subirInstalar{from{transform:translateY(100%);opacity:0;}to{transform:translateY(0);opacity:1;}}
+#modal-instalar.activo{display:flex;}
+
+.instalar-encabezado{display:flex;align-items:center;gap:clamp(12px, 2vw, 16px);}
+.instalar-icono{width:clamp(48px, 12vw, 64px);height:clamp(48px, 12vw, 64px);background:rgba(0,0,0,0.08);border-radius:clamp(12px, 2vw, 16px);display:flex;align-items:center;justify-content:center;font-size:clamp(1.8rem, 4vw, 2.4rem);flex-shrink:0;}
+
+.instalar-contenido{flex:1;}
+.instalar-titulo{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.1rem, 3vw, 1.3rem);font-weight:700;color:#2C1810;margin:0;line-height:1.2;}
+.instalar-desc{font-size:clamp(0.85rem, 1.8vw, 0.95rem);color:#5C3D23;margin:clamp(4px, 1vw, 6px) 0 0 0;line-height:1.4;}
+
+.instalar-beneficios{list-style:none;margin:clamp(8px, 2vw, 12px) 0;padding-left:0;display:flex;flex-direction:column;gap:clamp(6px, 1.5vw, 8px);}
+.instalar-beneficios li{font-size:clamp(0.8rem, 1.5vw, 0.9rem);color:#5C3D23;display:flex;align-items:center;gap:clamp(6px, 1vw, 8px);}
+.instalar-beneficios li::before{content:'✓';font-weight:700;color:#2C1810;min-width:18px;}
+
+.instalar-pasos{background:rgba(0,0,0,0.06);border-radius:clamp(8px, 1.5vw, 12px);padding:clamp(12px, 2.5vw, 16px);margin:clamp(8px, 2vw, 12px) 0;font-size:clamp(0.8rem, 1.5vw, 0.85rem);color:#2C1810;line-height:1.6;}
+.instalar-pasos strong{color:#2C1810;font-weight:700;}
+
+.instalar-botones{display:flex;gap:clamp(8px, 2vw, 12px);flex-wrap:wrap;}
+.btn-instalar{flex:1;min-width:140px;padding:clamp(10px, 2.5vw, 14px);font-size:clamp(0.85rem, 1.8vw, 0.95rem);font-weight:600;border:none;border-radius:clamp(6px, 1.5vw, 10px);cursor:pointer;transition:all 0.3s;letter-spacing:0.5px;text-transform:uppercase;}
+.btn-instalar.primario{background:#2C1810;color:rgba(201,162,75,0.95);box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.btn-instalar.primario:hover{background:#1A0F08;transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+.btn-instalar.secundario{background:rgba(0,0,0,0.08);color:#2C1810;border:2px solid rgba(0,0,0,0.15);}
+.btn-instalar.secundario:hover{background:rgba(0,0,0,0.12);border-color:rgba(0,0,0,0.25);}
+
+.instalar-cerrar{position:absolute;top:clamp(12px, 2vw, 16px);right:clamp(12px, 2vw, 16px);background:none;border:none;color:#2C1810;font-size:1.4rem;cursor:pointer;opacity:0.6;transition:opacity 0.2s;padding:4px 8px;line-height:1;}
+.instalar-cerrar:hover{opacity:1;}
+
+/* ====== TOUR GUIADO ====== */
+#tour-overlay{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.7);display:none;animation:fadeInTour 0.4s ease-out;}
+#tour-overlay.activo{display:block;}
+@keyframes fadeInTour{from{opacity:0;}to{opacity:1;}}
+
+#tour-spotlight{position:fixed;z-index:8100;border:2px solid rgba(201,162,75,0.8);border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.7), inset 0 0 0 2px rgba(201,162,75,0.6), 0 0 30px rgba(201,162,75,0.4);transition:all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);display:none;pointer-events:none;}
+#tour-spotlight.activo{display:block;}
+
+#tour-tooltip{position:fixed;z-index:8200;background:rgba(30,20,15,0.98);color:#F5E6D3;border:2px solid rgba(201,162,75,0.6);border-radius:clamp(8px, 2vw, 16px);padding:clamp(16px, 3vw, 24px);max-width:clamp(280px, 90vw, 380px);box-shadow:0 12px 48px rgba(0,0,0,0.5), inset 0 0 20px rgba(201,162,75,0.1);display:none;animation:entrarTooltip 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);pointer-events:auto;backdrop-filter:blur(8px);}
+#tour-tooltip.activo{display:block;}
+@keyframes entrarTooltip{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
+
+.tour-titulo{font-family:'Space Grotesk',sans-serif;font-size:clamp(1rem, 2.5vw, 1.2rem);font-weight:700;color:rgba(201,162,75,0.95);margin:0 0 clamp(8px, 1.5vw, 12px) 0;letter-spacing:1px;}
+.tour-contenido{font-size:clamp(0.85rem, 1.8vw, 0.95rem);line-height:1.6;color:#E8D5C4;margin:0 0 clamp(12px, 2vw, 16px) 0;}
+.tour-paso{font-size:clamp(0.75rem, 1.5vw, 0.85rem);color:rgba(201,162,75,0.8);margin:clamp(8px, 1.5vw, 10px) 0 0 0;font-weight:600;letter-spacing:0.5px;}
+
+.tour-controles{display:flex;gap:clamp(8px, 2vw, 12px);margin-top:clamp(12px, 2vw, 16px);align-items:center;flex-wrap:wrap;}
+.tour-btn{padding:clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px);font-size:clamp(0.8rem, 1.5vw, 0.9rem);border:none;border-radius:clamp(4px, 1vw, 8px);cursor:pointer;transition:all 0.2s;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+.tour-btn.siguiente{background:linear-gradient(135deg, rgba(201,162,75,0.9) 0%, rgba(176,141,62,0.9) 100%);color:#1A0F08;box-shadow:0 4px 12px rgba(201,162,75,0.3);}
+.tour-btn.siguiente:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(201,162,75,0.4);}
+.tour-btn.anterior{background:rgba(255,255,255,0.1);color:#E8D5C4;border:1px solid rgba(201,162,75,0.4);}
+.tour-btn.anterior:hover{background:rgba(255,255,255,0.15);border-color:rgba(201,162,75,0.6);}
+.tour-btn.cerrar{background:none;color:#B08D3E;border:1px solid rgba(201,162,75,0.4);padding:clamp(6px, 1.5vw, 8px) clamp(10px, 1.5vw, 14px);}
+.tour-btn.cerrar:hover{color:#F5E6D3;border-color:rgba(201,162,75,0.8);}
+
+.tour-indicador{flex:1;display:flex;align-items:center;gap:6px;font-size:clamp(0.75rem, 1.5vw, 0.8rem);color:rgba(201,162,75,0.8);}
+.tour-punto{width:clamp(6px, 1.5vw, 8px);height:clamp(6px, 1.5vw, 8px);border-radius:50%;background:rgba(201,162,75,0.5);transition:all 0.2s;}
+.tour-punto.activo{background:rgba(201,162,75,0.95);box-shadow:0 0 12px rgba(201,162,75,0.6);transform:scale(1.2);}
+
+#tour-arrow{position:absolute;width:0;height:0;opacity:0.8;}
+
+.tour-badge{position:fixed;z-index:8050;background:linear-gradient(135deg, rgba(201,162,75,0.95) 0%, rgba(176,141,62,0.9) 100%);color:#1A0F08;padding:clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 14px);border-radius:99px;font-size:clamp(0.8rem, 1.5vw, 0.9rem);font-weight:700;box-shadow:0 4px 16px rgba(201,162,75,0.4);letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;animation:pulsarBadge 2s ease-in-out infinite;display:none;}
+.tour-badge.activo{display:block;}
+@keyframes pulsarBadge{0%,100%{transform:scale(1);box-shadow:0 4px 16px rgba(201,162,75,0.4);}50%{transform:scale(1.05);box-shadow:0 6px 20px rgba(201,162,75,0.6);}}
+
+@keyframes subirToast{from{transform:translateX(-50%) translateY(120%);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
+@keyframes bajarToast{from{transform:translateX(-50%) translateY(0);opacity:1;}to{transform:translateX(-50%) translateY(120%);opacity:0;}}
+
+/* ====== TRANSICIÓN ENTRE SECCIONES ====== */
+#pantalla-transicion{position:fixed;inset:0;z-index:9800;background:linear-gradient(135deg, rgba(176,141,62,0.95) 0%, rgba(201,162,75,0.85) 50%, rgba(176,141,62,0.95) 100%);display:none;flex-direction:column;justify-content:center;align-items:center;gap:24px;backdrop-filter:blur(4px);opacity:0;transition:opacity .6s cubic-bezier(0.25, 0.46, 0.45, 0.94);pointer-events:none;box-shadow:inset 0 0 120px rgba(0,0,0,0.15);}
+#pantalla-transicion::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 1000px 600px at 50% 30%, rgba(255,255,255,0.1) 0%, transparent 70%);pointer-events:none;}
+#pantalla-transicion::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,0,0,0.03) 50px, rgba(0,0,0,0.03) 100px);pointer-events:none;opacity:0.5;}
+#pantalla-transicion.activa{display:flex;opacity:1;pointer-events:auto;}
+#pantalla-transicion.salida{opacity:0;transition:opacity .6s cubic-bezier(0.45, 0.05, 0.55, 0.95);}
+
+.transicion-logo{position:relative;width:clamp(60px, 15vw, 100px);height:clamp(60px, 15vw, 100px);margin-bottom:clamp(12px, 3vw, 20px);z-index:2;}
+.transicion-logo .marca-p{width:100%;height:100%;box-shadow:0 0 30px rgba(44,24,16,0.3),0 0 60px rgba(44,24,16,0.15);}
+.transicion-logo .marca-p span{font-size:clamp(1.8rem, 5vw, 2.4rem);}
+.transicion-logo::after{content:'';position:absolute;inset:clamp(-15px, -3vw, -25px);border:2px solid rgba(92,61,35,0.4);border-radius:50%;opacity:0.4;animation:rotarAni 3s linear infinite;}
+@keyframes rotarAni{0%{transform:rotate(0deg);opacity:0.6;}100%{transform:rotate(360deg);opacity:0.2;}}
+
+.transicion-titulo{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.4rem, 5vw, 1.8rem);font-weight:700;color:#2C1810;text-align:center;letter-spacing:clamp(1px, 1vw, 2px);text-shadow:0 2px 4px rgba(0,0,0,0.1);}
+.transicion-subtitulo{font-size:clamp(0.8rem, 2vw, 0.9rem);color:#5C3D23;letter-spacing:clamp(1px, 0.5vw, 1.5px);text-transform:uppercase;text-align:center;font-weight:600;}
+
+.transicion-barra{width:min(240px,60vw);height:5px;background:rgba(0,0,0,.15);border-radius:99px;overflow:hidden;box-shadow:0 0 20px rgba(0,0,0,0.2);}
+.transicion-fill{height:100%;width:0%;background:linear-gradient(90deg,#5C3D23,#2C1810);border-radius:99px;animation:llenar 2.5s ease-out forwards;box-shadow:0 0 15px rgba(44,24,16,.6);}
+@keyframes llenar{0%{width:0%;opacity:0;}50%{opacity:1;}100%{width:100%;opacity:0.9;}}
+
+.transicion-puntos{display:flex;gap:8px;justify-content:center;}
+.transicion-punto{width:8px;height:8px;border-radius:50%;background:rgba(92,61,35,.5);animation:pulsar 1.5s ease-in-out infinite;}
+.transicion-punto:nth-child(2){animation-delay:0.2s;}
+.transicion-punto:nth-child(3){animation-delay:0.4s;}
+@keyframes pulsar{0%,100%{opacity:0.4;transform:scale(1);}50%{opacity:1;transform:scale(1.3);background:#5C3D23;box-shadow:0 0 12px rgba(92,61,35,.8);}}
 
 </style>
 </head>
@@ -834,6 +995,31 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
 </div>
 
 
+<!-- ============ PANTALLA DE TRANSICIÓN ELEGANTE ============ -->
+<div id="pantalla-transicion">
+    <div class="sp-aurora" style="opacity:0.3;"></div>
+    <div class="sp-estrellas" style="opacity:0.4;"></div>
+    <div class="sp-grilla" style="opacity:0.1;"></div>
+    
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div class="transicion-logo">
+            <div class="marca-p"><span>P</span></div>
+        </div>
+        <div class="transicion-titulo" id="transicion-titulo">Cargando</div>
+        <div class="transicion-subtitulo" id="transicion-subtitulo">Iniciando módulo</div>
+    </div>
+    
+    <div class="transicion-barra">
+        <div class="transicion-fill"></div>
+    </div>
+    
+    <div class="transicion-puntos">
+        <div class="transicion-punto"></div>
+        <div class="transicion-punto"></div>
+        <div class="transicion-punto"></div>
+    </div>
+</div>
+
 <!-- ============ LOGIN ============ -->
 <div id="pantalla-login">
     <div class="sp-aurora"></div>
@@ -865,6 +1051,53 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
 
 <!-- ============ CONTENEDOR DE NOTIFICACIONES ============ -->
 <div id="toast-container" class="toast-container"></div>
+
+<!-- ============ INSTALACIÓN PWA ============ -->
+<div id="modal-instalar">
+    <button class="instalar-cerrar" onclick="cerrarInstalar()" title="Cerrar">✕</button>
+    
+    <div class="instalar-encabezado">
+        <div class="instalar-icono" id="instalar-icono">📱</div>
+        <div class="instalar-contenido">
+            <h3 class="instalar-titulo">Instala Portanko</h3>
+            <p class="instalar-desc" id="instalar-subtitulo">Acceso rápido y sin conexión</p>
+        </div>
+    </div>
+    
+    <ul class="instalar-beneficios">
+        <li>Acceso instantáneo desde tu pantalla de inicio</li>
+        <li>Funciona mejor y más rápido</li>
+        <li>Notificaciones en tiempo real</li>
+        <li>Usa menos datos que el navegador</li>
+    </ul>
+    
+    <div class="instalar-pasos" id="instalar-pasos"></div>
+    
+    <div class="instalar-botones">
+        <button class="btn-instalar primario" id="btn-instalar-ahora" onclick="instalarApp()">Instalar Ahora</button>
+        <button class="btn-instalar secundario" onclick="cerrarInstalar()">Después</button>
+    </div>
+</div>
+
+<!-- ============ TOUR GUIADO ============ -->
+<div id="tour-overlay"></div>
+<div id="tour-spotlight"></div>
+<div id="tour-tooltip">
+    <h3 class="tour-titulo" id="tour-titulo">Bienvenido</h3>
+    <p class="tour-contenido" id="tour-contenido">Conoce todas las funcionalidades de Portanko</p>
+    <div class="tour-paso" id="tour-paso"></div>
+    <div class="tour-controles">
+        <div class="tour-indicador">
+            <span id="tour-contador">Paso 1 de 12</span>
+        </div>
+        <div style="flex:1;"></div>
+        <button class="tour-btn anterior" id="btn-anterior-tour" onclick="tourAnterior()" style="display:none;">← Anterior</button>
+        <button class="tour-btn siguiente" id="btn-siguiente-tour" onclick="tourSiguiente();">Siguiente →</button>
+        <button class="tour-btn cerrar" onclick="detenerTour();">Cerrar</button>
+    </div>
+</div>
+
+<div class="tour-badge" id="tour-badge" onclick="iniciarTour()">Tour Guiado</div>
 
 <!-- ============ CARGADOR ============ -->
 <div id="cargador">
@@ -905,7 +1138,7 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
         <div class="marca-p mini"><span>P</span></div>
         <div>
             <div class="titulo serif">Portanko</div>
-            <div class="subt">Fideicomisos</div>
+            <div class="subt" id="topbar-rol">Administrador General</div>
         </div>
         <div class="der" style="display:flex;align-items:center;gap:8px;justify-content:flex-end;">
             <button class="campanita" id="btn-ayuda" onclick="mostrarAyuda()" title="¿Cómo funciona esta pantalla?"><i class="fi fi-rr-interrogation"></i></button>
@@ -1922,6 +2155,7 @@ function iniciarApp() {
     document.getElementById('pill-rol').innerText = PERSONA.rotulo;
     document.getElementById('pill-nombre').innerText = USUARIO.split(' ')[0].replace('Dra.', 'Carla');
     document.querySelector('.topbar .subt').innerText = AREAS_INFO[AREA].nombre;
+    document.getElementById('topbar-rol').innerText = PERSONA.rotulo;
     document.querySelector('.selector-fid').style.display = AREA === 'inm' ? 'flex' : 'none';
 
     /* Cambio de área solo para quien tiene AMBOS accesos */
@@ -1947,6 +2181,7 @@ function iniciarApp() {
     window.VISTA_ACTUAL = vistas[0];
     poblarSelects();
     renderTodo();
+    mostrarBadgeTour();
 }
 
 function cambiarArea_hook() {}
@@ -1965,23 +2200,394 @@ function cambiarArea() {
 function irAlArea(a) {
     cerrarModal();
     if (a === AREA) return;
-    AREA = a;
-    const bit = a === 'jur' ? JBITACORA : BITACORA;
-    bit.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Ingresó al área ${AREAS_INFO[a].nombre}` });
-    iniciarApp();
-    if (AREA === 'jur') setTimeout(recordarRepartos, 700);
+    
+    // Mostrar transición elegante oro cuando cambias de ÁREA
+    mostrarTransicionArea(a);
+    
+    setTimeout(() => {
+        AREA = a;
+        const bit = a === 'jur' ? JBITACORA : BITACORA;
+        bit.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Ingresó al área ${AREAS_INFO[a].nombre}` });
+        iniciarApp();
+        if (AREA === 'jur') setTimeout(recordarRepartos, 700);
+        
+        // Ocultar transición
+        ocultarTransicion();
+    }, 1200);
 }
 
 function irA(v) {
     window.VISTA_ACTUAL = v;
-    if (v === 'lotes') setTimeout(() => Object.values(MAPAS_VIVOS).forEach(m => m && m.invalidateSize()), 250);
-    vistasActuales().forEach(x => {
-        document.getElementById('vista-' + x).classList.toggle('activa', x === v);
-        const n = document.getElementById('nav-' + x);
-        if (n) n.classList.toggle('activo', x === v);
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    const vistas = vistasActuales();
+    const vistaActualElement = vistas.find(x => document.getElementById('vista-' + x)?.classList.contains('activa'));
+    
+    // Agregar efecto de salida suave a la vista actual
+    if (vistaActualElement) {
+        const elActual = document.getElementById('vista-' + vistaActualElement);
+        if (elActual) elActual.classList.add('salida-suave');
+    }
+    
+    // Esperar a que termine la animación de salida
+    setTimeout(() => {
+        vistas.forEach(x => {
+            const el = document.getElementById('vista-' + x);
+            if (el) {
+                el.classList.remove('salida-suave');
+                el.classList.toggle('activa', x === v);
+            }
+            const n = document.getElementById('nav-' + x);
+            if (n) n.classList.toggle('activo', x === v);
+        });
+        
+        // Resize de mapas si es necesario
+        if (v === 'lotes') setTimeout(() => Object.values(MAPAS_VIVOS).forEach(m => m && m.invalidateSize()), 50);
+        
+        // Scroll suave al inicio
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 180);
 }
+
+function mostrarTransicionArea(areaId) {
+    const pantalla = document.getElementById('pantalla-transicion');
+    const areasInfo = {
+        inm: 'Área Inmobiliaria',
+        jur: 'Estudio Jurídico'
+    };
+    
+    document.getElementById('transicion-titulo').innerText = areasInfo[areaId] || 'Cargando';
+    document.getElementById('transicion-subtitulo').innerText = 'Cambiando de módulo';
+    
+    pantalla.classList.add('activa');
+    pantalla.classList.remove('salida');
+}
+
+function mostrarTransicion(vistaId) {
+    const pantalla = document.getElementById('pantalla-transicion');
+    const NAV_DEF = {
+        inicio: ['fi-rr-home', 'Tablero'],
+        lotes: ['fi-rr-map', 'Lotes y Planos'],
+        clientes: ['fi-rr-user-md', 'Clientes'],
+        cobrar: ['fi-rr-building-lock', 'Cobranzas'],
+        caja: ['fi-rr-cash', 'Tesorería'],
+        documentos: ['fi-rr-file', 'Documentos'],
+        informes: ['fi-rr-chart-line', 'Informes'],
+        cursos: ['fi-rr-book-open', 'Academia']
+    };
+    
+    const info = NAV_DEF[vistaId] || ['fi-rr-arrow-right', 'Cargando'];
+    document.getElementById('transicion-titulo').innerText = info[1];
+    
+    // Determinar subtítulo según la sección
+    const subtitulos = {
+        inicio: 'Iniciando tablero',
+        lotes: 'Cargando planos interactivos',
+        clientes: 'Buscando registros de clientes',
+        cobrar: 'Procesando cobranzas',
+        caja: 'Cargando tesorería',
+        documentos: 'Accediendo a documentos',
+        informes: 'Preparando informes',
+        cursos: 'Iniciando academia'
+    };
+    document.getElementById('transicion-subtitulo').innerText = subtitulos[vistaId] || 'Iniciando módulo';
+    
+    pantalla.classList.add('activa');
+    pantalla.classList.remove('salida');
+}
+
+function ocultarTransicion() {
+    const pantalla = document.getElementById('pantalla-transicion');
+    pantalla.classList.add('salida');
+    setTimeout(() => {
+        pantalla.classList.remove('activa', 'salida');
+    }, 600);
+}
+
+// ============ TOUR GUIADO ============
+let TOUR_ACTUAL = 0;
+let TOUR_ACTIVO = false;
+const PASOS_TOUR = [
+    {
+        target: '.topbar',
+        titulo: 'Bienvenido a Portanko',
+        contenido: 'Este es el panel de control principal. Aquí ves el área actual y tus datos personales.',
+        paso: 'Paso 1: Interfaz Principal'
+    },
+    {
+        target: '.sidebar',
+        titulo: 'Navegación Principal',
+        contenido: 'Usa estos botones para navegar entre las diferentes áreas: Lotes, Clientes, Cobranzas, Documentos e Informes.',
+        paso: 'Paso 2: Menú de Áreas'
+    },
+    {
+        target: '#nav-lotes, [onclick*="irA(\'lotes\')"]',
+        titulo: 'Gestión de Lotes',
+        contenido: 'Visualiza todos los lotes disponibles, sus planos interactivos en 2D y 3D, precios y estados.',
+        paso: 'Paso 3: Módulo de Lotes'
+    },
+    {
+        target: '#nav-clientes, [onclick*="irA(\'clientes\')"]',
+        titulo: 'Base de Clientes',
+        contenido: 'Administra tus clientes, contactos, información de compra y historial de transacciones.',
+        paso: 'Paso 4: Clientes'
+    },
+    {
+        target: '#nav-cobrar, [onclick*="irA(\'cobrar\')"]',
+        titulo: 'Cobranzas',
+        contenido: 'Controla pagos, cuotas vencidas, facturas y comprobantes de cobro en tiempo real.',
+        paso: 'Paso 5: Cobranzas'
+    },
+    {
+        target: '#nav-documentos, [onclick*="irA(\'documentos\')"]',
+        titulo: 'Centro de Documentos',
+        contenido: 'Almacena y genera automáticamente PDFs: presupuestos, constancias, fichas de lotes, reportes.',
+        paso: 'Paso 6: Documentos'
+    },
+    {
+        target: '#nav-informes, [onclick*="irA(\'informes\')"]',
+        titulo: 'Informes Avanzados',
+        contenido: 'Analiza datos con gráficos interactivos: ventas, rentabilidad, tendencias de mercado.',
+        paso: 'Paso 7: Informes'
+    },
+    {
+        target: '[data-area="jur"]',
+        titulo: 'Área Jurídica',
+        contenido: 'Acceso exclusivo al módulo de Estudio Jurídico con casos, documentación legal y consultas.',
+        paso: 'Paso 8: Estudio Jurídico'
+    },
+    {
+        target: '.fideicomisos-selector, [id*="fid"]',
+        titulo: 'Selector de Fideicomisos',
+        contenido: 'Cambia entre Aeroparque (AER), Don Guarino (DG) o visualiza Todos (ALL) los datos combinados.',
+        paso: 'Paso 9: Fideicomisos'
+    },
+    {
+        target: '#mapa-lotes, .mapa-contenedor',
+        titulo: 'Planos Interactivos',
+        contenido: 'Zoom, desplazamiento y vista 3D de lotes. Click en cualquier lote para ver detalles completos.',
+        paso: 'Paso 10: Mapas'
+    },
+    {
+        target: '[onclick*="buscar"], .buscador, [id*="search"]',
+        titulo: 'Sistema de Búsqueda',
+        contenido: 'Busca rápidamente clientes, lotes, documentos y casos. Filtros avanzados disponibles.',
+        paso: 'Paso 11: Búsqueda'
+    },
+    {
+        target: 'body',
+        titulo: '¡Tour Completado!',
+        contenido: 'Ya conoces Portanko. Puedes iniciar el tour en cualquier momento desde el botón flotante. ¡Bienvenido!',
+        paso: 'Paso 12: Fin'
+    }
+];
+
+function iniciarTour() {
+    if (TOUR_ACTIVO) return;
+    TOUR_ACTIVO = true;
+    TOUR_ACTUAL = 0;
+    document.getElementById('tour-badge').classList.remove('activo');
+    mostrarPasoTour(0);
+}
+
+function mostrarPasoTour(indice) {
+    if (indice < 0 || indice >= PASOS_TOUR.length) return;
+    TOUR_ACTUAL = indice;
+    
+    const paso = PASOS_TOUR[indice];
+    const elemento = document.querySelector(paso.target);
+    
+    // Actualizar contenido
+    document.getElementById('tour-titulo').textContent = paso.titulo;
+    document.getElementById('tour-contenido').textContent = paso.contenido;
+    document.getElementById('tour-paso').textContent = paso.paso;
+    document.getElementById('tour-contador').textContent = `Paso ${indice + 1} de ${PASOS_TOUR.length}`;
+    
+    // Actualizar visibilidad de botones
+    document.getElementById('btn-anterior-tour').style.display = indice > 0 ? 'block' : 'none';
+    document.getElementById('btn-siguiente-tour').textContent = indice === PASOS_TOUR.length - 1 ? 'Finalizar' : 'Siguiente →';
+    
+    // Mostrar overlay
+    document.getElementById('tour-overlay').classList.add('activo');
+    document.getElementById('tour-tooltip').classList.add('activo');
+    
+    if (elemento && indice !== PASOS_TOUR.length - 1) {
+        const rect = elemento.getBoundingClientRect();
+        const spotlight = document.getElementById('tour-spotlight');
+        
+        spotlight.style.top = (rect.top - 10) + 'px';
+        spotlight.style.left = (rect.left - 10) + 'px';
+        spotlight.style.width = (rect.width + 20) + 'px';
+        spotlight.style.height = (rect.height + 20) + 'px';
+        spotlight.classList.add('activo');
+        
+        // Posicionar tooltip
+        posicionarTooltip(rect);
+    } else {
+        document.getElementById('tour-spotlight').classList.remove('activo');
+        posicionarTooltipCentro();
+    }
+    
+    // Guardar progreso
+    localStorage.setItem('tour-progreso', indice);
+}
+
+function posicionarTooltip(rect) {
+    const tooltip = document.getElementById('tour-tooltip');
+    const spacing = 20;
+    const tooltipRect = tooltip.getBoundingClientRect();
+    
+    let top = rect.bottom + spacing;
+    let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+    
+    // Ajustar si sale de pantalla
+    if (top + tooltipRect.height > window.innerHeight) {
+        top = rect.top - tooltipRect.height - spacing;
+    }
+    if (left < spacing) {
+        left = spacing;
+    }
+    if (left + tooltipRect.width > window.innerWidth - spacing) {
+        left = window.innerWidth - tooltipRect.width - spacing;
+    }
+    
+    tooltip.style.top = top + 'px';
+    tooltip.style.left = left + 'px';
+}
+
+function posicionarTooltipCentro() {
+    const tooltip = document.getElementById('tour-tooltip');
+    tooltip.style.top = '50%';
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translate(-50%, -50%)';
+}
+
+function tourSiguiente() {
+    if (TOUR_ACTUAL === PASOS_TOUR.length - 1) {
+        detenerTour();
+    } else {
+        mostrarPasoTour(TOUR_ACTUAL + 1);
+    }
+}
+
+function tourAnterior() {
+    mostrarPasoTour(TOUR_ACTUAL - 1);
+}
+
+function detenerTour() {
+    TOUR_ACTIVO = false;
+    document.getElementById('tour-overlay').classList.remove('activo');
+    document.getElementById('tour-tooltip').classList.remove('activo');
+    document.getElementById('tour-spotlight').classList.remove('activo');
+    localStorage.setItem('tour-completado', 'true');
+}
+
+function mostrarBadgeTour() {
+    const completado = localStorage.getItem('tour-completado');
+    if (!completado && !TOUR_ACTIVO) {
+        setTimeout(() => {
+            document.getElementById('tour-badge').classList.add('activo');
+        }, 3000);
+    }
+}
+
+// ============ INSTALACIÓN PWA ============
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    mostrarModalInstalar();
+});
+
+function mostrarModalInstalar() {
+    const modal = document.getElementById('modal-instalar');
+    const esAndroid = /Android/.test(navigator.userAgent);
+    const esIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    
+    if (!esAndroid && !esIOS) return;
+    
+    const icono = document.getElementById('instalar-icono');
+    const subtitulo = document.getElementById('instalar-subtitulo');
+    const pasos = document.getElementById('instalar-pasos');
+    
+    if (esAndroid) {
+        icono.textContent = '🤖';
+        subtitulo.textContent = 'Acceso rápido desde tu dispositivo';
+        pasos.innerHTML = `
+            <strong>¿Cómo instalar en Android?</strong><br>
+            1. Toca el botón <strong>"Instalar Ahora"</strong><br>
+            2. Confirma la instalación<br>
+            3. ¡Portanko aparecerá en tu pantalla de inicio!<br><br>
+            La app funciona sin conexión en modo caché y se actualiza automáticamente.
+        `;
+    } else if (esIOS) {
+        icono.textContent = '🍎';
+        subtitulo.textContent = 'Acceso rápido desde tu iPhone/iPad';
+        pasos.innerHTML = `
+            <strong>¿Cómo instalar en iOS?</strong><br>
+            1. Toca el botón <strong>Compartir</strong> (cuadrado con flecha)<br>
+            2. Selecciona <strong>"Añadir a pantalla de inicio"</strong><br>
+            3. Elige un nombre y confirma<br>
+            4. ¡Listo! Portanko estará en tu pantalla de inicio.<br><br>
+            Se abre como app nativa sin necesidad de Safari.
+        `;
+        document.getElementById('btn-instalar-ahora').style.display = 'none';
+    }
+    
+    modal.classList.add('activo');
+    localStorage.setItem('instalar-mostrado', 'true');
+}
+
+function instalarApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                cerrarInstalar();
+                mostrarNotificacion('✓ Portanko instalado correctamente', 'success');
+            }
+            deferredPrompt = null;
+        });
+    }
+}
+
+function cerrarInstalar() {
+    const modal = document.getElementById('modal-instalar');
+    modal.classList.remove('activo');
+}
+
+function mostrarNotificacion(mensaje, tipo = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${tipo}`;
+    toast.textContent = mensaje;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${tipo === 'success' ? 'rgba(76, 175, 80, 0.95)' : 'rgba(30, 20, 15, 0.95)'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        font-size: 0.95rem;
+        z-index: 9999;
+        animation: subirToast 0.3s ease-out;
+    `;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'bajarToast 0.3s ease-out forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Verificar si ya se mostró el modal
+window.addEventListener('load', () => {
+    if (!localStorage.getItem('instalar-mostrado') && !navigator.userAgent.includes('localhost')) {
+        setTimeout(mostrarModalInstalar, 2000);
+    }
+});
 
 function elegirFid(f) {
     FID = f;
@@ -5804,13 +6410,8 @@ if (document.readyState === 'loading') {
             e.preventDefault();
         }
     });
-    
-    // Asegurar que el zoom CSS se mantenga
-    document.documentElement.style.zoom = '75%';
-    window.addEventListener('resize', () => {
-        document.documentElement.style.zoom = '75%';
-    });
 })();
+
 </script>
 </body>
 </html>
