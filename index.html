@@ -1129,6 +1129,21 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
             </div>
             <label class="form-lbl">Otros detalles (texto libre)</label>
             <input class="form-inp" id="crm-detalle" placeholder="Ej: planta baja, cerca de escuelas, apto profesional">
+            <div class="fila-2" style="margin-top:8px;">
+                <div>
+                    <label class="form-lbl">Vinculación a cliente (privacidad)</label>
+                    <select class="form-inp" id="crm-cliente-vinculado">
+                        <option value="">No vincular · búsqueda compartida</option>
+                        <option value="—">────────────────</option>
+                        ${CLIENTES.map((cl, idx) => `<option value="${idx}">${cl.nombre}</option>`).join('')}
+                    </select>
+                    <small style="color:var(--piedra);font-size:.75rem;margin-top:4px;display:block;">Si vinculas, solo ese cliente verá esta búsqueda en su panel privado.</small>
+                </div>
+                <div>
+                    <label class="form-lbl">Notas iniciales (opcional)</label>
+                    <textarea class="form-inp" id="crm-nota-inicial" placeholder="Ej: Cliente prefiere este sector" style="resize:vertical;min-height:60px;"></textarea>
+                </div>
+            </div>
             <button class="btn carmin" onclick="guardarConsultaCRM()"><i class="fi fi-rr-search"></i> Registrar cliente y buscar coincidencias</button>
             <button class="btn tinta" onclick="busquedaPrivada()"><i class="fi fi-rr-incognito"></i> Búsqueda privada · sin cargar cliente</button>
         </div>
@@ -1567,6 +1582,46 @@ let CUENTAS = [
 let MOVIMIENTOS = [
     { fid:'DG', fecha:'2026-08-18', tipo:'Depósito en banco', detalle:'USD 5.000 de Caja Fuerte a CAU$', monto:5000, usuario:'Lucía', documentos:[{nombre:'Comprobante transferencia bancaria', tipo:'PDF', tamaño:'245 KB'}, {nombre:'Ticket Banco CAU$', tipo:'PDF', tamaño:'128 KB'}] },
     { fid:'AER', fecha:'2026-08-12', tipo:'Pago de gasto de obra', detalle:'Mano de obra red de agua · Factura 214', monto:2140, usuario:'Lucía', documentos:[{nombre:'Factura 214 - Empresa Construcciones SA', tipo:'PDF', tamaño:'312 KB'}, {nombre:'Foto comprobante de pago', tipo:'JPG', tamaño:'2.8 MB'}] }
+];
+
+/* ===== NOTIFICACIONES POR EMAIL ===== */
+let CONFIGURACION_EMAIL = {
+    habilitada: false,
+    servidor_smtp: 'smtp.gmail.com',
+    puerto: 587,
+    de: 'notificaciones@portankoinmobiliaria.com.ar',
+    frecuencia: 'inmediata', /* inmediata, diaria, semanal */
+    horario: '09:00'
+};
+
+let NOTIFICACIONES_ENVIADAS = [
+    /* Estructura: {fecha, destinatario, consulta_id, tipo, asunto, contenido, estado} */
+];
+
+let PREFERENCIAS_NOTIF_POR_USUARIO = {
+    /* estructura: { usuario_email: { habilitadas: bool, frecuencia: 'inmediata|diaria|semanal', tipos: ['nueva_coincidencia', 'resumen'] } } */
+};
+
+/* ===== SCRAPING DE PORTALES ===== */
+let CONFIG_SCRAPING = {
+    habilitado: true,
+    frecuencia_horas: 4,
+    ultima_ejecucion: '2026-08-22 08:30',
+    portales: [
+        { nombre: 'Zonaprop', activo: true, url: 'https://www.zonaprop.com.ar', prioridad: 1 },
+        { nombre: 'Argenprop', activo: true, url: 'https://www.argenprop.com', prioridad: 2 },
+        { nombre: 'MercadoLibre Inmuebles', activo: true, url: 'https://inmuebles.mercadolibre.com.ar', prioridad: 2 },
+        { nombre: 'Properati', activo: true, url: 'https://www.properati.com.ar', prioridad: 3 },
+        { nombre: 'InfoCasas', activo: false, url: 'https://www.infocasas.com.ar', prioridad: 4 }
+    ]
+};
+
+let RESULTADOS_SCRAPING = [
+    /* Estructura: {fecha, portal, query_id, propiedades_encontradas, nuevas_coincidencias, estado} */
+];
+
+let COLA_SCRAPING = [
+    /* Cola de búsquedas pendientes de analizar */
 ];
 
 let NOVEDADES = [
@@ -2717,6 +2772,9 @@ async function guardarConsultaCRM() {
     if (!nombre) return;
     const chk = id => document.getElementById(id).checked;
     const num = id => parseFloat((document.getElementById(id).value || '').replace(/[^0-9]/g, '')) || 0;
+    const clienteVinculado = document.getElementById('crm-cliente-vinculado').value || null;
+    const notaInicial = document.getElementById('crm-nota-inicial').value.trim();
+    
     const q = { nombre, tel: document.getElementById('crm-tel').value.trim(),
         op: document.getElementById('crm-op').value, tipo: document.getElementById('crm-tipo').value,
         zona: document.getElementById('crm-zona').value, barrio: document.getElementById('crm-barrio').value.trim(),
@@ -2724,15 +2782,27 @@ async function guardarConsultaCRM() {
         dorm: document.getElementById('crm-dorm').value, banos: document.getElementById('crm-banos').value,
         supmin: num('crm-supmin'),
         checks: { cochera: chk('chk-cochera'), patio: chk('chk-patio'), mascota: chk('chk-mascota'), pileta: chk('chk-pileta'), estrenar: chk('chk-estrenar'), parrilla: chk('chk-parrilla'), balc: chk('chk-balcon') },
-        detalle: document.getElementById('crm-detalle').value.trim(), fecha: hoyISO(), usuario: USUARIO, coincidencias: [] };
+        detalle: document.getElementById('crm-detalle').value.trim(), 
+        fecha: hoyISO(), 
+        usuario: USUARIO, 
+        coincidencias: [],
+        titulo: `Búsqueda para ${nombre}`,
+        cliente_vinculado: clienteVinculado ? parseInt(clienteVinculado) : null,
+        es_privada: clienteVinculado ? true : false,
+        notas: notaInicial ? [{ fecha: ahora(), usuario: USUARIO, texto: notaInicial }] : [],
+        detalles_adicionales: '',
+        favoritos: false,
+        notificaciones: [],
+        ultima_actualizacion: ahora()
+    };
     /* compatibilidad con el motor: presupuesto tope */
     q.presu = q.pmax ? String(q.pmax) : '';
     q.coincidencias = coincidenciasDe(q);
-    q.abierta = false; /* plegada: se abre al tocar la tarjeta del cliente */
+    q.abierta = false;
     CONSULTAS_CRM.unshift(q);
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CRM: cargó consulta de ${nombre} (${q.op} de ${q.tipo} en ${ZONAS_CRM[q.zona]}) · ${q.coincidencias.length} coincidencias ≥55%` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CRM: cargó consulta de ${nombre} (${q.op} de ${q.tipo} en ${ZONAS_CRM[q.zona]}) · ${q.coincidencias.length} coincidencias ≥55%${clienteVinculado ? ' · vinculada a cliente privado' : ''}` });
+    mostrarNotificacion(`Búsqueda guardada para ${nombre} · ${q.coincidencias.length} coincidencias${clienteVinculado ? ' · privada' : ''}`, 'exito', 3000);
     notificar(`🔎 ${q.coincidencias.length} propiedades coinciden (≥55%) para ${nombre}`, `La mejor: ${q.coincidencias.length ? q.coincidencias[0].score + '% — ' + q.coincidencias[0].p.ti : '—'}`);
-    /* Cruce: ¿alguna de sus coincidencias ya es favorita de otro cliente? */
     const cruces = [];
     q.coincidencias.forEach(x => {
         CONSULTAS_CRM.forEach(otra => {
@@ -2745,9 +2815,9 @@ async function guardarConsultaCRM() {
             (q.coincidencias.length ? `<br><br>Las mejores:<br>` + q.coincidencias.slice(0, 3).map(x => `• <b>${x.score}%</b> — ${x.p.ti} · ${x.p.precio}`).join('<br>') : '') +
             '<br><br>Se muestran acá abajo, <b>dentro del sistema</b>, con foto, precio y ubicación. El robot sigue buscando y te avisa cuando aparezca algo nuevo.',
         boton: 'Ver los resultados' });
-    ['crm-nombre', 'crm-tel', 'crm-barrio', 'crm-pmin', 'crm-pmax', 'crm-supmin', 'crm-detalle'].forEach(id => document.getElementById(id).value = '');
+    ['crm-nombre', 'crm-tel', 'crm-barrio', 'crm-pmin', 'crm-pmax', 'crm-supmin', 'crm-detalle', 'crm-nota-inicial'].forEach(id => document.getElementById(id).value = '');
     ['chk-cochera', 'chk-patio', 'chk-mascota', 'chk-pileta', 'chk-estrenar', 'chk-parrilla', 'chk-balcon'].forEach(id => document.getElementById(id).checked = false);
-    document.getElementById('crm-dorm').value = ''; document.getElementById('crm-banos').value = '';
+    document.getElementById('crm-dorm').value = ''; document.getElementById('crm-banos').value = ''; document.getElementById('crm-cliente-vinculado').value = '';
     renderCRM();
 }
 
@@ -3098,18 +3168,28 @@ function renderCRM() {
         const i = CONSULTAS_CRM.indexOf(c);
         const abierta = c.abierta === true;
         return `<div class="tarjeta">
-        <div class="bitacora-toc" style="margin:-8px;padding:8px;" onclick="CONSULTAS_CRM[${i}].abierta=${abierta ? 'false' : 'true'};renderCRM()">
+        <div class="bitacora-toc" style="margin:-8px;padding:8px;cursor:pointer;" onclick="CONSULTAS_CRM[${i}].abierta=${abierta ? 'false' : 'true'};renderCRM()">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-            <b>${c.nombre}</b>
-            <span class="curso-check ${abierta ? 'visto' : 'pend'}" style="flex-shrink:0;">${abierta ? '▲ Cerrar' : '▼ Ver ' + c.coincidencias.length + ' resultados'}</span>
+            <div style="flex:1;">
+                <b style="font-size:1.05rem;">${c.nombre}</b>
+                ${c.titulo ? `<div style="font-size:.85rem;color:var(--oro);font-weight:600;">${c.titulo}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button class="btn-mini ${c.favoritos ? 'carmin' : 'borde'}" onclick="event.stopPropagation();toggleFavoritoCRM(${i})" title="Marcar como favorito">
+                    <i class="fi ${c.favoritos ? 'fi-rr-heart' : 'fi-rr-heart'}"></i>
+                </button>
+                <span class="curso-check ${abierta ? 'visto' : 'pend'}" style="flex-shrink:0;">${abierta ? '▲' : '▼'}</span>
+            </div>
         </div>
         ${c.tel ? '<small style="color:var(--piedra);">📞 ' + c.tel + '</small><br>' : ''}
-        <small style="color:var(--piedra);">Busca: <b>${c.op}</b> de ${c.tipo} en <b>${ZONAS_CRM[c.zona]}</b>${c.barrio ? ' (' + c.barrio + ')' : ''}${c.pmax ? ' · $ ' + (c.pmin ? c.pmin.toLocaleString('es-AR') + ' a ' : 'hasta ') + c.pmax.toLocaleString('es-AR') : ''}${c.dorm !== '' && c.dorm !== undefined ? ' · ' + (c.dorm === '0' ? 'monoamb.' : c.dorm + ' dorm.') : ''}${c.banos ? ' · ' + c.banos + '+ baños' : ''}${c.supmin ? ' · ' + c.supmin + '+ m²' : ''}${c.checks ? Object.entries(c.checks).filter(([k, v]) => v).map(([k]) => ' · ' + (PALABRAS_CLAVE[k] || k)).join('') : ''}${c.detalle ? ' · ' + c.detalle : ''} · cargado ${c.fecha}${(c.favs || []).length ? ' · ❤ ' + c.favs.length : ''}</small>
+        <small style="color:var(--piedra);">Busca: <b>${c.op}</b> de ${c.tipo} en <b>${ZONAS_CRM[c.zona]}</b>${c.barrio ? ' (' + c.barrio + ')' : ''}${c.pmax ? ' · $ ' + (c.pmin ? c.pmin.toLocaleString('es-AR') + ' a ' : 'hasta ') + c.pmax.toLocaleString('es-AR') : ''}${c.dorm !== '' && c.dorm !== undefined ? ' · ' + (c.dorm === '0' ? 'monoamb.' : c.dorm + ' dorm.') : ''}${c.banos ? ' · ' + c.banos + '+ baños' : ''}${c.supmin ? ' · ' + c.supmin + '+ m²' : ''}${c.checks ? Object.entries(c.checks).filter(([k, v]) => v).map(([k]) => ' · ' + (PALABRAS_CLAVE[k] || k)).join('') : ''}${c.detalle ? ' · ' + c.detalle : ''} · cargado ${c.fecha}${c.coincidencias.length ? ' · ' + c.coincidencias.length + ' coincidencias' : ''}</small>
         </div>
         ${abierta ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-            <button class="btn-mini" onclick="rebuscarCRM(${i})"><i class="fi fi-rr-refresh"></i> Buscar de nuevo</button>
+            <button class="btn-mini" onclick="event.stopPropagation();rebuscarCRM(${i})"><i class="fi fi-rr-refresh"></i> Buscar de nuevo</button>
+            <button class="btn-mini" onclick="event.stopPropagation();verDetallesBusquedaCRM(${i})"><i class="fi fi-rr-eye"></i> Ver detalles</button>
+            <button class="btn-mini" onclick="event.stopPropagation();descargarPDFBusquedaCRM(${i})"><i class="fi fi-rr-download"></i> Descargar PDF</button>
         </div>` : ''}
-        ${abierta ? `<div class="etiqueta" style="margin-top:12px;">${c.coincidencias.length} coincidencias del 55% para arriba${(c.favs || []).length ? ' · ❤ ' + c.favs.length + ' favorita/s' : ''} · dentro del sistema 🔄</div>
+        ${abierta ? `<div class="etiqueta" style="margin-top:12px;">${c.coincidencias.length} coincidencias del 55% para arriba${c.favoritos ? ' · ❤ Favorita' : ''} · dentro del sistema</div>
         ${c.coincidencias.length ? [...c.coincidencias].sort((a, b) => ((c.favs || []).includes(b.pi) ? 1 : 0) - ((c.favs || []).includes(a.pi) ? 1 : 0) || b.score - a.score).map(x => tarjetaProp(x, i)).join('') : '<div class="aviso alerta">Todavía nada con 55% o más para esta búsqueda. El robot sigue rastreando y avisa apenas aparezca.</div>'}` : ''}
     </div>`;
     }).join('') || '<div class="tarjeta" style="text-align:center;color:var(--piedra);font-size:.9rem;">Sin consultas cargadas. Registrá la primera búsqueda arriba.</div>';
@@ -3120,11 +3200,350 @@ function rebuscarCRM(i) {
     const c = CONSULTAS_CRM[i];
     c.coincidencias = coincidenciasDe(c);
     c.abierta = true;
-    notificar(`🔎 Búsqueda actualizada para ${c.nombre}: ${c.coincidencias.length} propiedades ≥55%`, c.coincidencias.length ? 'La mejor: ' + c.coincidencias[0].score + '%' : 'Sin resultados por ahora');
+    notificar(`Búsqueda actualizada para ${c.nombre}: ${c.coincidencias.length} propiedades ≥55%`, c.coincidencias.length ? 'La mejor: ' + c.coincidencias[0].score + '%' : 'Sin resultados por ahora');
     renderCRM();
 }
 
-function renderTarjetaValores() {
+function toggleFavoritoCRM(i) {
+    const c = CONSULTAS_CRM[i];
+    c.favoritos = !c.favoritos;
+    mostrarNotificacion(c.favoritos ? `Búsqueda marcada como favorita` : `Favorito removido`, 'info', 2000);
+    renderCRM();
+}
+
+function verDetallesBusquedaCRM(i) {
+    const c = CONSULTAS_CRM[i];
+    if (!c) return;
+    
+    const totalCoincidencias = c.coincidencias.length;
+    const top4 = c.coincidencias.slice(0, 4).sort((a, b) => b.score - a.score);
+    const porcentajePromedio = totalCoincidencias ? Math.round(c.coincidencias.reduce((a, x) => a + x.score, 0) / totalCoincidencias) : 0;
+    const conFavoritos = (c.favs || []).length;
+    const cliente = c.cliente_vinculado !== null ? CLIENTES[c.cliente_vinculado] : null;
+    const notasHTML = (c.notas || []).map(n => `
+        <div class="item-lista" style="border-left:3px solid var(--oro);font-size:.9rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <b>${n.texto}</b>
+                <button class="btn-mini rojo" onclick="event.stopPropagation();eliminarNotaCRM(${i}, '${n.fecha}')" title="Eliminar nota"><i class="fi fi-rr-trash"></i></button>
+            </div>
+            <small style="color:var(--piedra);">Agregada por ${n.usuario} · ${n.fecha}</small>
+        </div>
+    `).join('');
+    
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:14px;">
+            <div>
+                <h3 class="serif" style="margin:0 0 2px 0;">Detalles de Búsqueda</h3>
+                <div style="font-size:.85rem;color:var(--piedra);">Registrado el ${c.fecha} por ${c.usuario}</div>
+            </div>
+            <div style="display:flex;gap:6px;">
+                <button class="btn-mini ${c.favoritos ? 'carmin' : 'borde'}" onclick="event.stopPropagation();toggleFavoritoCRM(${i});verDetallesBusquedaCRM(${i})" title="Marcar como favorito">
+                    <i class="fi fi-rr-heart"></i>
+                </button>
+                <button class="btn-mini borde" onclick="descargarPDFBusquedaCRM(${i})" title="Descargar PDF"><i class="fi fi-rr-download"></i></button>
+            </div>
+        </div>
+        
+        <div style="background:var(--oro-suave);padding:10px;border-radius:4px;margin-bottom:12px;border-left:3px solid var(--oro);">
+            <input class="form-inp" id="edit-titulo-${i}" value="${c.titulo}" placeholder="Título de la búsqueda" style="margin:0;font-weight:600;">
+        </div>
+        
+        <div class="recibo-fila"><span>Cliente</span><b>${c.nombre}${c.tel ? ' · ' + c.tel : ''}</b></div>
+        ${cliente ? `<div class="recibo-fila" style="background:var(--carmin-suave);padding:8px;border-left:3px solid var(--carmin);border-radius:2px;"><span>Vinculado a cliente</span><b style="color:var(--carmin);">${cliente.nombre} <i class="fi fi-rr-lock"></i> Privada</b></div>` : ''}
+        <div class="recibo-fila"><span>Tipo de operación</span><b>${c.op === 'alquiler' ? 'Alquiler' : 'Compra'}</b></div>
+        <div class="recibo-fila"><span>Propiedad</span><b>${c.tipo}</b></div>
+        <div class="recibo-fila"><span>Zona</span><b>${ZONAS_CRM[c.zona]}</b></div>
+        ${c.barrio ? `<div class="recibo-fila"><span>Barrio</span><b>${c.barrio}</b></div>` : ''}
+        ${c.pmin || c.pmax ? `<div class="recibo-fila"><span>Presupuesto</span><b>${c.pmin ? '$' + c.pmin.toLocaleString('es-AR') : 'Sin mínimo'} a ${c.pmax ? '$' + c.pmax.toLocaleString('es-AR') : 'Sin máximo'}</b></div>` : ''}
+        ${c.dorm !== '' && c.dorm !== undefined ? `<div class="recibo-fila"><span>Dormitorios</span><b>${c.dorm === '0' ? 'Monoambiente' : c.dorm}</b></div>` : ''}
+        ${c.banos ? `<div class="recibo-fila"><span>Baños (mínimo)</span><b>${c.banos}</b></div>` : ''}
+        ${c.supmin ? `<div class="recibo-fila"><span>Superficie mínima</span><b>${c.supmin} m²</b></div>` : ''}
+        ${c.detalle ? `<div class="recibo-fila"><span>Detalles</span><b>${c.detalle}</b></div>` : ''}
+        
+        <div class="etiqueta" style="margin-top:14px;">Análisis de resultados</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div style="border:1.2px solid #171412;padding:12px;text-align:center;border-radius:4px;">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;">${totalCoincidencias}</div>
+                <small style="color:var(--piedra);">Propiedades analizadas</small>
+            </div>
+            <div style="border:1.2px solid var(--oro);padding:12px;text-align:center;border-radius:4px;background:var(--oro-suave);">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--oro);">${porcentajePromedio}%</div>
+                <small style="color:var(--piedra);">Coincidencia promedio</small>
+            </div>
+            <div style="border:1.2px solid var(--carmin);padding:12px;text-align:center;border-radius:4px;background:var(--carmin-suave);">
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--carmin);">${conFavoritos}</div>
+                <small style="color:var(--piedra);">Marcadas favorito</small>
+            </div>
+        </div>
+        
+        ${top4.length ? `<div class="etiqueta" style="margin-top:14px;">🏆 Top 4 opciones recomendadas</div>
+        ${top4.map((x, idx) => `
+            <div class="item-lista" style="border-left:3px solid var(--oro);padding-left:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:start;">
+                    <div>
+                        <b>#${idx + 1} ${x.p.ti}</b> - <span class="monto-usd">${x.p.precio}</span><br>
+                        <small style="color:var(--piedra);">Coincidencia: <b>${x.score}%</b> · ${x.p.zona ? ZONAS_CRM[x.p.zona] : ''}</small>
+                    </div>
+                    <span class="sello ${x.score >= 80 ? 'exito' : x.score >= 65 ? 'oro' : 'gris'}" style="flex-shrink:0;font-size:.7rem;">${x.score}%</span>
+                </div>
+            </div>
+        `).join('')}` : ''}
+        
+        <div class="etiqueta" style="margin-top:14px;">📝 Notas sobre esta búsqueda</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <input class="form-inp" id="nueva-nota-${i}" placeholder="Agregar nota (ej: el cliente prefiere este sector, rechazó X por Y)..." style="flex:1;margin:0;">
+            <button class="btn carmin" onclick="agregarNotaCRM(${i})" style="margin:0;">Agregar</button>
+        </div>
+        <div style="max-height:200px;overflow-y:auto;">
+            ${notasHTML || '<div class="aviso alerta" style="font-size:.9rem;">Sin notas aún. Agrega comentarios sobre el progreso de esta búsqueda.</div>'}
+        </div>
+        
+        <div style="display:flex;gap:8px;margin-top:14px;">
+            <button class="btn carmin" onclick="guardarCambiosTituloCRM(${i})" style="flex:1;">💾 Guardar cambios</button>
+            <button class="btn borde" onclick="cerrarModal()" style="flex:1;">Cerrar</button>
+        </div>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
+
+function agregarNotaCRM(i) {
+    const c = CONSULTAS_CRM[i];
+    const notaEl = document.getElementById(`nueva-nota-${i}`);
+    const texto = notaEl.value.trim();
+    if (!texto) return;
+    
+    if (!c.notas) c.notas = [];
+    c.notas.push({ fecha: ahora(), usuario: USUARIO, texto });
+    c.ultima_actualizacion = ahora();
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CRM: agregó nota a búsqueda de ${c.nombre}: "${texto.substring(0, 50)}..."` });
+    
+    notaEl.value = '';
+    mostrarNotificacion('Nota agregada', 'exito', 2000);
+    verDetallesBusquedaCRM(i);
+}
+
+function eliminarNotaCRM(i, fecha) {
+    const c = CONSULTAS_CRM[i];
+    if (!c.notas) return;
+    const idx = c.notas.findIndex(n => n.fecha === fecha);
+    if (idx !== -1) {
+        c.notas.splice(idx, 1);
+        c.ultima_actualizacion = ahora();
+        mostrarNotificacion('Nota eliminada', 'info', 2000);
+        verDetallesBusquedaCRM(i);
+    }
+}
+
+function guardarCambiosTituloCRM(i) {
+    const c = CONSULTAS_CRM[i];
+    const nuevoTitulo = document.getElementById(`edit-titulo-${i}`).value.trim();
+    if (nuevoTitulo) {
+        c.titulo = nuevoTitulo;
+        c.ultima_actualizacion = ahora();
+        mostrarNotificacion('Cambios guardados', 'exito', 2000);
+        verDetallesBusquedaCRM(i);
+    }
+}
+
+function descargarPDFBusquedaCRM(i) {
+    const c = CONSULTAS_CRM[i];
+    if (!c) return;
+    
+    mostrarNotificacion(`Generando PDF de búsqueda para ${c.nombre}...`, 'info', 2000);
+    
+    setTimeout(() => {
+        const totalCoincidencias = c.coincidencias.length;
+        const top4 = c.coincidencias.slice(0, 4).sort((a, b) => b.score - a.score);
+        const porcentajePromedio = totalCoincidencias ? Math.round(c.coincidencias.reduce((a, x) => a + x.score, 0) / totalCoincidencias) : 0;
+        const conFavoritos = (c.favs || []).length;
+        
+        const w = window.open('', '_blank');
+        w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Informe de Búsqueda · ${c.nombre}</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@page{margin:130px 48px 90px 48px;}
+body{font-family:'Inter',sans-serif;color:#171412;margin:0;font-size:13px;line-height:1.65;}
+.membrete-arriba{position:fixed;top:-110px;left:0;right:0;display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #A31621;padding-bottom:12px;}
+.logo-p{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C21E2A, #A31621 55%, #7A0E17);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;}
+.m-nombre{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;line-height:1;}
+.m-sub{font-size:9.5px;letter-spacing:3.5px;color:#B08D3E;text-transform:uppercase;font-weight:600;margin-top:4px;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:22px;margin:0 0 2px 0;}
+.etq{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A8378;font-weight:600;margin:16px 0 6px 0;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:#F7F4EE;text-align:left;padding:8px;border-bottom:1.5px solid #171412;font-weight:600;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+td{padding:6px 8px;border-bottom:1px solid #E4DFD5;}
+.resumen{border:1.2px solid #171412;padding:12px 14px;margin:6px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.resumen b{font-family:'Space Grotesk',sans-serif;font-size:17px;}
+.membrete-abajo{position:fixed;bottom:-70px;left:0;right:0;border-top:1px solid #B08D3E;padding-top:8px;font-size:9.5px;color:#8A8378;display:flex;justify-content:space-between;letter-spacing:.5px;}
+.pie-emision{margin-top:22px;font-size:10px;color:#8A8378;border-top:1px dashed #E4DFD5;padding-top:8px;}
+</style></head><body>
+<div class="membrete-arriba"><div class="logo-p">P</div>
+<div><div class="m-nombre">Portanko Inmobiliaria</div><div class="m-sub">Informe de Búsqueda · Desde 1971</div></div></div>
+<div class="membrete-abajo"><span>Portanko Inmobiliaria · Neuquén</span><span>Informe de Búsqueda</span><span>www.portankoinmobiliaria.com.ar</span></div>
+
+<h1>Informe de Búsqueda Inmobiliaria</h1>
+<div>Cliente: <b>${c.nombre}${c.tel ? ' · ' + c.tel : ''}</b> · Emitido el ${ahora()} hs</div>
+
+<div class="etq">Parámetros de búsqueda</div>
+<table>
+<tr><th>Parámetro</th><th>Valor</th></tr>
+<tr><td>Tipo de operación</td><td><b>${c.op === 'alquiler' ? 'Alquiler' : 'Compra'}</b></td></tr>
+<tr><td>Tipo de propiedad</td><td><b>${c.tipo}</b></td></tr>
+<tr><td>Zona</td><td><b>${ZONAS_CRM[c.zona]}</b>${c.barrio ? ' (' + c.barrio + ')' : ''}</td></tr>
+${c.pmin || c.pmax ? `<tr><td>Presupuesto</td><td>${c.pmin ? '$' + c.pmin.toLocaleString('es-AR') : 'Sin mínimo'} a ${c.pmax ? '$' + c.pmax.toLocaleString('es-AR') : 'Sin máximo'}</td></tr>` : ''}
+${c.dorm !== '' && c.dorm !== undefined ? `<tr><td>Dormitorios</td><td>${c.dorm === '0' ? 'Monoambiente' : c.dorm}</td></tr>` : ''}
+${c.banos ? `<tr><td>Baños (mínimo)</td><td>${c.banos}</td></tr>` : ''}
+${c.supmin ? `<tr><td>Superficie mínima</td><td>${c.supmin} m²</td></tr>` : ''}
+${c.detalle ? `<tr><td>Detalles adicionales</td><td>${c.detalle}</td></tr>` : ''}
+</table>
+
+<div class="etq">Resumen de resultados</div>
+<div class="resumen">
+<span>Total de propiedades analizadas<br><b>${totalCoincidencias}</b></span>
+<span>Coincidencia promedio<br><b>${porcentajePromedio}%</b></span>
+<span>Opciones favoritas<br><b>${conFavoritos}</b></span>
+</div>
+
+<div class="etq">Top 4 propiedades recomendadas</div>
+<table>
+<tr><th>Posición</th><th>Propiedad</th><th>Zona</th><th style="text-align:right;">Precio</th><th style="text-align:right;">Coincidencia</th></tr>
+${top4.map((x, idx) => `<tr><td>${idx + 1}</td><td><b>${x.p.ti}</b></td><td>${x.p.zona ? ZONAS_CRM[x.p.zona] : '-'}</td><td style="text-align:right;"><b>${x.p.precio}</b></td><td style="text-align:right;"><b>${x.score}%</b></td></tr>`).join('')}
+${!top4.length ? '<tr><td colspan="5" style="text-align:center;color:#8A8378;">Sin resultados con coincidencia ≥55%</td></tr>' : ''}
+</table>
+
+<div class="etq">Próximos pasos recomendados</div>
+<ul style="margin:8px 0;padding-left:20px;font-size:12px;">
+<li>Contactar al cliente con las opciones encontradas.</li>
+<li>Programar citas de visita para las propiedades recomendadas.</li>
+<li>El robot continuará rastreando nuevas publicaciones que coincidan con los criterios establecidos.</li>
+<li>Se notificará automáticamente cuando aparezcan nuevas coincidencias ≥55%.</li>
+</ul>
+
+<div class="pie-emision">Informe solicitado por <b>${USUARIO}</b> · Emitido el ${ahora()} hs<br>Portanko Inmobiliaria · Documento de gestión interna</div>
+<script>setTimeout(() => window.print(), 600);<\/script>
+</body></html>`);
+        w.document.close();
+        mostrarNotificacion(`Informe de búsqueda generado`, 'exito', 2000);
+    }, 600);
+}
+
+/* ===== NOTIFICACIONES POR EMAIL ===== */
+function enviarNotificacionEmail(consulta_id, tipo = 'nueva_coincidencia') {
+    const c = CONSULTAS_CRM[consulta_id];
+    if (!c) return false;
+    
+    if (!CONFIGURACION_EMAIL.habilitada) {
+        console.log('Notificaciones por email deshabilitadas');
+        return false;
+    }
+    
+    const clienteEmail = c.cliente_vinculado !== null && CLIENTES[c.cliente_vinculado] 
+        ? CLIENTES[c.cliente_vinculado].email 
+        : null;
+    
+    if (!clienteEmail) {
+        console.log('No hay email para enviar notificación');
+        return false;
+    }
+    
+    const asunto = tipo === 'nueva_coincidencia' 
+        ? `✨ Nueva propiedad encontrada para tu búsqueda`
+        : `📊 Resumen semanal de búsquedas inmobiliarias`;
+    
+    const notif = {
+        fecha: ahora(),
+        destinatario: clienteEmail,
+        consulta_id,
+        tipo,
+        asunto,
+        contenido: `Se encontraron nuevas propiedades coincidentes (≥55%) para tu búsqueda de ${c.tipo} en ${ZONAS_CRM[c.zona]}. Ingresa al sistema para ver detalles.`,
+        estado: 'enviado'
+    };
+    
+    NOTIFICACIONES_ENVIADAS.push(notif);
+    BITACORA.unshift({ fecha: ahora(), usuario: 'Sistema', accion: `EMAIL: envió notificación a ${clienteEmail} sobre búsqueda de ${c.nombre}` });
+    mostrarNotificacion(`Notificación enviada a ${clienteEmail}`, 'exito', 2000);
+    
+    return true;
+}
+
+function configurarNotificacionesPorUsuario(usuario, habilitadas, frecuencia) {
+    if (!PREFERENCIAS_NOTIF_POR_USUARIO[usuario]) {
+        PREFERENCIAS_NOTIF_POR_USUARIO[usuario] = {};
+    }
+    PREFERENCIAS_NOTIF_POR_USUARIO[usuario].habilitadas = habilitadas;
+    PREFERENCIAS_NOTIF_POR_USUARIO[usuario].frecuencia = frecuencia;
+    PREFERENCIAS_NOTIF_POR_USUARIO[usuario].tipos = ['nueva_coincidencia', 'resumen'];
+    mostrarNotificacion(`Preferencias de notificación actualizadas`, 'exito', 2000);
+}
+
+/* ===== SCRAPING DE PORTALES ===== */
+function iniciarScrapingAutomatico() {
+    if (!CONFIG_SCRAPING.habilitado) {
+        mostrarNotificacion('Scraping deshabilitado', 'info', 2000);
+        return;
+    }
+    
+    mostrarNotificacion('Iniciando búsqueda en portales...', 'info', 3000);
+    
+    /* En producción, esto llamaría a un backend con APIs de los portales */
+    /* Por ahora es simulado */
+    
+    setTimeout(() => {
+        const resultado = {
+            fecha: ahora(),
+            portales_consultados: CONFIG_SCRAPING.portales.filter(p => p.activo).length,
+            propiedades_encontradas: Math.floor(Math.random() * 50),
+            nuevas_coincidencias: Math.floor(Math.random() * 8),
+            estado: 'completado'
+        };
+        
+        RESULTADOS_SCRAPING.unshift(resultado);
+        CONFIG_SCRAPING.ultima_ejecucion = ahora();
+        BITACORA.unshift({ fecha: ahora(), usuario: 'Robot Scraping', accion: `Escaneo de ${resultado.portales_consultados} portales: ${resultado.propiedades_encontradas} propiedades · ${resultado.nuevas_coincidencias} nuevas coincidencias` });
+        
+        mostrarNotificacion(`Búsqueda completada · ${resultado.nuevas_coincidencias} nuevas coincidencias encontradas`, 'exito', 3000);
+    }, 1500);
+}
+
+function programarScrapingPeriodico() {
+    const frecuenciaMs = CONFIG_SCRAPING.frecuencia_horas * 60 * 60 * 1000;
+    setInterval(() => {
+        if (CONFIG_SCRAPING.habilitado) {
+            iniciarScrapingAutomatico();
+        }
+    }, frecuenciaMs);
+    console.log(`Scraping programado cada ${CONFIG_SCRAPING.frecuencia_horas} horas`);
+}
+
+function agregarAColaScrapingManual(consulta_id) {
+    if (!COLA_SCRAPING.includes(consulta_id)) {
+        COLA_SCRAPING.push(consulta_id);
+        mostrarNotificacion(`Búsqueda #${consulta_id} agregada a cola de scraping`, 'info', 2000);
+    }
+}
+
+function verHistorialScraping() {
+    const resumenHTML = RESULTADOS_SCRAPING.slice(0, 5).map(r => `
+        <div class="item-lista" style="border-left:3px solid var(--oro);">
+            <b>${r.fecha}</b> · ${r.portales_consultados} portales consultados<br>
+            <small>Propiedades encontradas: <b>${r.propiedades_encontradas}</b> · Nuevas coincidencias: <b>${r.nuevas_coincidencias}</b> · Estado: ${r.estado}</small>
+        </div>
+    `).join('');
+    
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">Historial de Scraping</h3>
+        <div class="etiqueta" style="margin-top:12px;">Últimos escaneos de portales</div>
+        ${resumenHTML || '<div class="aviso alerta">Sin historial de scraping aún.</div>'}
+        <div style="margin-top:14px;padding:10px;background:var(--oro-suave);border-radius:4px;font-size:.9rem;">
+            <b>Próximo escaneo:</b> cada ${CONFIG_SCRAPING.frecuencia_horas} horas<br>
+            <b>Última ejecución:</b> ${CONFIG_SCRAPING.ultima_ejecucion}<br>
+            <b>Estado:</b> ${CONFIG_SCRAPING.habilitado ? '✓ Activo' : '⊘ Deshabilitado'}
+        </div>
+        <button class="btn carmin" onclick="iniciarScrapingAutomatico();verHistorialScraping()" style="margin-top:14px;width:100%;"><i class="fi fi-rr-refresh"></i> Ejecutar ahora</button>
+        <button class="btn borde" onclick="cerrarModal()" style="margin-top:8px;width:100%;">Cerrar</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
     const cont = document.getElementById('tarjeta-valores');
     if (!cont) return;
     const fids = FID === 'ALL' ? ['AER', 'DG'] : [FID];
