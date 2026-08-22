@@ -767,7 +767,7 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
 
 </style>
 </head>
-<body onload="iniciarSplash()">
+<body>
 <!-- PANTALLA DE CARGA ULTRA · núcleo Portanko -->
 <div id="splash">
     <div class="sp-aurora"></div>
@@ -2888,39 +2888,6 @@ function cargarYTApi() {
     s.id = 'yt-api'; s.src = 'https://www.youtube.com/iframe_api';
     document.head.appendChild(s);
 }
-
-/* Pantalla de carga: en PC, tablet y celular por igual - YA NO SE NECESITA (movido a iniciarSplash()) */
-/* window.addEventListener('load', () => {
-    /* Contador de porcentaje sincronizado con la barra (1,9 s) */
-    const pctEl = document.getElementById('splash-pct');
-    const t0 = performance.now();
-    const easeOut = x => 1 - Math.pow(1 - x, 2.2);
-    (function tick() {
-        const x = Math.min(1, (performance.now() - t0) / 4200);
-        if (pctEl) pctEl.innerText = Math.round(easeOut(x) * 100) + '%';
-        if (x < 1) requestAnimationFrame(tick);
-    })();
-    /* Consola de arranque */
-    const lineas = [
-        ['[ <span class="ok">OK</span> ] Núcleo Portanko iniciado', 250],
-        ['[ <span class="ok">OK</span> ] Mapa catastral · 2 loteos · 70 mensuras oficiales', 1000],
-        ['[ <span class="ok">OK</span> ] Fideicomisos · clientes · cobranzas · tesorería', 1800],
-        ['[ <span class="oro">SYNC</span> ] Portales inmobiliarios · motor de coincidencias', 2600],
-        ['[ <span class="ok">OK</span> ] Academia · Estudio Jurídico · notificaciones', 3400],
-        ['[ <span class="ok">OK</span> ] <span class="ok">ACCESO CONCEDIDO</span> <span class="sp-cursor"></span>', 4300]
-    ];
-    const cons = document.getElementById('sp-consola');
-    lineas.forEach(([txt, t]) => setTimeout(() => {
-        if (!cons) return;
-        cons.querySelectorAll('.sp-cursor').forEach(c => c.remove());
-        cons.innerHTML += `<div class="lin">${txt}</div>`;
-    }, t));
-    /* Salida en warp */
-    setTimeout(() => {
-        const s = document.getElementById('splash');
-        if (s) { s.classList.add('fuera'); setTimeout(() => s.remove(), 850); }
-    }, 5000);
-}); */
 
 window.onYouTubeIframeAPIReady = () => { ytApiLista = true; if (cursoAbierto !== null) montarPlayer(); };
 
@@ -5633,6 +5600,17 @@ function filtrarClientesBusca() {
             <small>${c.estado === 'PAGADO' ? '✓ Pagado' : 'En financiación'} · Deuda ${usd(Math.max(0, c.valor - c.pagado))}</small>
         </div>`;
     }).join('');
+}
+</script>
+
+<!-- Ejecutar splash screen inmediatamente al cargar el documento -->
+<script>
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof iniciarSplash === 'function') iniciarSplash();
+    });
+} else {
+    if (typeof iniciarSplash === 'function') iniciarSplash();
 }
 </script>
 </body>
