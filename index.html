@@ -522,6 +522,23 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
 .prop-url{font-size:.7rem;margin-top:4px;display:inline-flex;align-items:center;gap:4px;color:var(--carmin);font-weight:600;text-decoration:none;}
 .prop-url:hover{text-decoration:underline;}
 
+
+/* ===== Capacitaciones: video con preguntas superpuestas ===== */
+.curso-player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;}
+.curso-player iframe{width:100%;height:100%;border:none;}
+.quiz-overlay{position:absolute;inset:0;background:rgba(18,22,28,.94);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:5;}
+.quiz-caja{background:#fff;border-radius:16px;padding:20px;max-width:440px;width:100%;max-height:92%;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.quiz-op{display:block;width:100%;text-align:left;border:2px solid var(--linea);background:#fff;border-radius:12px;padding:13px 15px;margin-top:8px;font-family:'Inter';font-size:.9rem;font-weight:500;cursor:pointer;transition:all .12s;}
+.quiz-op:hover{border-color:var(--carmin);background:var(--carmin-suave);}
+.quiz-op.bien{border-color:var(--ok);background:var(--ok-suave);font-weight:700;}
+.quiz-op.mal{border-color:var(--carmin);background:var(--carmin-suave);opacity:.7;}
+.curso-check{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;border-radius:999px;padding:5px 12px;}
+.curso-check.visto{background:var(--ok-suave);color:var(--ok);}
+.curso-check.pend{background:#F2F3F5;color:var(--piedra);}
+.tabla-capa{width:100%;font-size:.78rem;border-collapse:collapse;}
+.tabla-capa th{text-align:left;padding:8px 6px;border-bottom:2px solid var(--tinta);font-size:.66rem;letter-spacing:1px;text-transform:uppercase;}
+.tabla-capa td{padding:8px 6px;border-bottom:1px solid var(--linea);}
+
 </style>
 </head>
 <body>
@@ -775,6 +792,10 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
         <div class="tarjeta">
             <div class="etiqueta"><i class="fi fi-rr-user-add"></i> Nueva consulta de búsqueda</div>
             <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;margin-bottom:4px;">Cargá lo que busca la persona: el sistema rastrea los portales (Zonaprop, MercadoLibre, Argenprop) para Neuquén y Río Negro y te muestra las propiedades <b>acá adentro</b> — con foto, precio, ubicación y el <b>% de coincidencia</b> con la búsqueda (solo del 55% para arriba). Los filtros de abajo son <b>los mismos parámetros que usan los portales</b>: son exactamente lo que el robot de rastreo usará para buscar. Demo con cartera de ejemplo.</p>
+            <div class="prop-chips" style="margin-bottom:8px;">
+                <span class="prop-chip" style="background:var(--carmin-suave);color:var(--carmin);">🤖 El robot rastrea:</span>
+                <span class="prop-chip">Zonaprop</span><span class="prop-chip">Argenprop</span><span class="prop-chip">MercadoLibre</span><span class="prop-chip">Properati</span><span class="prop-chip">InfoCasas</span><span class="prop-chip">Inmobiliarias de Neuquén (web propia)</span><span class="prop-chip">Inmobiliarias de Río Negro</span>
+            </div>
             <div class="fila-2">
                 <div><label class="form-lbl">Nombre y apellido</label><input class="form-inp" id="crm-nombre" placeholder="Ej: Sosa Marina"></div>
                 <div><label class="form-lbl">Teléfono</label><input class="form-inp" id="crm-tel" inputmode="tel" placeholder="299 ..."></div>
@@ -810,7 +831,15 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
             </div>
             <label class="form-lbl">Otros detalles (texto libre)</label>
             <input class="form-inp" id="crm-detalle" placeholder="Ej: planta baja, cerca de escuelas, apto profesional">
-            <button class="btn carmin" onclick="guardarConsultaCRM()"><i class="fi fi-rr-search"></i> Registrar y buscar coincidencias ahora</button>
+            <button class="btn carmin" onclick="guardarConsultaCRM()"><i class="fi fi-rr-search"></i> Registrar cliente y buscar coincidencias</button>
+            <button class="btn tinta" onclick="busquedaPrivada()"><i class="fi fi-rr-incognito"></i> Búsqueda privada · sin cargar cliente</button>
+        </div>
+        <div class="tarjeta" id="privada-caja" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <div class="etiqueta" style="margin:0;"><i class="fi fi-rr-incognito"></i> Búsqueda privada · no queda registrada como cliente</div>
+                <button class="btn-mini rojo" style="margin:0;" onclick="document.getElementById('privada-caja').style.display='none'"><i class="fi fi-rr-cross-small"></i> Limpiar</button>
+            </div>
+            <div id="privada-resultados"></div>
         </div>
         <input class="form-inp" id="buscar-crm" placeholder="Buscar consulta por nombre o teléfono..." oninput="renderCRM()">
         <div id="lista-crm" style="margin-top:10px;"></div>
@@ -834,6 +863,33 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
             </div>
             <div id="tas-resultado"></div>
             <button class="btn carmin" onclick="pdfTasacion()"><i class="fi fi-rr-document"></i> Descargar presupuesto de tasación (PDF)</button>
+        </div>
+    </div>
+
+    <div class="vista" id="vista-capa">
+        <div class="encabezado-seccion"><i class="fi fi-rr-graduation-cap"></i><h2>Capacitaciones</h2><div class="filete"></div></div>
+        <div id="capa-mi-progreso"></div>
+        <div id="lista-cursos"></div>
+        <div class="tarjeta" id="capa-admin-alta">
+            <div class="etiqueta"><i class="fi fi-rr-add-document"></i> Agregar curso desde YouTube · solo administradores</div>
+            <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;">Pegá el enlace de cualquier video de YouTube (cursos que encuentren por ahí). En la versión real, la <b>IA lee la transcripción del video y genera las preguntas sola</b>; acá cargás una de muestra.</p>
+            <label class="form-lbl">URL de YouTube</label>
+            <input class="form-inp" id="curso-url" placeholder="https://www.youtube.com/watch?v=...">
+            <label class="form-lbl">Título del curso</label>
+            <input class="form-inp" id="curso-titulo" placeholder="Ej: Atención al cliente inmobiliario">
+            <div class="fila-2">
+                <div><label class="form-lbl">Pregunta en el minuto</label><input class="form-inp" id="curso-min" type="number" min="0" placeholder="Ej: 2"></div>
+                <div><label class="form-lbl">Respuesta correcta (opción)</label><select class="form-inp" id="curso-correcta"><option value="0">La 1era</option><option value="1">La 2da</option><option value="2">La 3era</option></select></div>
+            </div>
+            <label class="form-lbl">Pregunta</label>
+            <input class="form-inp" id="curso-preg" placeholder="¿Qué se explicó hasta acá?">
+            <label class="form-lbl">Opciones (3, separadas por ;)</label>
+            <input class="form-inp" id="curso-ops" placeholder="Opción A; Opción B; Opción C">
+            <button class="btn tinta" onclick="agregarCurso()"><i class="fi fi-rr-add-document"></i> Agregar curso</button>
+        </div>
+        <div class="tarjeta" id="capa-admin-control">
+            <div class="etiqueta"><i class="fi fi-rr-stats"></i> Control de capacitaciones por usuario · solo administradores</div>
+            <div id="capa-tabla"></div>
         </div>
     </div>
 
@@ -1038,6 +1094,21 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
 </div>
 
 <div class="panel-notifs" id="panel-notifs"></div>
+
+<!-- POPUP FORMULARIO INSTITUCIONAL -->
+<div class="modal-fondo" id="popup-form" style="z-index:8550;" onclick="if(event.target===this)document.getElementById('pf-no').click()">
+    <div class="modal-envoltura" style="max-width:410px;">
+        <button class="modal-x" onclick="document.getElementById('pf-no').click()" title="Cerrar" aria-label="Cerrar">✕</button>
+        <div class="modal-caja">
+            <h3 class="serif" id="pf-titulo" style="margin-bottom:2px;">Editar</h3>
+            <div id="pf-sub" style="font-size:.76rem;color:var(--piedra);margin-bottom:6px;"></div>
+            <div id="pf-campos"></div>
+            <button class="btn carmin" id="pf-ok">Guardar</button>
+            <button class="btn borde" id="pf-no">Cancelar</button>
+        </div>
+    </div>
+</div>
+
 <!-- MODAL RECIBO / INFORME -->
 <div class="modal-fondo" id="modal-doc" onclick="if(event.target===this)cerrarModal()">
     <div class="modal-envoltura">
@@ -1329,11 +1400,11 @@ function cerrarSesion() {
 }
 
 const VISTAS_ROL = {
-    duenio: ['inicio', 'lotes', 'clientes', 'cobrar', 'tesoreria', 'novedades', 'docs', 'informes'],
-    personal: ['inicio', 'lotes', 'clientes', 'cobrar', 'novedades', 'docs']
+    duenio: ['inicio', 'lotes', 'clientes', 'cobrar', 'tesoreria', 'novedades', 'docs', 'informes', 'capa'],
+    personal: ['inicio', 'lotes', 'clientes', 'cobrar', 'novedades', 'docs', 'capa']
 };
 const VISTAS_JUR = ['jinicio', 'casos', 'jcobrar', 'jgastos', 'jbitacora'];
-const VISTAS_AGE = ['ainicio', 'crm', 'atasaciones'];
+const VISTAS_AGE = ['ainicio', 'crm', 'atasaciones', 'capa'];
 const AREAS_INFO = {
     inm: { nombre: 'Fideicomisos', icono: '🏛', desc: 'Aeroparque · Don Guarino · lotes, clientes y cobranzas' },
     age: { nombre: 'Inmobiliaria', icono: '🏢', desc: 'Atención al público · búsquedas en portales · tasaciones' },
@@ -1342,7 +1413,7 @@ const AREAS_INFO = {
 const NAV_DEF = {
     inicio: ['fi-rr-bank', 'Inicio'], lotes: ['fi-rr-map', 'Lotes'], clientes: ['fi-rr-users-alt', 'Clientes'],
     cobrar: ['fi-rr-hand-holding-usd', 'Cobrar'], tesoreria: ['fi-rr-safe-box', 'Caja'],
-    ainicio: ['fi-rr-building', 'Panel'], crm: ['fi-rr-search', 'Búsquedas'], atasaciones: ['fi-rr-diploma', 'Tasaciones'],
+    ainicio: ['fi-rr-building', 'Panel'], capa: ['fi-rr-graduation-cap', 'Cursos'], crm: ['fi-rr-search', 'Búsquedas'], atasaciones: ['fi-rr-diploma', 'Tasaciones'],
     novedades: ['fi-rr-book-open-cover', 'Libro'], docs: ['fi-rr-folder-open', 'Docs'], informes: ['fi-rr-document', 'Informes'],
     jinicio: ['fi-rr-scale', 'Estudio'], casos: ['fi-rr-briefcase', 'Casos'],
     jcobrar: ['fi-rr-hand-holding-usd', 'Cobrar'], jgastos: ['fi-rr-receipt', 'Gastos'], jbitacora: ['fi-rr-time-past', 'Bitácora']
@@ -1510,6 +1581,7 @@ const AYUDAS = {
     ainicio: { t: '¿Qué es el área Inmobiliaria?', c: `El mostrador de Portanko: acá se atiende al público que <b>no</b> es de los loteos. Dos herramientas: <b>Búsquedas</b> (cargar qué busca cada persona y rastrear los portales) y <b>Tasaciones</b> (presupuestar el servicio de tasar con PDF al instante).<br><br>💡 Con el botón <b>⇄ Áreas</b> de arriba te movés entre Fideicomisos, Inmobiliaria y Estudio (según tus permisos).` },
     atasaciones: { t: '¿Cómo cobro una tasación?', c: `Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad — aclaralo siempre al cliente). Base: coeficiente 1,00 = Terreno-Lote a $ por m² que fija la Dirección; cada tipo multiplica según su complejidad. Cargás tipo y m², sale el total y el <b>PDF con los fundamentos</b> para imprimir o mandar por WhatsApp.` },
     crm: { t: '¿Cómo funcionan las Búsquedas?', c: `Cargás qué busca la persona (alquiler o compra, tipo, zona, presupuesto, detalles como "2 dormitorios, mascotas") y el sistema te muestra las propiedades <b>acá adentro</b>: foto, precio, ubicación, características y una insignia con el <b>% de coincidencia</b> — verde 80%+, oro 65-79%, gris 55-64%. Lo que da menos de 55% ni aparece.<br><br>💡 Cuanto más completes los detalles, mejor puntúa el sistema. En la versión final, un robot revisa los portales cada pocas horas y suma publicaciones nuevas a estas tarjetas, avisándote por notificación.<br><br>📐 <b>Tasaciones:</b> calcula cuánto cuesta EL SERVICIO de tasar (no el valor de la propiedad — esto confunde, aclaralo siempre al cliente). Elegís el tipo, ponés los m², y sale el PDF con el presupuesto y los fundamentos para entregar en mano o por WhatsApp.` },
+    capa: { t: '¿Cómo funcionan las Capacitaciones?', c: `La academia interna de Portanko: cursos armados con <b>videos de YouTube</b> (los que encuentren por internet o graben ustedes).<br><br>▶️ Le das play y el video <b>se pausa solo</b> en los minutos marcados: aparece una tarjeta con una pregunta sobre lo que acabás de ver. Respondés bien → sigue solo. Mal → repasás y reintentás.<br><br>🎓 Al terminar con todas las preguntas respondidas, el curso queda <b>"✓ Visto"</b> a tu nombre, con fecha — y los administradores tienen el <b>tablero de control</b> de quién completó qué.<br><br>💡 En la versión real, la <b>IA lee la transcripción del video y genera las preguntas automáticamente</b> — pegás la URL y listo.` },
     tesoreria: { t: '¿Qué es la Caja?', c: `Las cuentas del fideicomiso (pesos y dólares) y sus movimientos. Cada ingreso o egreso queda registrado con quién lo cargó.<br><br>💡 Anular un movimiento no lo borra: queda asentado en la bitácora que se anuló, quién y cuándo. "El libro nunca miente".` },
     novedades: { t: '¿Qué es el Libro?', c: `El libro de novedades diarias: lo que pasó, quién vino, qué se acordó. Como el cuaderno de la oficina, pero que no se pierde y queda firmado por quien escribió cada cosa.` },
     docs: { t: '¿Cómo funcionan los Documentos?', c: `La biblioteca de documentos del fideicomiso. Para descargar cualquiera, el sistema pide el <b>motivo</b> — no es desconfianza: es que cada descarga queda registrada (quién, cuándo, para qué). Eso protege a todos.` },
@@ -1583,6 +1655,41 @@ function mostrarPush(texto) {
 
 /* El motivo de emisión: obligatorio para todo informe o descarga.
    Queda registrado junto al usuario logueado que lo solicita. */
+
+/* ===== FORMULARIO INSTITUCIONAL =====
+   Reemplaza a los carteles del navegador: campos con el diseño de la
+   casa, la X y el clic afuera cancelan. Devuelve los valores o null. */
+function pedirFormulario(op) {
+    return new Promise(res => {
+        document.getElementById('pf-titulo').innerText = op.titulo || 'Editar';
+        document.getElementById('pf-sub').innerHTML = op.sub || '';
+        const cont = document.getElementById('pf-campos');
+        cont.innerHTML = op.campos.map(c => {
+            if (c.tipo === 'select') return `<label class="form-lbl">${c.label}</label>
+                <select class="form-inp" id="pf-${c.id}">${c.opciones.map(o => `<option${o === c.valor ? ' selected' : ''}>${o}</option>`).join('')}</select>`;
+            if (c.tipo === 'textarea') return `<label class="form-lbl">${c.label}</label>
+                <textarea class="form-inp" id="pf-${c.id}" rows="2" placeholder="${c.placeholder || ''}">${c.valor || ''}</textarea>`;
+            return `<label class="form-lbl">${c.label}</label>
+                <input class="form-inp" id="pf-${c.id}" ${c.tipo === 'numero' ? 'inputmode="decimal"' : ''} value="${c.valor != null ? String(c.valor).replace(/"/g, '&quot;') : ''}" placeholder="${c.placeholder || ''}">`;
+        }).join('');
+        const f = document.getElementById('popup-form');
+        f.style.display = 'flex';
+        setTimeout(() => { const p = cont.querySelector('input,select,textarea'); if (p) p.focus(); }, 90);
+        const ok = document.getElementById('pf-ok'), no = document.getElementById('pf-no');
+        ok.onclick = () => {
+            const r = {};
+            op.campos.forEach(c => {
+                let v = document.getElementById('pf-' + c.id).value;
+                if (c.tipo === 'numero') v = parseFloat(String(v).replace(/\./g, '').replace(',', '.')) || 0;
+                else v = String(v).trim();
+                r[c.id] = v;
+            });
+            f.style.display = 'none'; res(r);
+        };
+        no.onclick = () => { f.style.display = 'none'; res(null); };
+    });
+}
+
 async function pedirMotivo(queCosa) {
     const ok = await pedirConfirmacion({
         titulo: 'Motivo de la emisión',
@@ -1600,7 +1707,7 @@ let chartCobranza = null, chartEstados = null;
 function renderTodo() {
     if (AREA === 'jur') { renderJur(); return; }
     renderInicio(); renderPlanos(); renderClientes(); renderMovimientos();
-    renderNovedades(); renderDocs(); renderBitacora(); renderCuentas(); renderVendedores(); renderPanelPrecios(); renderActas(); renderCRM(); renderPanelAge(); poblarTasaciones(); poblarSelects();
+    renderNovedades(); renderDocs(); renderBitacora(); renderCuentas(); renderVendedores(); renderPanelPrecios(); renderActas(); renderCRM(); renderPanelAge(); renderCursos(); poblarTasaciones(); poblarSelects();
 }
 
 function renderInicio() {
@@ -1932,15 +2039,36 @@ const PROPIEDADES = [
     { t: 'departamentos', op: 'alquiler', ti: 'Depto 1 dorm. con patio, Plottier', zona: 'plottier', ubi: 'Plottier, cerca del centro', precio: '$ 390.000/mes', pnum: 390000, dorm: 1, m2: 50, extra: ['1 dormitorio', 'Patio', 'Apto mascotas'], portal: 'Zonaprop', img: 'https://picsum.photos/seed/plo3/400/260' },
     { t: 'casas', op: 'venta', ti: 'Casa 4 dorm. amplia, General Roca', zona: 'general-roca', ubi: 'General Roca, RN', precio: 'USD 168.000', pnum: 168000, dorm: 4, m2: 180, extra: ['4 dormitorios', 'Pileta', 'Lote 600 m²'], portal: 'Argenprop', img: 'https://picsum.photos/seed/roc2/400/260' },
     { t: 'departamentos', op: 'venta', ti: 'Monoambiente inversión, renta activa', zona: 'neuquen', ubi: 'Centro Este, Neuquén', precio: 'USD 62.000', pnum: 62000, dorm: 0, m2: 34, extra: ['Monoambiente', 'Alquilado'], portal: 'MercadoLibre', img: 'https://picsum.photos/seed/nqn7/400/260' },
-    { t: 'casas', op: 'alquiler', ti: 'Casa chica 2 dorm., Centenario', zona: 'centenario', ubi: 'Centenario centro', precio: '$ 470.000/mes', pnum: 470000, dorm: 2, m2: 75, extra: ['2 dormitorios', 'Patio', 'Reciclada'], portal: 'Argenprop', img: 'https://picsum.photos/seed/cen2/400/260' }
+    { t: 'casas', op: 'alquiler', ti: 'Casa chica 2 dorm., Centenario', zona: 'centenario', ubi: 'Centenario centro', precio: '$ 470.000/mes', pnum: 470000, dorm: 2, m2: 75, extra: ['2 dormitorios', 'Patio', 'Reciclada'], portal: 'Argenprop', img: 'https://picsum.photos/seed/cen2/400/260' },
+    { t: 'departamentos', op: 'alquiler', ti: 'Depto 2 dorm. con balcón, publica inmobiliaria local', zona: 'neuquen', ubi: 'B° Área Centro Este, Neuquén', precio: '$ 510.000/mes', pnum: 510000, dorm: 2, m2: 64, extra: ['2 dormitorios', 'Balcón', 'Cochera'], portal: 'Inmobiliaria local · web propia', img: 'https://picsum.photos/seed/nqn8/400/260' },
+    { t: 'casas', op: 'venta', ti: 'Casa 3 dorm. B° Islas Malvinas', zona: 'neuquen', ubi: 'Neuquén oeste', precio: 'USD 128.000', pnum: 128000, dorm: 3, m2: 130, extra: ['3 dormitorios', 'Quincho', 'Cochera'], portal: 'Properati', img: 'https://picsum.photos/seed/nqn9/400/260' },
+    { t: 'terrenos', op: 'venta', ti: 'Lote 500 m² en Villa Regina', zona: 'rio-negro', ubi: 'Villa Regina, RN', precio: 'USD 29.000', pnum: 29000, dorm: 0, m2: 500, extra: ['500 m²', 'Zona en crecimiento'], portal: 'Inmobiliaria local · web propia', img: 'https://picsum.photos/seed/reg1/400/260' },
+    { t: 'departamentos', op: 'venta', ti: 'Depto 1 dorm. céntrico, Cipolletti', zona: 'cipolletti', ubi: 'Cipolletti centro, RN', precio: 'USD 72.000', pnum: 72000, dorm: 1, m2: 48, extra: ['1 dormitorio', 'Balcón'], portal: 'InfoCasas', img: 'https://picsum.photos/seed/cip3/400/260' }
 ];
+/* Cobertura del robot: todos los portales + las webs propias de las
+   inmobiliarias de Neuquén y Río Negro (rastreo de sus catálogos) */
+const FUENTES_ROBOT = ['Zonaprop', 'Argenprop', 'MercadoLibre Inmuebles', 'Properati', 'InfoCasas', 'Sitios web de inmobiliarias de Neuquén (capital e interior)', 'Sitios web de inmobiliarias de Río Negro'];
 function urlDeProp(p) {
-    /* En la demo, el enlace lleva a la sección real del portal para esa
-       zona y tipo; con el robot real, será el aviso puntual publicado. */
+    /* Si el robot ya capturó la URL exacta del aviso, manda esa.
+       En la demo (propiedades de ejemplo, sin página real propia), el
+       enlace arma la búsqueda PROFUNDA con los filtros exactos de esta
+       propiedad: tipo + operación + zona + dormitorios + precio. */
+    if (p.url) return p.url; /* ← el robot real llena este campo con el aviso puntual */
     const zona = p.zona === 'rio-negro' ? 'rio-negro' : p.zona;
-    if (p.portal === 'Zonaprop') return `https://www.zonaprop.com.ar/${p.t}-${p.op}-${zona}.html`;
-    if (p.portal === 'MercadoLibre') return `https://inmuebles.mercadolibre.com.ar/${p.t}/${p.op}/${zona}/`;
-    return `https://www.argenprop.com/${p.t}/${p.op}/${zona}`;
+    const esAlq = p.op !== 'venta';
+    if (p.portal === 'Zonaprop') {
+        let u = `https://www.zonaprop.com.ar/${p.t}-${p.op}-${zona}`;
+        if (p.dorm > 0) u += `-${p.dorm}-habitaciones`;
+        if (esAlq && p.pnum) u += `-menos-${Math.ceil(p.pnum / 50000) * 50000}-pesos`;
+        return u + '.html';
+    }
+    if (p.portal === 'MercadoLibre') return `https://inmuebles.mercadolibre.com.ar/${p.t}/${esAlq ? 'alquiler' : 'venta'}/${p.dorm > 0 ? p.dorm + '-dormitorios/' : ''}${zona}/`;
+    if (p.portal === 'Properati') return `https://www.properati.com.ar/s/${zona}/${p.t.slice(0, -1)}/${p.op}`;
+    if (p.portal === 'InfoCasas') return `https://www.infocasas.com.ar/${esAlq ? 'alquiler' : 'venta'}/${p.t}/neuquen`;
+    if (p.portal.includes('local')) return '';
+    let u = `https://www.argenprop.com/${p.t}/${p.op}/${zona}`;
+    if (p.dorm > 0) u += `?dormitorios=${p.dorm}`;
+    return u;
 }
 const ZONAS_VECINAS = { neuquen: ['plottier', 'centenario', 'cipolletti'], plottier: ['neuquen', 'centenario'], centenario: ['neuquen', 'plottier'], cipolletti: ['neuquen', 'general-roca', 'rio-negro'], 'general-roca': ['cipolletti', 'rio-negro'], 'rio-negro': ['cipolletti', 'general-roca'] };
 
@@ -2014,7 +2142,8 @@ function otrosClientesPara(pi, ciExcluir) {
 }
 function tarjetaProp(x, ci) {
     const clase = x.score >= 80 ? 'alto' : x.score >= 65 ? 'medio' : 'bajo';
-    const c = CONSULTAS_CRM[ci];
+    const privado = ci < 0;
+    const c = privado ? { nombre: 'el interesado', favs: [] } : CONSULTAS_CRM[ci];
     const esFav = (c.favs || []).includes(x.pi);
     const otros = otrosClientesPara(x.pi, ci).slice(0, 3);
     const porque = `
@@ -2036,10 +2165,12 @@ function tarjetaProp(x, ci) {
                 ${esFav ? `<span class="prop-tag fav">❤ Favorita de ${c.nombre.split(' ')[0]}</span>` : ''}
                 ${otros.map(o => `<span class="prop-tag">🏷 También ${o.c.nombre.split(' ')[0]} · ${o.score}%</span>`).join('')}
             </div>
-            <a class="prop-url" href="${urlDeProp(x.p)}" target="_blank" rel="noopener"><i class="fi fi-rr-link"></i> Ver la publicación en ${x.p.portal} ↗</a>
+            ${x.p.url ? `<a class="prop-url" href="${x.p.url}" target="_blank" rel="noopener"><i class="fi fi-rr-link"></i> Abrir el aviso publicado ↗</a>`
+            : urlDeProp(x.p) ? `<a class="prop-url" href="${urlDeProp(x.p)}" target="_blank" rel="noopener"><i class="fi fi-rr-link"></i> Ver este perfil en ${x.p.portal} (filtros aplicados) ↗</a><span class="prop-fuente">Demo: al ser una propiedad de ejemplo, el enlace abre el portal ya filtrado con este perfil exacto. El robot real trae el enlace del aviso puntual.</span>`
+            : `<span class="prop-fuente">🔗 Publicada en la web de la inmobiliaria — el enlace directo llega con el robot real</span>`}
         </div>
         <span class="prop-match ${clase}">${x.score}%</span>
-        <button class="fav-btn ${esFav ? 'activo' : ''}" onclick="toggleFav(${ci},${x.pi})" title="${esFav ? 'Quitar de favoritas' : 'Guardar como favorita para ' + c.nombre}">${esFav ? '❤' : '♡'}</button>
+        ${privado ? '' : `<button class="fav-btn ${esFav ? 'activo' : ''}" onclick="toggleFav(${ci},${x.pi})" title="${esFav ? 'Quitar de favoritas' : 'Guardar como favorita para ' + c.nombre}">${esFav ? '❤' : '♡'}</button>`}
     </div>`;
 }
 
@@ -2086,6 +2217,7 @@ async function guardarConsultaCRM() {
     /* compatibilidad con el motor: presupuesto tope */
     q.presu = q.pmax ? String(q.pmax) : '';
     q.coincidencias = coincidenciasDe(q);
+    q.abierta = false; /* plegada: se abre al tocar la tarjeta del cliente */
     CONSULTAS_CRM.unshift(q);
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CRM: cargó consulta de ${nombre} (${q.op} de ${q.tipo} en ${ZONAS_CRM[q.zona]}) · ${q.coincidencias.length} coincidencias ≥55%` });
     notificar(`🔎 ${q.coincidencias.length} propiedades coinciden (≥55%) para ${nombre}`, `La mejor: ${q.coincidencias.length ? q.coincidencias[0].score + '% — ' + q.coincidencias[0].p.ti : '—'}`);
@@ -2107,6 +2239,168 @@ async function guardarConsultaCRM() {
     document.getElementById('crm-dorm').value = ''; document.getElementById('crm-banos').value = '';
     renderCRM();
 }
+
+/* ===== CAPACITACIONES =====
+   Cursos desde YouTube con preguntas superpuestas: el video se pausa
+   solo en el minuto marcado, aparece la tarjeta de preguntas, y al
+   responder bien continúa. Al terminar, "curso visto" queda registrado
+   por usuario. En la versión real, la IA genera las preguntas leyendo
+   la transcripción del video automáticamente. */
+let CURSOS = [
+    { yt: 'jNQXAC9IVRw', titulo: 'Demo · Cómo funcionan las preguntas en el video', desc: 'Curso corto de prueba: mirá cómo el video se pausa solo y aparece la pregunta.',
+      checkpoints: [{ seg: 5, preg: '¿Qué hace el sistema cuando el video llega al minuto marcado?', ops: ['Pausa el video y muestra la pregunta', 'Cierra el curso', 'Salta al final'], ok: 0 }] },
+    { yt: 'Ks-_Mh1QhMc', titulo: 'Oratoria y atención al cliente (ejemplo de curso de internet)', desc: 'Ejemplo de curso externo de YouTube incorporado a la academia de Portanko.',
+      checkpoints: [
+        { seg: 120, preg: '¿Cuál es la actitud correcta al recibir a un cliente?', ops: ['Atenderlo con predisposición y escucha activa', 'Esperar a que hable solo', 'Derivarlo siempre'], ok: 0 },
+        { seg: 300, preg: 'Ante una objeción del cliente, conviene…', ops: ['Ignorarla', 'Escucharla y responder con información', 'Cambiar de tema'], ok: 1 }
+      ] }
+];
+let PROGRESO = {}; /* { usuario: { cursoIdx: { visto, fecha, aciertos } } } */
+let ytApiLista = false, ytPlayer = null, cursoAbierto = null, pollTimer = null;
+
+function cargarYTApi() {
+    if (window.YT && window.YT.Player) { ytApiLista = true; return; }
+    if (document.getElementById('yt-api')) return;
+    const s = document.createElement('script');
+    s.id = 'yt-api'; s.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(s);
+}
+window.onYouTubeIframeAPIReady = () => { ytApiLista = true; if (cursoAbierto !== null) montarPlayer(); };
+
+function miProgreso() { if (!PROGRESO[USUARIO]) PROGRESO[USUARIO] = {}; return PROGRESO[USUARIO]; }
+
+function renderCursos() {
+    const el = document.getElementById('lista-cursos');
+    if (!el) return;
+    const prog = miProgreso();
+    el.innerHTML = CURSOS.map((c, i) => {
+        const p = prog[i];
+        return `<div class="tarjeta">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <div><b>${c.titulo}</b><br><small style="color:var(--piedra);">${c.desc} · ${c.checkpoints.length} pregunta/s en el video</small></div>
+                <span class="curso-check ${p && p.visto ? 'visto' : 'pend'}">${p && p.visto ? '✓ Visto el ' + p.fecha : 'Pendiente'}</span>
+            </div>
+            <div id="curso-zona-${i}"></div>
+            <button class="btn ${p && p.visto ? 'borde' : 'carmin'}" onclick="abrirCurso(${i})"><i class="fi fi-rr-play"></i> ${p && p.visto ? 'Volver a ver' : 'Hacer el curso'}</button>
+        </div>`;
+    }).join('');
+    const mp = document.getElementById('capa-mi-progreso');
+    if (mp) {
+        const vistos = Object.values(prog).filter(x => x.visto).length;
+        mp.innerHTML = `<div class="aviso ${vistos === CURSOS.length ? 'ok' : 'alerta'}">🎓 <b>${USUARIO.split(' ')[0]}</b>: completaste <b>${vistos} de ${CURSOS.length}</b> capacitaciones.${vistos < CURSOS.length ? ' El video se pausa solo en cada pregunta: respondé y sigue.' : ' ¡Todas al día! ✓'}</div>`;
+    }
+    renderTablaCapa();
+    const alta = document.getElementById('capa-admin-alta'), ctrl = document.getElementById('capa-admin-control');
+    if (alta) alta.style.display = puede('admin') ? '' : 'none';
+    if (ctrl) ctrl.style.display = (puede('admin') || puede('informes')) ? '' : 'none';
+}
+
+function abrirCurso(i) {
+    /* Cierra el que estuviera abierto y monta el player en la tarjeta */
+    document.querySelectorAll('[id^="curso-zona-"]').forEach(z => z.innerHTML = '');
+    cursoAbierto = i;
+    CURSOS[i]._hechos = {};
+    const zona = document.getElementById('curso-zona-' + i);
+    zona.innerHTML = `<div class="curso-player" id="player-caja">
+        <div id="yt-player"></div>
+        <div class="quiz-overlay" id="quiz-overlay" style="display:none;"></div>
+    </div>`;
+    cargarYTApi();
+    if (ytApiLista) montarPlayer();
+}
+function montarPlayer() {
+    const c = CURSOS[cursoAbierto];
+    if (ytPlayer) { try { ytPlayer.destroy(); } catch (e) {} ytPlayer = null; }
+    clearInterval(pollTimer);
+    ytPlayer = new YT.Player('yt-player', {
+        videoId: c.yt, playerVars: { rel: 0, modestbranding: 1 },
+        events: { onStateChange: ev => {
+            if (ev.data === YT.PlayerState.PLAYING) iniciarPoll();
+            if (ev.data === YT.PlayerState.ENDED) terminarCurso();
+        } }
+    });
+}
+function iniciarPoll() {
+    clearInterval(pollTimer);
+    pollTimer = setInterval(() => {
+        if (!ytPlayer || cursoAbierto === null) return;
+        const t = ytPlayer.getCurrentTime();
+        const c = CURSOS[cursoAbierto];
+        c.checkpoints.forEach((ck, ki) => {
+            if (!c._hechos[ki] && t >= ck.seg) {
+                c._hechos[ki] = 'preguntando';
+                ytPlayer.pauseVideo();
+                mostrarQuiz(ki);
+            }
+        });
+    }, 700);
+}
+function mostrarQuiz(ki) {
+    const c = CURSOS[cursoAbierto], ck = c.checkpoints[ki];
+    const ov = document.getElementById('quiz-overlay');
+    ov.style.display = 'flex';
+    ov.innerHTML = `<div class="quiz-caja">
+        <div class="etiqueta"><i class="fi fi-rr-interrogation"></i> Pregunta ${ki + 1} de ${c.checkpoints.length} · el video sigue al responder bien</div>
+        <b style="font-size:1rem;line-height:1.5;">${ck.preg}</b>
+        <div id="quiz-ops">${ck.ops.map((o, oi) => `<button class="quiz-op" onclick="responderQuiz(${ki},${oi})">${o}</button>`).join('')}</div>
+        <div id="quiz-msg" style="margin-top:8px;font-size:.82rem;"></div>
+    </div>`;
+}
+function responderQuiz(ki, oi) {
+    const c = CURSOS[cursoAbierto], ck = c.checkpoints[ki];
+    const botones = document.querySelectorAll('#quiz-ops .quiz-op');
+    if (oi === ck.ok) {
+        botones[oi].classList.add('bien');
+        document.getElementById('quiz-msg').innerHTML = '<span style="color:var(--ok);font-weight:700;">✓ ¡Correcto! El video continúa…</span>';
+        c._hechos[ki] = true;
+        setTimeout(() => { document.getElementById('quiz-overlay').style.display = 'none'; ytPlayer.playVideo(); }, 900);
+    } else {
+        botones[oi].classList.add('mal');
+        document.getElementById('quiz-msg').innerHTML = '<span style="color:var(--carmin);font-weight:700;">✗ No es esa — repasá y probá de nuevo.</span>';
+    }
+}
+function terminarCurso() {
+    const c = CURSOS[cursoAbierto];
+    const pendientes = c.checkpoints.filter((ck, ki) => c._hechos[ki] !== true).length;
+    clearInterval(pollTimer);
+    const prog = miProgreso();
+    prog[cursoAbierto] = { visto: pendientes === 0, fecha: hoyISO(), aciertos: c.checkpoints.length - pendientes };
+    if (pendientes === 0) {
+        notificar(`🎓 ${USUARIO.split(' ')[0]} completó "${c.titulo}"`, `${c.checkpoints.length} pregunta/s respondidas · registrado en el control`, true);
+        BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CAPACITACIÓN completada: "${c.titulo}" (${c.checkpoints.length} preguntas OK)` });
+        mostrarPush('🎓 ¡Curso completado y registrado!');
+    }
+    renderCursos();
+}
+async function agregarCurso() {
+    if (!puede('admin')) return sinPermiso('agregar cursos (administración exclusiva de la Dirección)');
+    const url = document.getElementById('curso-url').value.trim();
+    const yt = (/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/.exec(url) || [])[1];
+    const titulo = document.getElementById('curso-titulo').value.trim();
+    if (!yt || !titulo) { mostrarPush('Pegá una URL de YouTube válida y el título.'); return; }
+    const minuto = parseFloat(document.getElementById('curso-min').value) || 1;
+    const ops = document.getElementById('curso-ops').value.split(';').map(x => x.trim()).filter(Boolean);
+    const preg = document.getElementById('curso-preg').value.trim();
+    const ok = await pedirConfirmacion({ titulo: 'Agregar curso', mensaje: `<b>${titulo}</b><br>Video de YouTube · pregunta en el minuto ${minuto}.<br><br>En la versión real, la IA genera un juego de preguntas completo leyendo la transcripción.`, boton: 'Agregar' });
+    if (!ok) return;
+    CURSOS.push({ yt, titulo, desc: 'Curso incorporado por ' + USUARIO.split(' ')[0], checkpoints: preg && ops.length >= 2 ? [{ seg: minuto * 60, preg, ops, ok: parseInt(document.getElementById('curso-correcta').value) }] : [] });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Agregó la capacitación "${titulo}" (YouTube)` });
+    notificar(`🎓 Nueva capacitación disponible: ${titulo}`, 'Ya aparece en Cursos para todo el equipo');
+    ['curso-url', 'curso-titulo', 'curso-min', 'curso-preg', 'curso-ops'].forEach(id => document.getElementById(id).value = '');
+    renderCursos();
+}
+function renderTablaCapa() {
+    const el = document.getElementById('capa-tabla');
+    if (!el) return;
+    const usuarios = Object.values(PERFILES).map(p => p.usuario);
+    el.innerHTML = `<div style="overflow-x:auto;"><table class="tabla-capa"><tr><th>Usuario</th>${CURSOS.map(c => `<th>${c.titulo.slice(0, 22)}…</th>`).join('')}</tr>` +
+        usuarios.map(u => `<tr><td><b>${u.split(' ')[0]}</b></td>${CURSOS.map((c, i) => {
+            const p = (PROGRESO[u] || {})[i];
+            return `<td>${p && p.visto ? '<span style="color:var(--ok);font-weight:700;">✓ ' + p.fecha + '</span>' : '<span style="color:var(--piedra);">—</span>'}</td>`;
+        }).join('')}</tr>`).join('') + '</table></div>' +
+        '<div style="font-size:.72rem;color:var(--piedra);margin-top:8px;">✓ = curso completado con todas las preguntas respondidas. Los administradores ven quién hizo qué y cuándo.</div>';
+}
+
 function renderPanelAge() {
     const k = document.getElementById('age-kpis');
     if (!k) return;
@@ -2124,6 +2418,27 @@ function renderPanelAge() {
     }
 }
 
+
+/* ===== BÚSQUEDA PRIVADA: mismos filtros, sin cargar cliente ===== */
+function busquedaPrivada() {
+    const chk = id => document.getElementById(id).checked;
+    const num = id => parseFloat((document.getElementById(id).value || '').replace(/[^0-9]/g, '')) || 0;
+    const q = { op: document.getElementById('crm-op').value, tipo: document.getElementById('crm-tipo').value,
+        zona: document.getElementById('crm-zona').value, barrio: document.getElementById('crm-barrio').value.trim(),
+        pmin: num('crm-pmin'), pmax: num('crm-pmax'),
+        dorm: document.getElementById('crm-dorm').value, banos: document.getElementById('crm-banos').value,
+        supmin: num('crm-supmin'),
+        checks: { cochera: chk('chk-cochera'), patio: chk('chk-patio'), mascota: chk('chk-mascota'), pileta: chk('chk-pileta'), estrenar: chk('chk-estrenar'), parrilla: chk('chk-parrilla'), balc: chk('chk-balcon') },
+        detalle: document.getElementById('crm-detalle').value.trim(), nombre: 'Búsqueda privada' };
+    const res = coincidenciasDe(q);
+    const caja = document.getElementById('privada-caja');
+    caja.style.display = '';
+    document.getElementById('privada-resultados').innerHTML =
+        `<div style="font-size:.8rem;color:var(--piedra);margin:6px 0;">${q.op} de ${q.tipo} en ${ZONAS_CRM[q.zona]} · <b>${res.length} resultado/s ≥55%</b> · las etiquetas 🏷 muestran a qué clientes cargados también les sirve cada propiedad.</div>` +
+        (res.length ? res.map(x => tarjetaProp(x, -1)).join('') : '<div class="aviso alerta">Nada con 55% o más para esos filtros. Ajustá y volvé a buscar.</div>');
+    caja.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function renderCRM() {
     const el = document.getElementById('lista-crm');
     if (!el) return;
@@ -2131,14 +2446,19 @@ function renderCRM() {
     const lista = CONSULTAS_CRM.filter(c => !q || `${c.nombre} ${c.tel}`.toLowerCase().includes(q));
     el.innerHTML = lista.map(c => {
         const i = CONSULTAS_CRM.indexOf(c);
-        const abierta = c.abierta !== false;
+        const abierta = c.abierta === true;
         return `<div class="tarjeta">
-        <b>${c.nombre}</b> ${c.tel ? '· 📞 ' + c.tel : ''}<br>
-        <small style="color:var(--piedra);">Busca: <b>${c.op}</b> de ${c.tipo} en <b>${ZONAS_CRM[c.zona]}</b>${c.barrio ? ' (' + c.barrio + ')' : ''}${c.pmax ? ' · $ ' + (c.pmin ? c.pmin.toLocaleString('es-AR') + ' a ' : 'hasta ') + c.pmax.toLocaleString('es-AR') : ''}${c.dorm !== '' && c.dorm !== undefined ? ' · ' + (c.dorm === '0' ? 'monoamb.' : c.dorm + ' dorm.') : ''}${c.banos ? ' · ' + c.banos + '+ baños' : ''}${c.supmin ? ' · ' + c.supmin + '+ m²' : ''}${c.checks ? Object.entries(c.checks).filter(([k, v]) => v).map(([k]) => ' · ' + (PALABRAS_CLAVE[k] || k)).join('') : ''}${c.detalle ? ' · ' + c.detalle : ''} · cargado ${c.fecha}</small>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-            <button class="btn-mini" style="border-color:var(--carmin);color:var(--carmin);" onclick="CONSULTAS_CRM[${i}].abierta=${abierta ? 'false' : 'true'};renderCRM()"><i class="fi fi-rr-${abierta ? 'eye-crossed' : 'eye'}"></i> ${abierta ? 'Ocultar' : 'Ver'} resultados (${c.coincidencias.length})</button>
-            <button class="btn-mini" onclick="rebuscarCRM(${i})"><i class="fi fi-rr-refresh"></i> Buscar de nuevo</button>
+        <div class="bitacora-toc" style="margin:-8px;padding:8px;" onclick="CONSULTAS_CRM[${i}].abierta=${abierta ? 'false' : 'true'};renderCRM()">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <b>${c.nombre}</b>
+            <span class="curso-check ${abierta ? 'visto' : 'pend'}" style="flex-shrink:0;">${abierta ? '▲ Cerrar' : '▼ Ver ' + c.coincidencias.length + ' resultados'}</span>
         </div>
+        ${c.tel ? '<small style="color:var(--piedra);">📞 ' + c.tel + '</small><br>' : ''}
+        <small style="color:var(--piedra);">Busca: <b>${c.op}</b> de ${c.tipo} en <b>${ZONAS_CRM[c.zona]}</b>${c.barrio ? ' (' + c.barrio + ')' : ''}${c.pmax ? ' · $ ' + (c.pmin ? c.pmin.toLocaleString('es-AR') + ' a ' : 'hasta ') + c.pmax.toLocaleString('es-AR') : ''}${c.dorm !== '' && c.dorm !== undefined ? ' · ' + (c.dorm === '0' ? 'monoamb.' : c.dorm + ' dorm.') : ''}${c.banos ? ' · ' + c.banos + '+ baños' : ''}${c.supmin ? ' · ' + c.supmin + '+ m²' : ''}${c.checks ? Object.entries(c.checks).filter(([k, v]) => v).map(([k]) => ' · ' + (PALABRAS_CLAVE[k] || k)).join('') : ''}${c.detalle ? ' · ' + c.detalle : ''} · cargado ${c.fecha}${(c.favs || []).length ? ' · ❤ ' + c.favs.length : ''}</small>
+        </div>
+        ${abierta ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+            <button class="btn-mini" onclick="rebuscarCRM(${i})"><i class="fi fi-rr-refresh"></i> Buscar de nuevo</button>
+        </div>` : ''}
         ${abierta ? `<div class="etiqueta" style="margin-top:12px;">${c.coincidencias.length} coincidencias del 55% para arriba${(c.favs || []).length ? ' · ❤ ' + c.favs.length + ' favorita/s' : ''} · dentro del sistema 🔄</div>
         ${c.coincidencias.length ? [...c.coincidencias].sort((a, b) => ((c.favs || []).includes(b.pi) ? 1 : 0) - ((c.favs || []).includes(a.pi) ? 1 : 0) || b.score - a.score).map(x => tarjetaProp(x, i)).join('') : '<div class="aviso alerta">Todavía nada con 55% o más para esta búsqueda. El robot sigue rastreando y avisa apenas aparezca.</div>'}` : ''}
     </div>`;
@@ -2473,15 +2793,18 @@ async function modificarReserva(fid, mza, nro) {
     if (!puede('modificar')) return sinPermiso('modificar reservas');
     const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
     const r = l.reserva || {};
-    const cliente = prompt('¿Quién reserva? (apellido y nombre):', r.cliente || ''); if (cliente === null) return;
-    const motivo = prompt('¿Por qué? (motivo de la reserva):', r.motivo || ''); if (motivo === null) return;
-    const nroV = prompt('Vendedor:\n' + VENDEDORES.map((v, i) => (i + 1) + '. ' + v).join('\n') + '\n(escribí el número)', String(Math.max(1, VENDEDORES.indexOf(r.vendedor) + 1)));
-    if (nroV === null) return;
-    const vendedor = VENDEDORES[parseInt(nroV) - 1] || r.vendedor || VENDEDORES[0];
-    const ok = await pedirConfirmacion({ titulo: 'Modificar reserva',
-        mensaje: `<b>Mza ${mza} Lote ${nro}</b> · ${FIDEICOMISOS[fid].nombre}<br>Reservado para: <b>${cliente || '—'}</b><br>Motivo: <b>${motivo || '—'}</b><br>Vendedor: <b>${vendedor}</b>`, boton: 'Guardar reserva' });
+    const f = await pedirFormulario({ titulo: 'Modificar reserva', sub: `Mza ${mza} Lote ${nro} · ${FIDEICOMISOS[fid].nombre}`,
+        campos: [
+            { id: 'cliente', label: '¿Quién reserva? (apellido y nombre)', valor: r.cliente || '' },
+            { id: 'motivo', label: 'Motivo de la reserva', valor: r.motivo || '', placeholder: 'Ej: seña verbal · espera transferencia' },
+            { id: 'vendedor', label: 'Vendedor', tipo: 'select', opciones: VENDEDORES, valor: r.vendedor || VENDEDORES[0] }
+        ] });
+    if (!f) return;
+    const ok = await pedirConfirmacion({ titulo: 'Confirmar reserva',
+        mensaje: `<b>Mza ${mza} Lote ${nro}</b> · ${FIDEICOMISOS[fid].nombre}<br>Reservado para: <b>${f.cliente || '—'}</b><br>Motivo: <b>${f.motivo || '—'}</b><br>Vendedor: <b>${f.vendedor}</b>`, boton: 'Guardar reserva' });
     if (!ok) return;
-    l.reserva = { cliente: cliente || 'Sin nombre', motivo: motivo || 'Sin motivo indicado', vendedor, fecha: r.fecha || hoyISO(), usuario: USUARIO };
+    l.reserva = { cliente: f.cliente || 'Sin nombre', motivo: f.motivo || 'Sin motivo indicado', vendedor: f.vendedor, fecha: r.fecha || hoyISO(), usuario: USUARIO };
+    const cliente = f.cliente, motivo = f.motivo, vendedor = f.vendedor;
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó la reserva de Mza ${mza} Lote ${nro}: ${cliente} · ${motivo} · vendedor ${vendedor}` });
     cerrarModal(); renderTodo();
 }
@@ -2810,14 +3133,23 @@ function renderClientes() {
 async function modificarCliente(idx) {
     if (!puede('modificar')) return sinPermiso('modificar clientes');
     const c = CLIENTES[idx];
-    const nombre = prompt('Nombre del cliente:', c.nombre); if (nombre === null) return;
-    const vCuota = parseFloat(prompt('Valor de la cuota (USD):', c.vCuota)); if (isNaN(vCuota)) return;
-    const ok = await pedirConfirmacion({ titulo: 'Modificar cliente',
-        mensaje: `Vas a guardar estos cambios:<br><br><b>${nombre}</b> · cuota <b>${usd(vCuota)}</b><br>Mza ${c.mza} Lote ${c.lote} · ${FIDEICOMISOS[c.fid].nombre}`, boton: 'Guardar cambios' });
+    const r = await pedirFormulario({ titulo: 'Modificar cliente', sub: `Mza ${c.mza} Lote ${c.lote} · ${FIDEICOMISOS[c.fid].nombre}`,
+        campos: [
+            { id: 'nombre', label: 'Apellido y nombre', valor: c.nombre },
+            { id: 'dni', label: 'DNI', valor: c.dni },
+            { id: 'valor', label: 'Valor del lote (USD)', tipo: 'numero', valor: c.valor },
+            { id: 'vCuota', label: 'Valor de la cuota (USD)', tipo: 'numero', valor: c.vCuota },
+            { id: 'vendedor', label: 'Vendedor', tipo: 'select', opciones: VENDEDORES, valor: c.vendedor },
+            { id: 'detalles', label: 'Detalles', tipo: 'textarea', valor: c.detalles || '' }
+        ] });
+    if (!r || !r.nombre) return;
+    const ok = await pedirConfirmacion({ titulo: 'Confirmar cambios',
+        mensaje: `<b>${r.nombre}</b> · DNI ${r.dni}<br>Valor <b>${usd(r.valor)}</b> · cuota <b>${usd(r.vCuota)}</b> · vendedor ${r.vendedor}`, boton: 'Guardar cambios' });
     if (!ok) return;
-    notificar(`✎ ${USUARIO} modificó un cliente`, 'Detalle en la bitácora', true);
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó al cliente ${c.nombre} → ${nombre} (cuota ${usd(vCuota)})` });
-    c.nombre = nombre; c.vCuota = vCuota;
+    notificar(`✎ ${USUARIO} modificó al cliente ${r.nombre}`, 'Detalle en la bitácora', true);
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó al cliente ${c.nombre} → ${r.nombre} (valor ${usd(r.valor)}, cuota ${usd(r.vCuota)}, vendedor ${r.vendedor})` });
+    c.nombre = r.nombre; c.dni = r.dni || c.dni; c.valor = r.valor; c.vCuota = r.vCuota; c.vendedor = r.vendedor; c.detalles = r.detalles;
+    if (c.pagado >= c.valor && c.valor > 0) c.estado = 'PAGADO'; else if (c.estado === 'PAGADO' && c.pagado < c.valor) c.estado = 'FINANCIA';
     renderTodo();
 }
 
@@ -3207,7 +3539,9 @@ function renderVendedores() {
 }
 async function nuevoVendedor() {
     if (!puede('admin')) return sinPermiso('dar de alta vendedores (administración exclusiva de la Dirección)');
-    const n = prompt('Nombre completo del vendedor:'); if (!n) return;
+    const f = await pedirFormulario({ titulo: 'Alta de vendedor', campos: [{ id: 'n', label: 'Nombre completo', placeholder: 'Ej: Juan Pérez' }] });
+    if (!f || !f.n) return;
+    const n = f.n;
     const ok = await pedirConfirmacion({ titulo: 'Alta de vendedor', mensaje: `Se agregará <b>${n}</b> al equipo de ventas. Aparecerá en todos los selectores de vendedor de la app.`, boton: 'Dar de alta' });
     if (!ok) return;
     VENDEDORES.push(n);
@@ -3216,7 +3550,9 @@ async function nuevoVendedor() {
 }
 async function modificarVendedor(i) {
     if (!puede('admin')) return sinPermiso('modificar vendedores (administración exclusiva de la Dirección)');
-    const n = prompt('Nombre del vendedor:', VENDEDORES[i]); if (!n) return;
+    const f = await pedirFormulario({ titulo: 'Modificar vendedor', campos: [{ id: 'n', label: 'Nombre completo', valor: VENDEDORES[i] }] });
+    if (!f || !f.n) return;
+    const n = f.n;
     const ok = await pedirConfirmacion({ titulo: 'Modificar vendedor', mensaje: `<b>${VENDEDORES[i]}</b> pasará a llamarse <b>${n}</b>.`, boton: 'Guardar' });
     if (!ok) return;
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó al vendedor ${VENDEDORES[i]} → ${n}` });
@@ -3476,28 +3812,35 @@ function verCaso(i) {
     document.getElementById('modal-doc').style.display = 'flex';
 }
 
-function agregarInterviniente(i) {
-    const nombre = prompt('Nombre del interviniente:');
-    if (!nombre) return;
-    const rolNum = prompt('Rol:\n' + ROLES_REPARTO.map((r, j) => (j + 1) + '. ' + r).join('\n') + '\n(escribí el número)', '1');
-    const rol = ROLES_REPARTO[parseInt(rolNum) - 1] || 'Otro';
-    const pct = parseFloat(prompt('Porcentaje del RESTO que le corresponde (%):') || '0');
-    if (!pct) return;
-    CASOS[i].intervinientes.push({ nombre, rol, pct, pagado: 0 });
-    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Agregó interviniente ${nombre} (${pct}%) en "${CASOS[i].caratula}"` });
+async function agregarInterviniente(i) {
+    const f = await pedirFormulario({ titulo: 'Agregar interviniente', sub: CASOS[i].caratula,
+        campos: [
+            { id: 'nombre', label: 'Nombre completo', placeholder: 'Ej: Dr. García' },
+            { id: 'rol', label: 'Rol en el caso', tipo: 'select', opciones: ROLES_REPARTO, valor: ROLES_REPARTO[0] },
+            { id: 'pct', label: '% del RESTO que le corresponde', tipo: 'numero', placeholder: 'Ej: 15' }
+        ] });
+    if (!f || !f.nombre || !f.pct) return;
+    CASOS[i].intervinientes.push({ nombre: f.nombre, rol: f.rol, pct: f.pct, pagado: 0 });
+    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Agregó interviniente ${f.nombre} (${f.pct}%) en "${CASOS[i].caratula}"` });
     verCaso(i); renderJur();
 }
 
-function editarPctEstudio(i) {
-    const v = parseFloat(prompt('¿Qué % de lo cobrado queda para el Estudio?', CASOS[i].pctEstudio || 0));
+async function editarPctEstudio(i) {
+    const f = await pedirFormulario({ titulo: '% del Estudio', sub: CASOS[i].caratula + ' · sale primero de lo cobrado',
+        campos: [{ id: 'v', label: '¿Qué % de lo cobrado queda para el Estudio?', tipo: 'numero', valor: CASOS[i].pctEstudio || 0 }] });
+    if (!f) return;
+    const v = f.v;
     if (isNaN(v) || v < 0 || v > 100) return;
     CASOS[i].pctEstudio = v;
     JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Ajustó % del Estudio a ${v}% en "${CASOS[i].caratula}"` });
     verCaso(i); renderJur();
 }
-function editarPct(ci, ii) {
+async function editarPct(ci, ii) {
     const x = CASOS[ci].intervinientes[ii];
-    const v = parseFloat(prompt(`% del resto para ${x.nombre}:`, x.pct));
+    const f = await pedirFormulario({ titulo: 'Reparto de ' + x.nombre, sub: 'Porcentaje sobre el RESTO (después del % del Estudio)',
+        campos: [{ id: 'v', label: '% del resto para ' + x.nombre, tipo: 'numero', valor: x.pct }] });
+    if (!f) return;
+    const v = f.v;
     if (isNaN(v) || v < 0 || v > 100) return;
     x.pct = v;
     JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Ajustó reparto de ${x.nombre} a ${v}% en "${CASOS[ci].caratula}"` });
@@ -3543,14 +3886,17 @@ function crearCaso() {
 
 async function modificarCaso(i) {
     const c = CASOS[i];
-    const caratula = prompt('Autos caratulados:', c.caratula); if (caratula === null) return;
-    const cliente = prompt('Cliente (apellido y nombre):', c.cliente || ''); if (cliente === null) return;
-    const dni = prompt('DNI del cliente:', c.dni || ''); if (dni === null) return;
-    const tel = prompt('Teléfono del cliente:', c.tel || ''); if (tel === null) return;
     const estados = ['En trámite', 'Ganado', 'Acordado', 'Perdido'];
-    const nro = prompt('Estado:\n' + estados.map((e, j) => (j + 1) + '. ' + e).join('\n') + '\n(escribí el número)', String(estados.indexOf(c.estado) + 1));
-    if (nro === null) return;
-    const estado = estados[parseInt(nro) - 1] || c.estado;
+    const f = await pedirFormulario({ titulo: 'Modificar caso', sub: c.caratula,
+        campos: [
+            { id: 'caratula', label: 'Autos caratulados', valor: c.caratula },
+            { id: 'cliente', label: 'Cliente (apellido y nombre)', valor: c.cliente || '' },
+            { id: 'dni', label: 'DNI del cliente', valor: c.dni || '' },
+            { id: 'tel', label: 'Teléfono', valor: c.tel || '' },
+            { id: 'estado', label: 'Estado del caso', tipo: 'select', opciones: estados, valor: c.estado }
+        ] });
+    if (!f || !f.caratula) return;
+    const caratula = f.caratula, cliente = f.cliente, dni = f.dni, tel = f.tel, estado = f.estado;
     const ok = await pedirConfirmacion({ titulo: 'Modificar caso',
         mensaje: `Vas a guardar:<br><br><b>${caratula}</b><br>Cliente: <b>${cliente || '—'}</b> · DNI ${dni || '—'} · 📞 ${tel || '—'}<br>Estado: <b>${estado}</b>`, boton: 'Guardar cambios' });
     if (!ok) return;
@@ -3702,13 +4048,13 @@ function renderAlertasGastos() {
     }
 }
 
-function nuevaCategoria() {
-    const c = prompt('Nombre de la nueva categoría:');
-    if (!c || CATSG.includes(c)) return;
-    CATSG.push(c);
+async function nuevaCategoria() {
+    const f = await pedirFormulario({ titulo: 'Nueva categoría de gasto', campos: [{ id: 'c', label: 'Nombre de la categoría', placeholder: 'Ej: Librería' }] });
+    if (!f || !f.c || CATSG.includes(f.c)) return;
+    CATSG.push(f.c);
     const sel = document.getElementById('g-cat');
     sel.innerHTML = CATSG.map(x => `<option>${x}</option>`).join('');
-    sel.value = c;
+    sel.value = f.c;
 }
 
 function crearItemGasto() {
@@ -3725,9 +4071,14 @@ function crearItemGasto() {
 
 async function modificarItemGasto(i) {
     const it = ITEMSG[i];
-    const monto = parseFloat((prompt('Monto habitual (ARS):', it.monto) || '').replace(/\./g, '')); if (isNaN(monto)) return;
-    const dia = prompt('Día de vencimiento (1-28, vacío si no tiene):', it.diaVenc || '');
-    if (dia === null) return;
+    const f = await pedirFormulario({ titulo: 'Modificar ítem de gasto', sub: it.nombre,
+        campos: [
+            { id: 'monto', label: 'Monto habitual (ARS)', tipo: 'numero', valor: it.monto },
+            { id: 'dia', label: 'Día de vencimiento (1-28, vacío si no tiene)', valor: it.diaVenc || '' }
+        ] });
+    if (!f) return;
+    const monto = f.monto, dia = f.dia;
+    if (isNaN(monto) || !monto) return;
     const ok = await pedirConfirmacion({ titulo: 'Modificar ítem',
         mensaje: `<b>${it.nombre}</b><br>Monto: <b>${ars(monto)}</b> · Vence el día <b>${dia || '—'}</b>`, boton: 'Guardar cambios' });
     if (!ok) return;
@@ -3749,9 +4100,10 @@ async function eliminarItemGasto(i) {
 
 async function pagarGasto(i) {
     const it = ITEMSG[i];
-    const medioNum = prompt(`Pagar "${it.nombre}" por ${ars(it.monto)}.\n\nMedio de pago:\n1. Transferencia bancaria\n2. Efectivo\n3. Mercado Pago\n(escribí el número)`, '1');
-    if (medioNum === null) return;
-    const medio = { '1': 'Transferencia bancaria', '2': 'Efectivo', '3': 'Mercado Pago' }[medioNum] || 'Transferencia bancaria';
+    const fm = await pedirFormulario({ titulo: 'Pagar ' + it.nombre, sub: 'Monto: ' + ars(it.monto),
+        campos: [{ id: 'medio', label: 'Medio de pago', tipo: 'select', opciones: ['Transferencia bancaria', 'Efectivo', 'Mercado Pago'], valor: 'Transferencia bancaria' }] });
+    if (!fm) return;
+    const medio = fm.medio;
     const ok = await pedirConfirmacion({ titulo: 'Registrar pago',
         mensaje: `¿Confirmás el pago de <b>${ars(it.monto)}</b> a <b>"${it.nombre}"</b> por <b>${medio}</b>?<br><br><small>En la versión real acá se adjunta la foto del comprobante; queda la constancia con fecha, medio y usuario.</small>`,
         boton: 'Confirmar pago' });
