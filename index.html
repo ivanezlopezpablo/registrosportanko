@@ -767,7 +767,7 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
 
 </style>
 </head>
-<body>
+<body onload="iniciarSplash()">
 <!-- PANTALLA DE CARGA ULTRA · núcleo Portanko -->
 <div id="splash">
     <div class="sp-aurora"></div>
@@ -861,7 +861,7 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
         <div class="splash-sub" id="carg-sub">Verificando acceso</div>
     </div>
     <div class="splash-barra-caja" style="position:relative;z-index:2;">
-        <div class="splash-barra"><i id="carg-fill" style="animation:none;transition:width .25s;"></i></div>
+        <div class="splash-barra"><div id="carg-fill" style="display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#F0D48B);box-shadow:0 0 12px rgba(201,162,75,.7);transition:width .25s;border-radius:99px;"></div></div>
         <span class="splash-pct" id="carg-pct">0%</span>
     </div>
     <div class="sp-consola" id="carg-consola" style="position:relative;z-index:2;"></div>
@@ -1708,6 +1708,40 @@ let ROL = 'duenio', USUARIO = 'Lucía', FID = 'AER', AREA = 'inm';
           o eliminar lo existente) · informes (solicitar y descargar,
           siempre con constancia de quién pidió) · admin (valores del
           m², vendedores) */
+
+/* Iniciar splash screen (debe ejecutarse al cargar) */
+function iniciarSplash() {
+    /* Contador de porcentaje sincronizado con la barra (1,9 s) */
+    const pctEl = document.getElementById('splash-pct');
+    const t0 = performance.now();
+    const easeOut = x => 1 - Math.pow(1 - x, 2.2);
+    (function tick() {
+        const x = Math.min(1, (performance.now() - t0) / 4200);
+        if (pctEl) pctEl.innerText = Math.round(easeOut(x) * 100) + '%';
+        if (x < 1) requestAnimationFrame(tick);
+    })();
+    /* Consola de arranque */
+    const lineas = [
+        ['[ <span class="ok">OK</span> ] Núcleo Portanko iniciado', 250],
+        ['[ <span class="ok">OK</span> ] Mapa catastral · 2 loteos · 70 mensuras oficiales', 1000],
+        ['[ <span class="ok">OK</span> ] Fideicomisos · clientes · cobranzas · tesorería', 1800],
+        ['[ <span class="oro">SYNC</span> ] Portales inmobiliarios · motor de coincidencias', 2600],
+        ['[ <span class="ok">OK</span> ] Academia · Estudio Jurídico · notificaciones', 3400],
+        ['[ <span class="ok">OK</span> ] <span class="ok">ACCESO CONCEDIDO</span> <span class="sp-cursor"></span>', 4300]
+    ];
+    const cons = document.getElementById('sp-consola');
+    lineas.forEach(([txt, t]) => setTimeout(() => {
+        if (!cons) return;
+        cons.querySelectorAll('.sp-cursor').forEach(c => c.remove());
+        cons.innerHTML += `<div class="lin">${txt}</div>`;
+    }, t));
+    /* Salida en warp */
+    setTimeout(() => {
+        const s = document.getElementById('splash');
+        if (s) { s.classList.add('fuera'); setTimeout(() => s.remove(), 850); }
+    }, 5000);
+}
+
 const PERFILES = {
     lucia:   { usuario: 'Lucía Natalia Bruno Portanko', rotulo: 'Dirección General', vista: 'duenio', areas: ['inm', 'age', 'jur'],
                puede: { registrar: true, modificar: true, informes: true, admin: true } },
@@ -2564,7 +2598,7 @@ td{padding:8px;border-bottom:1px solid #E4DFD5;} .n{text-align:right;}
 <div class="etq">¿Qué incluye tasar una propiedad?</div>
 <div class="fund">La tasación es un <b>informe técnico profesional</b> que determina el valor de mercado de una propiedad. El servicio comprende: <b>inspección ocular</b> de la propiedad y su entorno · <b>relevamiento fotográfico y de medidas</b> · <b>análisis comparativo de mercado</b> (propiedades similares ofrecidas y vendidas en la zona) · consideración de <b>ubicación, estado, antigüedad, mejoras y servicios</b> · elaboración del <b>informe escrito con fundamentos</b>, firmado por la inmobiliaria. El arancel varía según el tipo de propiedad porque cada tipología exige distinta complejidad de análisis (un local comercial o un departamento requieren estudios de renta y mercado más profundos que un lote). Presupuesto válido por 30 días. El arancel corresponde al servicio de tasación y es independiente del valor de la propiedad.</div>
 <div class="pie-emision">Atendido por <b>${USUARIO}</b> · ${ahora()} hs · Registrado en el sistema.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
-<script>setTimeout(() => window.print(), 600);<\/script>
+<scr` + `ipt>setTimeout(() => window.print(), 600);</scr` + `ipt>
 </body></html>`);
     w.document.close();
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió presupuesto de tasación: ${t.n}, ${m2} m², $ ${total.toLocaleString('es-AR')} · cliente ${cliente}` });
@@ -2855,8 +2889,8 @@ function cargarYTApi() {
     document.head.appendChild(s);
 }
 
-/* Pantalla de carga: en PC, tablet y celular por igual */
-window.addEventListener('load', () => {
+/* Pantalla de carga: en PC, tablet y celular por igual - YA NO SE NECESITA (movido a iniciarSplash()) */
+/* window.addEventListener('load', () => {
     /* Contador de porcentaje sincronizado con la barra (1,9 s) */
     const pctEl = document.getElementById('splash-pct');
     const t0 = performance.now();
@@ -2886,7 +2920,7 @@ window.addEventListener('load', () => {
         const s = document.getElementById('splash');
         if (s) { s.classList.add('fuera'); setTimeout(() => s.remove(), 850); }
     }, 5000);
-});
+}); */
 
 window.onYouTubeIframeAPIReady = () => { ytApiLista = true; if (cursoAbierto !== null) montarPlayer(); };
 
@@ -3420,7 +3454,7 @@ ${!top4.length ? '<tr><td colspan="5" style="text-align:center;color:#8A8378;">S
 </ul>
 
 <div class="pie-emision">Informe solicitado por <b>${USUARIO}</b> · Emitido el ${ahora()} hs<br>Portanko Inmobiliaria · Documento de gestión interna</div>
-<script>setTimeout(() => window.print(), 600);<\/script>
+<scr` + `ipt>setTimeout(() => window.print(), 600);</scr` + `ipt>
 </body></html>`);
         w.document.close();
         mostrarNotificacion(`Informe de búsqueda generado`, 'exito', 2000);
@@ -3792,7 +3826,7 @@ ${d.texto}<br>
 </div>
 <div style="font-size:11.5px;color:#5B6472;">Fuente: plano de mensura y fraccionamiento aprobado del loteo (${conf.ubicacion || 'ver expediente'}). ${conf.calles || ''}. Esta constancia informa el destino del espacio dentro del loteo y su carácter de cesión al dominio público.</div>
 <div class="pie-emision">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo} · Emitido el ${ahora()} hs · Registrado en bitácora.<br>Membrete provisorio de demostración.</div>
-<script>setTimeout(() => window.print(), 600);<\/script>
+<scr` + `ipt>setTimeout(() => window.print(), 600);</scr` + `ipt>
 </body></html>`);
     w.document.close();
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió constancia de destino de "${e.nombre}" (${FIDEICOMISOS[fid].nombre}) · Motivo: ${motivo}` });
@@ -3851,7 +3885,7 @@ ${svgPlanoLoteo(fid, mza, nro)}
 <div class="etq">Plano del lote — 2D con medidas reales · Vista volumétrica 3D</div>
 <div class="dos">${svgLote2D(g.coords)}${svgLote3D(g.coords, g.m2)}</div>
 <div class="pie-emision">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo} · Emitido el ${ahora()} hs · Registrado en bitácora.<br>Medidas calculadas sobre el plano digital oficial; las definitivas surgen de la mensura. Membrete provisorio de demostración.</div>
-<script>setTimeout(() => window.print(), 700);<\\/script>
+<scr` + `ipt>setTimeout(() => window.print(), 700);</scr` + `ipt>
 </body></html>`);
     w.document.close();
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió Ficha Comercial de Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) · Motivo: ${motivo}` });
@@ -4362,7 +4396,7 @@ td{padding:6px 8px;border-bottom:1px solid #E4DFD5;} td.n,th.n{text-align:right;
 <div class="etq">Historial de cobro al cliente</div>
 <table><tr><th>Mes</th><th>Fecha</th><th>Detalle</th><th class="n">Recibo Nro.</th><th class="n">Importe</th><th class="n">Constancias</th></tr>${filas}</table>
 <div class="pie-emision">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo}<br>Emitido el ${ahora()} hs · La emisión queda asentada en la bitácora.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
-<script>setTimeout(() => window.print(), 600);<\/script>
+<scr` + `ipt>setTimeout(() => window.print(), 600);</scr` + `ipt>
 </body></html>`);
     w.document.close();
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió Informe de Pagos de ${c.nombre} (Mza ${c.mza} Lote ${c.lote}) · Motivo: ${motivo}` });
@@ -5447,7 +5481,7 @@ ${c.cliente ? `<div style="font-size:12px;margin-bottom:2px;">Cliente: <b>${c.cl
 <table><tr><th>Fecha</th><th>Concepto</th><th class="n">Monto</th><th class="n">Constancias</th><th>Registró</th></tr>${filasCobros}</table>
 
 <div class="pie-emision">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo}<br>Emitido el ${ahora()} hs · Queda constancia en la bitácora del Estudio.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
-<script>setTimeout(() => window.print(), 600);<\/script>
+<scr` + `ipt>setTimeout(() => window.print(), 600);</scr` + `ipt>
 </body></html>`);
     w.document.close();
     JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Emitió el PDF resumen del caso "${c.caratula}" · Motivo: ${motivo}` });
