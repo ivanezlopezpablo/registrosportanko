@@ -22,7 +22,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}
 html{font-size:clamp(12px, 2vw, 16px);}
-body{width:100%;min-height:100vh;overflow-x:hidden;font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:1rem;-webkit-user-zoom:fixed;-moz-user-zoom:fixed;-ms-user-zoom:fixed;-o-user-zoom:fixed;user-zoom:fixed;}
+body{width:100%;min-height:100vh;overflow-x:hidden;font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:1rem;zoom:75%;-webkit-user-zoom:fixed;-moz-user-zoom:fixed;-ms-user-zoom:fixed;-o-user-zoom:fixed;user-zoom:fixed;}
 .serif{font-family:'Space Grotesk',sans-serif;}
 i.fi{display:inline-flex;vertical-align:middle;}
 ::-webkit-scrollbar{display:none;}
@@ -890,7 +890,7 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
 #tour-spotlight{position:fixed;z-index:8100;border:2px solid rgba(201,162,75,0.8);border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.7), inset 0 0 0 2px rgba(201,162,75,0.6), 0 0 30px rgba(201,162,75,0.4);transition:all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);display:none;pointer-events:none;}
 #tour-spotlight.activo{display:block;}
 
-#tour-tooltip{position:fixed;z-index:8200;background:rgba(30,20,15,0.98);color:#F5E6D3;border:2px solid rgba(201,162,75,0.6);border-radius:clamp(8px, 2vw, 16px);padding:clamp(16px, 3vw, 24px);max-width:clamp(280px, 90vw, 380px);box-shadow:0 12px 48px rgba(0,0,0,0.5), inset 0 0 20px rgba(201,162,75,0.1);display:none;animation:entrarTooltip 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);pointer-events:auto;backdrop-filter:blur(8px);}
+#tour-tooltip{position:fixed;z-index:8200;background:rgba(30,20,15,0.98);color:#F5E6D3;border:2px solid rgba(201,162,75,0.6);border-radius:clamp(8px, 2vw, 16px);padding:clamp(16px, 3vw, 24px);max-width:clamp(280px, 80vw, 320px);box-shadow:0 12px 48px rgba(0,0,0,0.5), inset 0 0 20px rgba(201,162,75,0.1);display:none;animation:entrarTooltip 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);pointer-events:auto;backdrop-filter:blur(8px);}
 #tour-tooltip.activo{display:block;}
 @keyframes entrarTooltip{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
 
@@ -2424,25 +2424,42 @@ function mostrarPasoTour(indice) {
 
 function posicionarTooltip(rect) {
     const tooltip = document.getElementById('tour-tooltip');
-    const spacing = 20;
+    const spacing = 15;
+    const tooltipWidth = 320; // max-width del tooltip
+    const minLeft = 10;
+    const maxLeft = window.innerWidth - tooltipWidth - 10;
+    
+    // Obtener dimensiones reales
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.display = 'block';
     const tooltipRect = tooltip.getBoundingClientRect();
+    const tooltipHeight = tooltipRect.height || 120;
+    tooltip.style.visibility = 'visible';
     
+    // Intentar posicionar abajo
     let top = rect.bottom + spacing;
-    let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+    let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
     
-    // Ajustar si sale de pantalla
-    if (top + tooltipRect.height > window.innerHeight) {
-        top = rect.top - tooltipRect.height - spacing;
-    }
-    if (left < spacing) {
-        left = spacing;
-    }
-    if (left + tooltipRect.width > window.innerWidth - spacing) {
-        left = window.innerWidth - tooltipRect.width - spacing;
+    // Si se sale por abajo, poner arriba
+    if (top + tooltipHeight > window.innerHeight - spacing) {
+        top = rect.top - tooltipHeight - spacing;
     }
     
-    tooltip.style.top = top + 'px';
-    tooltip.style.left = left + 'px';
+    // Si se sale por arriba, poner al lado
+    if (top < spacing) {
+        top = rect.bottom + spacing;
+    }
+    
+    // Ajustar left para que no se salga
+    if (left < minLeft) {
+        left = minLeft;
+    }
+    if (left > maxLeft) {
+        left = maxLeft;
+    }
+    
+    tooltip.style.top = Math.max(spacing, top) + 'px';
+    tooltip.style.left = Math.max(minLeft, Math.min(left, maxLeft)) + 'px';
 }
 
 function posicionarTooltipCentro() {
@@ -2450,6 +2467,7 @@ function posicionarTooltipCentro() {
     tooltip.style.top = '50%';
     tooltip.style.left = '50%';
     tooltip.style.transform = 'translate(-50%, -50%)';
+    tooltip.style.maxWidth = '90vw';
 }
 
 function tourSiguiente() {
