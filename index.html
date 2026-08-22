@@ -540,33 +540,176 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
 .tabla-capa td{padding:8px 6px;border-bottom:1px solid var(--linea);}
 
 
-/* ===== PANTALLA DE CARGA · PC, tablet y celular ===== */
-#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
-background:radial-gradient(1200px 800px at 50% 30%, #1B212B 0%, #12161C 55%, #0C0F14 100%);transition:opacity .7s ease;}
-#splash.fuera{opacity:0;pointer-events:none;}
-.splash-p{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C4142B, #B31226 55%, #8A0D1C);
-display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:48px;color:#fff;
-box-shadow:0 0 0 10px rgba(179,18,38,.12), 0 0 60px rgba(179,18,38,.45);animation:splashLatido 1.6s ease-in-out infinite;}
-@keyframes splashLatido{0%,100%{transform:scale(1);box-shadow:0 0 0 10px rgba(179,18,38,.12),0 0 60px rgba(179,18,38,.45);}
-50%{transform:scale(1.06);box-shadow:0 0 0 16px rgba(179,18,38,.07),0 0 90px rgba(179,18,38,.6);}}
-.splash-nombre{font-family:'Space Grotesk';font-weight:700;font-size:2rem;color:#fff;letter-spacing:.5px;text-align:center;line-height:1.1;}
-.splash-sub{font-size:.68rem;letter-spacing:4px;color:var(--oro);text-transform:uppercase;font-weight:600;margin-top:6px;text-align:center;}
-.splash-barra{width:min(260px,60vw);height:3px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;}
-.splash-barra i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#E8C97A);border-radius:99px;animation:splashCarga 1.6s ease-out forwards;}
-@keyframes splashCarga{0%{width:0%;}45%{width:58%;}75%{width:86%;}100%{width:100%;}}
-.splash-pie{position:absolute;bottom:26px;font-size:.62rem;letter-spacing:2px;color:#5B6472;text-transform:uppercase;}
+/* ===== PANTALLA DE CARGA ULTRA · núcleo Portanko ===== */
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+background:radial-gradient(1200px 800px at 50% 30%, #151B26 0%, #10141B 50%, #090C11 100%);transition:opacity .8s ease, transform .8s ease;overflow:hidden;}
+#splash.fuera{opacity:0;transform:scale(1.18);pointer-events:none;}
+/* Aurora de energía rotando */
+.sp-aurora{position:absolute;inset:-30%;background:conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(179,18,38,.16) 60deg, transparent 130deg, rgba(201,162,75,.13) 200deg, transparent 270deg, rgba(179,18,38,.1) 320deg, transparent 360deg);filter:blur(50px);animation:girarSp 16s linear infinite;}
+/* Piso de grilla en perspectiva */
+.sp-grilla{position:absolute;left:-40%;right:-40%;bottom:-6%;height:46%;
+background-image:linear-gradient(rgba(201,162,75,.18) 1px, transparent 1px),linear-gradient(90deg, rgba(201,162,75,.18) 1px, transparent 1px);
+background-size:44px 44px;transform:perspective(420px) rotateX(62deg);transform-origin:top center;
+-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 32%,#000 78%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 32%,#000 78%,transparent 100%);
+animation:grillaAvanza 2.6s linear infinite;}
+@keyframes grillaAvanza{to{background-position:0 44px, 0 0;}}
+/* Estrellas + escaneo CRT + viñeta */
+.sp-estrellas{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 18% 22%, rgba(255,255,255,.3), transparent 40%),radial-gradient(1px 1px at 78% 14%, rgba(201,162,75,.5), transparent 40%),radial-gradient(1.5px 1.5px at 88% 62%, rgba(255,255,255,.2), transparent 40%),radial-gradient(1px 1px at 8% 70%, rgba(201,162,75,.35), transparent 40%),radial-gradient(1px 1px at 60% 8%, rgba(255,255,255,.25), transparent 40%);}
+.sp-scan{position:absolute;inset:0;background:repeating-linear-gradient(180deg, rgba(255,255,255,.025) 0 1px, transparent 1px 4px);pointer-events:none;}
+.sp-vineta{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);pointer-events:none;}
+/* Centro orbital */
+.splash-centro{position:relative;width:min(330px,84vw);height:min(330px,84vw);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.anillo{position:absolute;border-radius:50%;border:1px dashed rgba(201,162,75,.16);}
+.anillo.a1{inset:24%;} .anillo.a2{inset:10%;border-color:rgba(255,255,255,.08);} .anillo.a3{inset:-3%;border-color:rgba(201,162,75,.1);}
+/* Anillo de instrumento: marcas de precisión girando */
+.sp-ticks{position:absolute;inset:17%;border-radius:50%;background:repeating-conic-gradient(rgba(201,162,75,.55) 0deg .8deg, transparent .8deg 6deg);
+-webkit-mask-image:radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));mask-image:radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+animation:girarSp 24s linear infinite;opacity:.8;}
+.scan{position:absolute;inset:10%;border-radius:50%;border:2px solid transparent;border-top-color:rgba(201,162,75,.6);animation:girarSp 3s linear infinite;filter:drop-shadow(0 0 8px rgba(201,162,75,.55));}
+.scan.s2{inset:24%;border-top-color:rgba(179,18,38,.55);animation-duration:4.6s;animation-direction:reverse;filter:drop-shadow(0 0 8px rgba(179,18,38,.45));}
+@keyframes girarSp{to{transform:rotate(360deg);}}
+.rotor{position:absolute;animation:girarSp var(--t) linear infinite;animation-delay:var(--d);}
+.rotor.r1{inset:24%;} .rotor.r2{inset:10%;animation-direction:reverse;} .rotor.r3{inset:-3%;}
+.sat{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;
+background:rgba(14,18,24,.94);border:1px solid rgba(201,162,75,.5);display:flex;align-items:center;justify-content:center;
+color:var(--oro);font-size:.82rem;box-shadow:0 0 16px rgba(201,162,75,.35), inset 0 0 8px rgba(201,162,75,.1);}
+.rotor.r2 .sat{border-color:rgba(255,255,255,.28);color:#DDE2E9;box-shadow:0 0 14px rgba(255,255,255,.18);}
+.sat i{display:flex;animation:contraSp var(--t) linear infinite;animation-delay:var(--d);}
+.rotor.r2 .sat i{animation-direction:reverse;}
+@keyframes contraSp{to{transform:rotate(-360deg);}}
+/* Núcleo P con doble halo energético */
+.splash-p{width:min(96px,26vw);height:min(96px,26vw);border-radius:50%;background:radial-gradient(circle at 32% 28%, #C4142B, #B31226 55%, #8A0D1C);
+display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:min(50px,13vw);color:#fff;position:relative;z-index:2;
+box-shadow:0 0 0 10px rgba(179,18,38,.12), 0 0 70px rgba(179,18,38,.5);animation:splashLatido 1.5s ease-in-out infinite;}
+.splash-p::after{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(201,162,75,.35);animation:haloExp 1.5s ease-out infinite;}
+@keyframes haloExp{0%{transform:scale(.9);opacity:.8;}100%{transform:scale(1.35);opacity:0;}}
+@keyframes splashLatido{0%,100%{transform:scale(1);}50%{transform:scale(1.06);box-shadow:0 0 0 18px rgba(179,18,38,.06),0 0 100px rgba(179,18,38,.65);}}
+/* Título con glitch */
+.splash-nombre{font-family:'Space Grotesk';font-weight:700;font-size:2.05rem;color:#fff;letter-spacing:1px;text-align:center;line-height:1.1;position:relative;}
+.splash-nombre::before,.splash-nombre::after{content:attr(data-t);position:absolute;inset:0;opacity:0;}
+.splash-nombre::before{color:#E8536B;transform:translate(-2px,-1px);animation:glitchA 2.8s steps(1) infinite;}
+.splash-nombre::after{color:var(--oro);transform:translate(2px,1px);animation:glitchB 2.8s steps(1) infinite;}
+@keyframes glitchA{0%,92%,100%{opacity:0;clip-path:inset(0 0 0 0);}93%{opacity:.85;clip-path:inset(10% 0 55% 0);}95%{opacity:.85;clip-path:inset(60% 0 15% 0);}97%{opacity:0;}}
+@keyframes glitchB{0%,92%,100%{opacity:0;}94%{opacity:.8;clip-path:inset(45% 0 30% 0);}96%{opacity:.8;clip-path:inset(5% 0 70% 0);}98%{opacity:0;}}
+.splash-sub{font-size:.66rem;letter-spacing:5px;color:var(--oro);text-transform:uppercase;font-weight:600;margin-top:6px;text-align:center;}
+/* Barra segmentada + porcentaje */
+.splash-barra-caja{display:flex;align-items:center;gap:10px;margin-top:12px;}
+.splash-barra{width:min(240px,56vw);height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;position:relative;
+-webkit-mask-image:repeating-linear-gradient(90deg,#000 0 10px, transparent 10px 13px);mask-image:repeating-linear-gradient(90deg,#000 0 10px, transparent 10px 13px);}
+.splash-barra i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#F0D48B);animation:splashCarga 1.9s ease-out forwards;box-shadow:0 0 12px rgba(201,162,75,.7);}
+@keyframes splashCarga{0%{width:0%;}40%{width:52%;}70%{width:81%;}100%{width:100%;}}
+.splash-pct{font-family:'Space Grotesk';font-weight:700;font-size:.85rem;color:var(--oro);min-width:44px;text-align:left;text-shadow:0 0 10px rgba(201,162,75,.5);}
+/* Consola de arranque */
+.sp-consola{font-family:ui-monospace,'Cascadia Code',Consolas,monospace;font-size:.62rem;letter-spacing:.5px;color:#7A8494;margin-top:10px;min-height:42px;text-align:left;width:min(300px,74vw);}
+.sp-consola .lin{opacity:0;animation:linEntra .25s forwards;}
+@keyframes linEntra{to{opacity:1;}}
+.sp-consola .ok{color:#5FBF87;} .sp-consola .oro{color:var(--oro);}
+.sp-cursor{display:inline-block;width:7px;height:11px;background:var(--oro);vertical-align:-1px;animation:parpadeo .7s steps(1) infinite;}
+@keyframes parpadeo{50%{opacity:0;}}
+.splash-pie{position:absolute;bottom:22px;font-size:.6rem;letter-spacing:3px;color:#4A5361;text-transform:uppercase;}
+
+
+/* ===== ACADEMIA · estética futurista ===== */
+.capa-hud{background:linear-gradient(135deg,#12161C 0%,#1B212B 60%,#151B26 100%);border-radius:18px;padding:18px;color:#fff;position:relative;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;gap:18px;}
+.capa-hud::before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 82% 20%, rgba(201,162,75,.5), transparent 40%),radial-gradient(1.5px 1.5px at 12% 70%, rgba(255,255,255,.2), transparent 40%),radial-gradient(1px 1px at 60% 85%, rgba(201,162,75,.35), transparent 40%);}
+.aro-prog{width:74px;height:74px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;
+background:conic-gradient(var(--oro) calc(var(--p)*1%), rgba(255,255,255,.1) 0);box-shadow:0 0 20px rgba(201,162,75,.25);}
+.aro-prog::before{content:'';position:absolute;inset:6px;border-radius:50%;background:#161C26;}
+.aro-prog b{position:relative;font-family:'Space Grotesk';font-size:1.05rem;color:var(--oro);}
+.capa-hud .titulo-hud{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;}
+.capa-hud small{color:#8B93A0;font-size:.74rem;letter-spacing:.5px;}
+.grid-cursos{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.curso-holo{background:linear-gradient(160deg,#161C26,#12161C);border:1px solid rgba(201,162,75,.22);border-radius:16px;overflow:hidden;color:#fff;position:relative;transition:transform .18s, box-shadow .18s;}
+.curso-holo:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.45), 0 0 24px rgba(201,162,75,.14);}
+.curso-tapa{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#1B212B,#0C0F14);overflow:hidden;}
+.curso-tapa img{width:100%;height:100%;object-fit:cover;opacity:.85;}
+.curso-tapa::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(18,22,28,.95) 100%);}
+.curso-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;}
+.curso-play span{width:52px;height:52px;border-radius:50%;background:rgba(179,18,38,.92);display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:#fff;box-shadow:0 0 0 8px rgba(179,18,38,.18), 0 0 30px rgba(179,18,38,.55);animation:playLatido 1.8s ease-in-out infinite;}
+@keyframes playLatido{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.curso-estado-chip{position:absolute;top:10px;right:10px;z-index:3;border-radius:999px;padding:5px 12px;font-size:.64rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;backdrop-filter:blur(6px);}
+.curso-estado-chip.ok{background:rgba(31,122,77,.85);color:#C9F2DC;box-shadow:0 0 16px rgba(46,158,91,.5);}
+.curso-estado-chip.pend{background:rgba(18,22,28,.75);color:var(--oro);border:1px solid rgba(201,162,75,.5);}
+.curso-cuerpo{padding:14px;position:relative;}
+.curso-cuerpo b{font-family:'Space Grotesk';font-size:.95rem;line-height:1.3;}
+.curso-cuerpo small{color:#8B93A0;display:block;margin-top:4px;line-height:1.5;}
+.curso-metas{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.curso-meta{border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 10px;font-size:.62rem;color:#B7BDC6;letter-spacing:.5px;}
+.btn-holo{width:100%;margin-top:12px;border:none;border-radius:12px;padding:12px;font-family:'Space Grotesk';font-weight:700;font-size:.85rem;letter-spacing:1px;cursor:pointer;text-transform:uppercase;
+background:linear-gradient(90deg,#B31226,#8A0D1C);color:#fff;box-shadow:0 0 18px rgba(179,18,38,.35);transition:all .15s;}
+.btn-holo:hover{box-shadow:0 0 28px rgba(179,18,38,.55);transform:translateY(-1px);}
+.btn-holo.visto{background:transparent;border:1px solid rgba(201,162,75,.5);color:var(--oro);box-shadow:none;}
+/* Marco HUD del reproductor */
+.curso-player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:visible;margin-top:12px;}
+.curso-player iframe{width:100%;height:100%;border:none;border-radius:12px;}
+.hud-marco{position:absolute;inset:-6px;pointer-events:none;z-index:4;}
+.hud-marco::before,.hud-marco::after,.hud-marco i::before,.hud-marco i::after{content:'';position:absolute;width:22px;height:22px;border:2px solid var(--oro);filter:drop-shadow(0 0 6px rgba(201,162,75,.6));}
+.hud-marco::before{top:0;left:0;border-right:none;border-bottom:none;border-radius:8px 0 0 0;}
+.hud-marco::after{top:0;right:0;border-left:none;border-bottom:none;border-radius:0 8px 0 0;}
+.hud-marco i::before{bottom:0;left:0;border-right:none;border-top:none;border-radius:0 0 0 8px;}
+.hud-marco i::after{bottom:0;right:0;border-left:none;border-top:none;border-radius:0 0 8px 0;}
+/* Quiz HUD */
+.quiz-overlay{position:absolute;inset:0;background:rgba(10,13,18,.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;z-index:5;border-radius:12px;}
+.quiz-caja{background:linear-gradient(165deg,rgba(27,33,43,.98),rgba(18,22,28,.98));border:1px solid rgba(201,162,75,.4);border-radius:16px;padding:20px;max-width:460px;width:100%;max-height:92%;overflow:auto;color:#fff;
+box-shadow:0 0 40px rgba(201,162,75,.15), 0 24px 60px rgba(0,0,0,.6);animation:quizEntra .35s cubic-bezier(.2,.9,.3,1.2);}
+@keyframes quizEntra{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+.quiz-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(201,162,75,.5);color:var(--oro);border-radius:999px;padding:5px 12px;font-size:.64rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.quiz-op{display:block;width:100%;text-align:left;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);border-radius:12px;padding:13px 15px;margin-top:8px;font-family:'Inter';font-size:.9rem;font-weight:500;color:#fff;cursor:pointer;transition:all .12s;}
+.quiz-op:hover{border-color:var(--oro);background:rgba(201,162,75,.12);box-shadow:0 0 14px rgba(201,162,75,.2);}
+.quiz-op.bien{border-color:var(--ok);background:rgba(46,158,91,.2);box-shadow:0 0 18px rgba(46,158,91,.45);font-weight:700;}
+.quiz-op.mal{border-color:var(--carmin);background:rgba(179,18,38,.18);animation:quizTiembla .3s;}
+@keyframes quizTiembla{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+
+
+/* ===== Sección Pagar: badge con zoom y filas de reparto ===== */
+@keyframes badgeZoom{0%,100%{transform:scale(1);}50%{transform:scale(1.35);}}
+.tab-badge.zoom{animation:badgeZoom 1s ease-in-out infinite;box-shadow:0 0 10px rgba(179,18,38,.6);}
+.pagar-fila{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(18,22,28,.08);border-left:4px solid var(--carmin);}
+.pagar-fila.viejo{border-left-color:#8A0D1C;background:linear-gradient(90deg,var(--carmin-suave),#fff 40%);}
+.pagar-avatar{width:42px;height:42px;border-radius:50%;background:var(--tinta);color:var(--oro);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:1rem;flex-shrink:0;}
+.pagar-info{flex:1;min-width:0;font-size:.84rem;line-height:1.4;}
+.pagar-monto{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;text-align:right;flex-shrink:0;}
+.pagar-dias{font-size:.66rem;font-weight:700;border-radius:999px;padding:3px 9px;display:inline-block;margin-top:3px;}
+.pagar-dias.ok{background:var(--ok-suave);color:var(--ok);}
+.pagar-dias.medio{background:var(--oro-suave);color:#8A6A1B;}
+.pagar-dias.rojo{background:var(--carmin-suave);color:var(--carmin);animation:badgeZoom 1.4s ease-in-out infinite;display:inline-block;}
 
 </style>
 </head>
 <body>
-<!-- PANTALLA DE CARGA -->
+<!-- PANTALLA DE CARGA ULTRA · núcleo Portanko -->
 <div id="splash">
-    <div class="splash-p">P</div>
-    <div>
-        <div class="splash-nombre">Portanko</div>
-        <div class="splash-sub">Administración · Desde 1971</div>
+    <div class="sp-aurora"></div>
+    <div class="sp-estrellas"></div>
+    <div class="sp-grilla"></div>
+    <div class="splash-centro">
+        <div class="anillo a1"></div><div class="anillo a2"></div><div class="anillo a3"></div>
+        <div class="sp-ticks"></div>
+        <div class="scan"></div><div class="scan s2"></div>
+        <!-- Órbita interna (3 satélites · 10s): las áreas del negocio -->
+        <div class="rotor r1" style="--t:10s;--d:0s;"><span class="sat"><i class="fi fi-rr-building"></i></span></div>
+        <div class="rotor r1" style="--t:10s;--d:-3.33s;"><span class="sat"><i class="fi fi-rr-home"></i></span></div>
+        <div class="rotor r1" style="--t:10s;--d:-6.66s;"><span class="sat"><i class="fi fi-rr-briefcase"></i></span></div>
+        <!-- Órbita media (3 satélites · 16s, sentido inverso): las herramientas -->
+        <div class="rotor r2" style="--t:16s;--d:0s;"><span class="sat"><i class="fi fi-rr-search"></i></span></div>
+        <div class="rotor r2" style="--t:16s;--d:-5.33s;"><span class="sat"><i class="fi fi-rr-document"></i></span></div>
+        <div class="rotor r2" style="--t:16s;--d:-10.66s;"><span class="sat"><i class="fi fi-rr-stats"></i></span></div>
+        <!-- Órbita externa (2 satélites · 22s) -->
+        <div class="rotor r3" style="--t:22s;--d:0s;"><span class="sat"><i class="fi fi-rr-graduation-cap"></i></span></div>
+        <div class="rotor r3" style="--t:22s;--d:-11s;"><span class="sat"><i class="fi fi-rr-bell"></i></span></div>
+        <div class="splash-p">P</div>
     </div>
-    <div class="splash-barra"><i></i></div>
+    <div style="position:relative;z-index:2;">
+        <div class="splash-nombre" data-t="Portanko">Portanko</div>
+        <div class="splash-sub">Sistema Integral · Desde 1971</div>
+    </div>
+    <div class="splash-barra-caja">
+        <div class="splash-barra"><i></i></div>
+        <span class="splash-pct" id="splash-pct">0%</span>
+    </div>
+    <div class="sp-consola" id="sp-consola"></div>
+    <div class="sp-scan"></div>
+    <div class="sp-vineta"></div>
     <div class="splash-pie">Neuquén · Patagonia Argentina</div>
 </div>
 
@@ -1093,6 +1236,15 @@ box-shadow:0 0 0 10px rgba(179,18,38,.12), 0 0 60px rgba(179,18,38,.45);animatio
         </div>
     </div>
 
+    <div class="vista" id="vista-jpagar">
+        <div class="encabezado-seccion"><i class="fi fi-rr-paper-plane"></i><h2>Pagar · Repartos pendientes</h2><div class="filete"></div></div>
+        <div class="kpi-grid" id="jpagar-kpis"></div>
+        <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-time-forward"></i> Cada fila es una persona esperando su parte · el pago exige constancia adjunta</div>
+            <div id="jpagar-lista"></div>
+        </div>
+    </div>
+
     <div class="vista" id="vista-jgastos">
         <div class="encabezado-seccion"><i class="fi fi-rr-receipt"></i><h2>Registro Contable del Estudio</h2><div class="filete"></div></div>
         <div class="tarjeta" id="tarjeta-alertas-g" style="border-left:3px solid var(--carmin);">
@@ -1435,7 +1587,7 @@ const VISTAS_ROL = {
     duenio: ['inicio', 'lotes', 'clientes', 'cobrar', 'tesoreria', 'novedades', 'docs', 'informes', 'capa'],
     personal: ['inicio', 'lotes', 'clientes', 'cobrar', 'novedades', 'docs', 'capa']
 };
-const VISTAS_JUR = ['jinicio', 'casos', 'jcobrar', 'jgastos', 'jbitacora'];
+const VISTAS_JUR = ['jinicio', 'casos', 'jcobrar', 'jpagar', 'jgastos', 'jbitacora'];
 const VISTAS_AGE = ['ainicio', 'crm', 'atasaciones', 'capa'];
 const AREAS_INFO = {
     inm: { nombre: 'Fideicomisos', icono: '🏛', desc: 'Aeroparque · Don Guarino · lotes, clientes y cobranzas' },
@@ -1448,7 +1600,7 @@ const NAV_DEF = {
     ainicio: ['fi-rr-building', 'Panel'], capa: ['fi-rr-graduation-cap', 'Cursos'], crm: ['fi-rr-search', 'Búsquedas'], atasaciones: ['fi-rr-diploma', 'Tasaciones'],
     novedades: ['fi-rr-book-open-cover', 'Libro'], docs: ['fi-rr-folder-open', 'Docs'], informes: ['fi-rr-document', 'Informes'],
     jinicio: ['fi-rr-scale', 'Estudio'], casos: ['fi-rr-briefcase', 'Casos'],
-    jcobrar: ['fi-rr-hand-holding-usd', 'Cobrar'], jgastos: ['fi-rr-receipt', 'Gastos'], jbitacora: ['fi-rr-time-past', 'Bitácora']
+    jcobrar: ['fi-rr-hand-holding-usd', 'Cobrar'], jpagar: ['fi-rr-paper-plane', 'Pagar'], jgastos: ['fi-rr-receipt', 'Gastos'], jbitacora: ['fi-rr-time-past', 'Bitácora']
 };
 function vistasActuales() { return AREA === 'jur' ? VISTAS_JUR : AREA === 'age' ? VISTAS_AGE : VISTAS_ROL[ROL]; }
 
@@ -1621,6 +1773,7 @@ const AYUDAS = {
     jinicio: { t: '¿Qué veo en el Estudio?', c: `El panel del Estudio Jurídico: totales cobrados, las <b>estadísticas por persona</b> (cuánto cobró cada uno, promedio por caso, cuánto tardan los casos en cobrar) y los movimientos recientes.<br><br>⏰ Si hay repartos sin pagar en casos cobrados hace más de 3 días, el sistema te lo recuerda solo al entrar.` },
     casos: { t: '¿Cómo funciona la CASCADA de reparto?', c: `<b>Lo más difícil de toda la app — con ejemplo:</b><br><br>Un caso cobra <b>$8.400.000</b>.<br>1️⃣ Primero sale el <b>% del Estudio</b> (ej: 20%) = $1.680.000.<br>2️⃣ Queda el <b>RESTO</b>: $6.720.000.<br>3️⃣ Los porcentajes de las personas se aplican <b>SOBRE ESE RESTO</b> (no sobre el total): Carla 40% del resto = $2.688.000; el publicista 15% del resto = $1.008.000.<br><br>⚠️ El error típico es calcular los % sobre el total cobrado. El sistema lo hace bien solo — pero ahora sabés por qué los números dan "distinto" de lo que esperabas.<br><br>Cada pago del reparto exige <b>constancia adjunta obligatoria</b> (captura o PDF), y los casos terminados se archivan en <b>"Ya cobrados"</b> para que la lista de trabajo quede limpia.` },
     jcobrar: { t: '¿Cómo registro un cobro del caso?', c: `Regla de oro del Estudio: <b>sin captura del comprobante, no hay registro</b>. El sistema no deja guardar un cobro sin al menos una foto o captura de WhatsApp adjunta. Después, desde el caso, se reparte con la cascada.` },
+    jpagar: { t: '¿Qué es la sección Pagar?', c: `El tablero de las <b>deudas internas del Estudio</b>: cada fila es una persona esperando su parte de un caso ya cobrado.<br><br>Ves <b>cuánto</b> le corresponde (calculado con la cascada), de <b>qué caso</b>, y <b>hace cuántos días espera</b> — verde recién cobrado, dorado 3+ días, <b>rojo latiendo 7+ días</b>.<br><br>El numerito rojo de la pestaña muestra cuántos pagos faltan y no para de latir hasta que llegue a cero. Cada pago exige <b>constancia adjunta obligatoria</b>.` },
     jgastos: { t: '¿Cómo funcionan los Gastos?', c: `Los gastos fijos del Estudio (sueldos, patente, internet...) con su día de vencimiento. El sistema avisa solo: 🔔 cuando faltan 5 días, cuando vence HOY, y en rojo si ya venció. Cada pago con su constancia.` },
     jbitacora: { t: '¿Qué es la Bitácora?', c: `El registro inviolable de todo lo que pasó en el Estudio: cada cobro, pago, modificación y emisión, con nombre y hora. No se puede borrar ni editar. Tocá cualquier registro para ampliarlo.` }
 };
@@ -2322,10 +2475,33 @@ function cargarYTApi() {
 
 /* Pantalla de carga: en PC, tablet y celular por igual */
 window.addEventListener('load', () => {
+    /* Contador de porcentaje sincronizado con la barra (1,9 s) */
+    const pctEl = document.getElementById('splash-pct');
+    const t0 = performance.now();
+    const easeOut = x => 1 - Math.pow(1 - x, 2.2);
+    (function tick() {
+        const x = Math.min(1, (performance.now() - t0) / 1900);
+        if (pctEl) pctEl.innerText = Math.round(easeOut(x) * 100) + '%';
+        if (x < 1) requestAnimationFrame(tick);
+    })();
+    /* Consola de arranque */
+    const lineas = [
+        ['[ <span class="ok">OK</span> ] Núcleo Portanko iniciado', 150],
+        ['[ <span class="ok">OK</span> ] Mapa catastral · 2 loteos · 70 mensuras', 620],
+        ['[ <span class="oro">SYNC</span> ] Portales inmobiliarios · CRM · Academia', 1150],
+        ['[ <span class="ok">OK</span> ] <span class="ok">ACCESO CONCEDIDO</span> <span class="sp-cursor"></span>', 1750]
+    ];
+    const cons = document.getElementById('sp-consola');
+    lineas.forEach(([txt, t]) => setTimeout(() => {
+        if (!cons) return;
+        cons.querySelectorAll('.sp-cursor').forEach(c => c.remove());
+        cons.innerHTML += `<div class="lin">${txt}</div>`;
+    }, t));
+    /* Salida en warp */
     setTimeout(() => {
         const s = document.getElementById('splash');
-        if (s) { s.classList.add('fuera'); setTimeout(() => s.remove(), 750); }
-    }, 1700);
+        if (s) { s.classList.add('fuera'); setTimeout(() => s.remove(), 850); }
+    }, 2450);
 });
 
 window.onYouTubeIframeAPIReady = () => { ytApiLista = true; if (cursoAbierto !== null) montarPlayer(); };
@@ -2336,21 +2512,39 @@ function renderCursos() {
     const el = document.getElementById('lista-cursos');
     if (!el) return;
     const prog = miProgreso();
-    el.innerHTML = CURSOS.map((c, i) => {
+    el.innerHTML = '<div class="grid-cursos">' + CURSOS.map((c, i) => {
         const p = prog[i];
-        return `<div class="tarjeta">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-                <div><b>${c.titulo}</b><br><small style="color:var(--piedra);">${c.desc} · ${c.checkpoints.length} pregunta/s en el video</small></div>
-                <span class="curso-check ${p && p.visto ? 'visto' : 'pend'}">${p && p.visto ? '✓ Visto el ' + p.fecha : 'Pendiente'}</span>
+        const visto = p && p.visto;
+        return `<div class="curso-holo">
+            <div class="curso-tapa" onclick="abrirCurso(${i})" style="cursor:pointer;">
+                <img src="https://img.youtube.com/vi/${c.yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.remove()">
+                <span class="curso-estado-chip ${visto ? 'ok' : 'pend'}">${visto ? '✓ Completado' : '● Pendiente'}</span>
+                <div class="curso-play"><span><i class="fi fi-rr-play"></i></span></div>
             </div>
-            <div id="curso-zona-${i}"></div>
-            <button class="btn ${p && p.visto ? 'borde' : 'carmin'}" onclick="abrirCurso(${i})"><i class="fi fi-rr-play"></i> ${p && p.visto ? 'Volver a ver' : 'Hacer el curso'}</button>
+            <div class="curso-cuerpo">
+                <b>${c.titulo}</b>
+                <small>${c.desc}</small>
+                <div class="curso-metas">
+                    <span class="curso-meta">🎬 YouTube</span>
+                    <span class="curso-meta">❓ ${c.checkpoints.length} pregunta/s</span>
+                    ${visto ? `<span class="curso-meta" style="border-color:rgba(46,158,91,.5);color:#7FD8A6;">✓ ${p.fecha}</span>` : ''}
+                </div>
+                <div id="curso-zona-${i}"></div>
+                <button class="btn-holo ${visto ? 'visto' : ''}" onclick="abrirCurso(${i})">${visto ? '↻ Volver a ver' : '▶ Iniciar curso'}</button>
+            </div>
         </div>`;
-    }).join('');
+    }).join('') + '</div>';
     const mp = document.getElementById('capa-mi-progreso');
     if (mp) {
         const vistos = Object.values(prog).filter(x => x.visto).length;
-        mp.innerHTML = `<div class="aviso ${vistos === CURSOS.length ? 'ok' : 'alerta'}">🎓 <b>${USUARIO.split(' ')[0]}</b>: completaste <b>${vistos} de ${CURSOS.length}</b> capacitaciones.${vistos < CURSOS.length ? ' El video se pausa solo en cada pregunta: respondé y sigue.' : ' ¡Todas al día! ✓'}</div>`;
+        const pct = CURSOS.length ? Math.round(vistos / CURSOS.length * 100) : 0;
+        mp.innerHTML = `<div class="capa-hud">
+            <div class="aro-prog" style="--p:${pct};"><b>${pct}%</b></div>
+            <div style="position:relative;">
+                <div class="titulo-hud">Academia Portanko · ${USUARIO.split(' ')[0]}</div>
+                <small>${vistos} de ${CURSOS.length} capacitaciones completadas${vistos === CURSOS.length ? ' · ¡TODAS AL DÍA! ✓' : ' · el video se pausa solo en cada pregunta'}</small>
+            </div>
+        </div>`;
     }
     renderTablaCapa();
     const alta = document.getElementById('capa-admin-alta'), ctrl = document.getElementById('capa-admin-control');
@@ -2365,6 +2559,7 @@ function abrirCurso(i) {
     CURSOS[i]._hechos = {};
     const zona = document.getElementById('curso-zona-' + i);
     zona.innerHTML = `<div class="curso-player" id="player-caja">
+        <div class="hud-marco"><i></i></div>
         <div id="yt-player"></div>
         <div class="quiz-overlay" id="quiz-overlay" style="display:none;"></div>
     </div>`;
@@ -2403,8 +2598,9 @@ function mostrarQuiz(ki) {
     const ov = document.getElementById('quiz-overlay');
     ov.style.display = 'flex';
     ov.innerHTML = `<div class="quiz-caja">
-        <div class="etiqueta"><i class="fi fi-rr-interrogation"></i> Pregunta ${ki + 1} de ${c.checkpoints.length} · el video sigue al responder bien</div>
-        <b style="font-size:1rem;line-height:1.5;">${ck.preg}</b>
+        <span class="quiz-chip"><i class="fi fi-rr-interrogation"></i> Checkpoint ${ki + 1} / ${c.checkpoints.length}</span>
+        <b style="font-size:1.02rem;line-height:1.5;display:block;">${ck.preg}</b>
+        <small style="color:#8B93A0;font-size:.72rem;">El video continúa al responder correctamente</small>
         <div id="quiz-ops">${ck.ops.map((o, oi) => `<button class="quiz-op" onclick="responderQuiz(${ki},${oi})">${o}</button>`).join('')}</div>
         <div id="quiz-msg" style="margin-top:8px;font-size:.82rem;"></div>
     </div>`;
@@ -3721,6 +3917,74 @@ function renderStatsPersonas() {
         (promDias ? `<div class="aviso alerta" style="margin-top:10px;">⏱ <b>Tiempo promedio de cobro:</b> los casos cobran a los <b>${promDias} días</b> (${(promDias / 30).toFixed(1)} meses) desde su inicio — calculado sobre ${tiempos.length} caso/s con fecha de inicio y cobro registrados.</div>` : '');
 }
 
+
+/* ===== SECCIÓN PAGAR =====
+   Todo lo que el Estudio debe repartir de casos ya cobrados: a quién,
+   cuánto, y hace cuántos días espera. El badge rojo late en la
+   navegación mientras haya deudas internas. */
+function todosLosRepartos() {
+    const hoy = new Date();
+    const filas = [];
+    CASOS.forEach((c, ci) => {
+        if (!c.cobros.length) return;
+        const ultCobro = new Date(c.cobros[0].fecha + 'T12:00:00');
+        const dias = Math.floor((hoy - ultCobro) / 86400000);
+        c.intervinientes.forEach((x, ii) => {
+            const debe = leTocaA(c, x) - x.pagado;
+            if (debe > 0.5) filas.push({ ci, ii, nombre: x.nombre, rol: x.rol, debe, debeTxt: montoCaso(c, debe), caso: c.caratula, dias, moneda: c.moneda });
+        });
+    });
+    return filas.sort((a, b) => b.dias - a.dias);
+}
+function renderPagar() {
+    const kpis = document.getElementById('jpagar-kpis');
+    if (!kpis) return;
+    const filas = todosLosRepartos();
+    const personas = [...new Set(filas.map(f => f.nombre))];
+    const totalARS = filas.filter(f => f.moneda !== 'USD').reduce((a, f) => a + f.debe, 0);
+    const masViejo = filas.length ? filas[0].dias : 0;
+    kpis.innerHTML = `
+        <div class="kpi"><div class="valor serif" style="color:var(--carmin);">${filas.length}</div><div class="nombre">Pagos pendientes</div></div>
+        <div class="kpi"><div class="valor serif">${personas.length}</div><div class="nombre">Personas esperando</div></div>
+        <div class="kpi"><div class="valor serif">${ars(totalARS)}</div><div class="nombre">Total a repartir (ARS)</div></div>
+        <div class="kpi"><div class="valor serif" style="color:${masViejo >= 7 ? 'var(--carmin)' : 'inherit'};">${masViejo} días</div><div class="nombre">El más antiguo</div></div>`;
+    const lista = document.getElementById('jpagar-lista');
+    lista.innerHTML = filas.length ? filas.map(f => `
+        <div class="pagar-fila ${f.dias >= 7 ? 'viejo' : ''}">
+            <div class="pagar-avatar">${f.nombre.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase()}</div>
+            <div class="pagar-info">
+                <b>${f.nombre}</b> <small style="color:var(--piedra);">· ${f.rol}</small><br>
+                <small style="color:var(--piedra);">"${f.caso}"</small><br>
+                <span class="pagar-dias ${f.dias >= 7 ? 'rojo' : f.dias >= 3 ? 'medio' : 'ok'}">⏱ Esperando hace ${f.dias} día${f.dias === 1 ? '' : 's'}</span>
+            </div>
+            <div>
+                <div class="pagar-monto">${f.debeTxt}</div>
+                <button class="btn-mini" style="border-color:var(--carmin);color:var(--carmin);margin-top:5px;" onclick="pagarDesdeSeccion(${f.ci},${f.ii})"><i class="fi fi-rr-paper-plane"></i> Pagar ahora</button>
+            </div>
+        </div>`).join('')
+        : '<div class="aviso ok">🎉 No hay repartos pendientes: todas las personas cobraron su parte.</div>';
+    /* Badge rojo con ZOOM en la pestaña Pagar */
+    const nav = document.getElementById('nav-jpagar');
+    if (nav) {
+        let badge = nav.querySelector('.tab-badge');
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'tab-badge zoom';
+            badge.style.position = 'static';
+            badge.style.marginLeft = '4px';
+            nav.appendChild(badge);
+        }
+        badge.innerText = filas.length;
+        badge.style.display = filas.length ? 'inline-flex' : 'none';
+        const icono = nav.querySelector('i');
+        if (icono) icono.style.animation = filas.length ? 'iconoLatido 1.2s ease-in-out infinite' : '';
+    }
+}
+async function pagarDesdeSeccion(ci, ii) {
+    await pagarInterno(ci, ii);
+    renderPagar();
+}
+
 function repartosPendientes() {
     /* Personas con plata asignada sin pagar, en casos que cobraron
        hace más de 3 días: hay que pagarles. */
@@ -3759,7 +4023,8 @@ function renderJur() {
     let pendienteRepartir = 0;
     CASOS.forEach(c => c.intervinientes.forEach(i => {
         pendienteRepartir += Math.max(0, leTocaA(c, i) - i.pagado);
-    }));
+        renderPagar();
+}));
     document.getElementById('jur-kpis').innerHTML = `
         <div class="kpi ok"><div class="valor serif">${ganados}</div><div class="nombre">Casos ganados</div></div>
         <div class="kpi oro"><div class="valor serif">${CASOS.filter(c => c.estado === 'En trámite').length}</div><div class="nombre">En trámite</div></div>
