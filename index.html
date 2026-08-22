@@ -33,8 +33,8 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .marca-p.mini span{font-size:1.4rem;}
 
 /* ====== LOGIN ====== */
-#pantalla-login{position:fixed;inset:0;background:linear-gradient(168deg,var(--papel) 0%,var(--marfil) 52%,#EFE9DD 100%);z-index:9000;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:26px;overflow:hidden;}
-#pantalla-login::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 85% 12%, rgba(163,22,33,.07), transparent 42%),radial-gradient(circle at 8% 88%, rgba(176,141,62,.09), transparent 45%);}
+#pantalla-login{position:fixed;inset:0;background:radial-gradient(1200px 800px at 50% 30%, #151B26 0%, #10141B 50%, #090C11 100%);z-index:9000;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:26px;overflow:hidden;}
+#pantalla-login .login-caja{box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 40px rgba(201,162,75,.08);border-color:rgba(201,162,75,.3);}
 .login-caja{position:relative;width:100%;max-width:380px;background:var(--papel);border:1px solid var(--linea);border-radius:4px;padding:34px 28px 26px 28px;box-shadow:0 30px 70px rgba(23,20,18,.13);text-align:center;}
 .login-caja::before{content:'';position:absolute;top:10px;left:10px;right:10px;bottom:10px;border:1px solid var(--linea);border-radius:2px;pointer-events:none;}
 .login-marca{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:8px;}
@@ -53,18 +53,28 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .sello-proto{display:inline-block;margin-top:8px;border:1.5px solid var(--oro);color:var(--oro);font-size:.6rem;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:2px;transform:rotate(-2deg);text-transform:uppercase;}
 
 /* ====== LOADER ====== */
-#cargador{position:fixed;inset:0;background:linear-gradient(168deg,var(--papel),var(--marfil));z-index:9500;display:none;flex-direction:column;justify-content:center;align-items:center;gap:16px;transition:opacity .5s,visibility .5s;}
+#cargador{position:fixed;inset:0;background:radial-gradient(1200px 800px at 50% 30%, #151B26 0%, #10141B 50%, #090C11 100%);z-index:9500;display:none;flex-direction:column;justify-content:center;align-items:center;gap:16px;transition:opacity .5s,visibility .5s;overflow:hidden;}
+#cargador .serif{color:#fff;}
+#cargador > *{position:relative;z-index:2;}
+#cargador .sp-aurora,#cargador .sp-estrellas,#cargador .sp-grilla,#cargador .sp-scan,#cargador .sp-vineta{z-index:0;}
 #cargador.oculto{opacity:0;visibility:hidden;}
 .carg-anillo{position:relative;width:96px;height:96px;}
-.carg-anillo::before{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid var(--linea);border-top-color:var(--carmin);animation:girar 1s linear infinite;}
+.carg-anillo::before{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid rgba(201,162,75,.25);border-top-color:var(--oro);animation:girar 1s linear infinite;filter:drop-shadow(0 0 8px rgba(201,162,75,.5));}
 .carg-anillo .centro{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
 @keyframes girar{to{transform:rotate(360deg)}}
-.carg-msg{font-size:.82rem;color:var(--piedra);letter-spacing:.5px;min-height:20px;transition:opacity .25s;}
-.carg-barra{width:200px;height:3px;background:var(--linea);border-radius:2px;overflow:hidden;}
-.carg-fill{height:100%;width:0%;background:var(--carmin);transition:width .15s;}
+.carg-msg{font-size:.78rem;color:#8B93A0;letter-spacing:.5px;min-height:18px;}
+.carg-barra{width:min(240px,60vw);height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;}
+.carg-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#F0D48B);border-radius:99px;transition:width .3s;box-shadow:0 0 10px rgba(201,162,75,.6);}
 
 /* ====== APP SHELL ====== */
-#app{display:none;width:100%;max-width:640px;min-height:100vh;background:var(--marfil);padding-bottom:96px;position:relative;}
+#app{display:none;width:100%;max-width:640px;min-height:100vh;padding-bottom:96px;position:relative;
+background-color:var(--marfil);
+background-image:
+ radial-gradient(700px 420px at 88% -60px, rgba(179,18,38,.045), transparent 60%),
+ radial-gradient(600px 380px at -80px 92%, rgba(201,162,75,.06), transparent 60%),
+ linear-gradient(rgba(18,22,28,.028) 1px, transparent 1px),
+ linear-gradient(90deg, rgba(18,22,28,.028) 1px, transparent 1px);
+background-size:auto,auto,44px 44px,44px 44px;background-attachment:fixed;}
 .topbar{position:sticky;top:0;z-index:500;background:var(--tinta);color:var(--marfil);padding:12px 16px;display:flex;align-items:center;gap:11px;}
 .topbar .titulo{font-size:1.3rem;font-weight:600;letter-spacing:.5px;line-height:1;}
 .topbar .subt{font-size:.6rem;letter-spacing:2.5px;color:var(--oro);text-transform:uppercase;margin-top:3px;}
@@ -596,11 +606,11 @@ box-shadow:0 0 0 10px rgba(179,18,38,.12), 0 0 70px rgba(179,18,38,.5);animation
 .splash-barra-caja{display:flex;align-items:center;gap:10px;margin-top:12px;}
 .splash-barra{width:min(240px,56vw);height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;position:relative;
 -webkit-mask-image:repeating-linear-gradient(90deg,#000 0 10px, transparent 10px 13px);mask-image:repeating-linear-gradient(90deg,#000 0 10px, transparent 10px 13px);}
-.splash-barra i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#F0D48B);animation:splashCarga 1.9s ease-out forwards;box-shadow:0 0 12px rgba(201,162,75,.7);}
+.splash-barra i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#F0D48B);animation:splashCarga 4.2s ease-out forwards;box-shadow:0 0 12px rgba(201,162,75,.7);}
 @keyframes splashCarga{0%{width:0%;}40%{width:52%;}70%{width:81%;}100%{width:100%;}}
 .splash-pct{font-family:'Space Grotesk';font-weight:700;font-size:.85rem;color:var(--oro);min-width:44px;text-align:left;text-shadow:0 0 10px rgba(201,162,75,.5);}
 /* Consola de arranque */
-.sp-consola{font-family:ui-monospace,'Cascadia Code',Consolas,monospace;font-size:.62rem;letter-spacing:.5px;color:#7A8494;margin-top:10px;min-height:42px;text-align:left;width:min(300px,74vw);}
+.sp-consola{font-family:ui-monospace,'Cascadia Code',Consolas,monospace;font-size:.62rem;letter-spacing:.5px;color:#7A8494;margin-top:10px;min-height:64px;text-align:left;width:min(320px,78vw);}
 .sp-consola .lin{opacity:0;animation:linEntra .25s forwards;}
 @keyframes linEntra{to{opacity:1;}}
 .sp-consola .ok{color:#5FBF87;} .sp-consola .oro{color:var(--oro);}
@@ -674,6 +684,43 @@ box-shadow:0 0 40px rgba(201,162,75,.15), 0 24px 60px rgba(0,0,0,.6);animation:q
 .pagar-dias.medio{background:var(--oro-suave);color:#8A6A1B;}
 .pagar-dias.rojo{background:var(--carmin-suave);color:var(--carmin);animation:badgeZoom 1.4s ease-in-out infinite;display:inline-block;}
 
+
+/* ===== Login de vidrio oscuro (mismo universo que la carga) ===== */
+#pantalla-login .login-caja{background:linear-gradient(165deg,rgba(27,33,43,.94),rgba(16,20,27,.96));border:1px solid rgba(201,162,75,.35);color:#fff;backdrop-filter:blur(8px);
+box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
+#pantalla-login .login-caja::before{border-color:rgba(201,162,75,.18);}
+#pantalla-login .login-nombre{color:#fff;}
+#pantalla-login .login-lbl{color:#8B93A0;}
+#pantalla-login .login-inp{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);color:#fff;}
+#pantalla-login .login-inp::placeholder{color:#5B6472;}
+#pantalla-login .login-inp:focus{border-color:var(--oro);box-shadow:0 0 12px rgba(201,162,75,.25);}
+#pantalla-login .login-proto{color:#7A8494;}
+#pantalla-login .login-proto b{color:var(--oro);}
+#pantalla-login .sello-proto{color:#5B6472;border-color:rgba(255,255,255,.14);}
+#pantalla-login .login-candado{background:rgba(179,18,38,.15);color:#E8536B;border:1px solid rgba(179,18,38,.4);box-shadow:0 0 18px rgba(179,18,38,.25);}
+#pantalla-login .btn-ingresar{background:linear-gradient(90deg,#B31226,#8A0D1C);box-shadow:0 0 22px rgba(179,18,38,.4);border:none;}
+#pantalla-login #ojo-clave{color:#8B93A0;}
+
+
+/* ===== La app en clave futurista (legibilidad primero) ===== */
+.kpi{background:linear-gradient(160deg,#161C26,#12161C);border:1px solid rgba(201,162,75,.25);color:#fff;border-radius:14px;}
+.kpi .valor{color:var(--oro);text-shadow:0 0 14px rgba(201,162,75,.35);}
+.kpi .nombre{color:#8B93A0;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,162,75,.6),transparent);}
+.encabezado-seccion .filete{height:2px;background:linear-gradient(90deg,rgba(201,162,75,.7),rgba(179,18,38,.35),transparent);box-shadow:0 0 8px rgba(201,162,75,.3);}
+.encabezado-seccion i{color:var(--carmin);filter:drop-shadow(0 0 6px rgba(179,18,38,.3));}
+.tarjeta{border:1px solid rgba(18,22,28,.07);transition:box-shadow .18s, border-color .18s;}
+.tarjeta:hover{border-color:rgba(201,162,75,.35);box-shadow:0 6px 24px rgba(18,22,28,.1), 0 0 18px rgba(201,162,75,.08);}
+.btn.carmin{box-shadow:0 4px 18px rgba(179,18,38,.3);}
+.btn.carmin:hover{box-shadow:0 4px 26px rgba(179,18,38,.45);}
+.etiqueta{border-left:3px solid var(--oro);padding-left:8px;}
+@media(min-width:900px){
+  .topbar{border-bottom:1px solid rgba(201,162,75,.35);box-shadow:0 1px 0 rgba(201,162,75,.15), 0 6px 24px rgba(0,0,0,.35);}
+  .sidebar{border-right:1px solid rgba(201,162,75,.25);}
+  .sidebar .nav-item.activo{box-shadow:inset 3px 0 0 var(--oro), 0 0 16px rgba(201,162,75,.12);}
+}
+.tabs-abajo{border-top:1px solid rgba(201,162,75,.3);box-shadow:0 -4px 20px rgba(18,22,28,.12);}
+
 </style>
 </head>
 <body>
@@ -716,6 +763,11 @@ box-shadow:0 0 40px rgba(201,162,75,.15), 0 24px 60px rgba(0,0,0,.6);animation:q
 
 <!-- ============ LOGIN ============ -->
 <div id="pantalla-login">
+    <div class="sp-aurora"></div>
+    <div class="sp-estrellas"></div>
+    <div class="sp-grilla"></div>
+    <div class="sp-scan"></div>
+    <div class="sp-vineta"></div>
     <div class="login-caja" style="max-width:330px;padding:28px 24px 20px 24px;">
         <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px;">
             <div class="login-candado"><i class="fi fi-rr-lock"></i></div>
@@ -740,10 +792,35 @@ box-shadow:0 0 40px rgba(201,162,75,.15), 0 24px 60px rgba(0,0,0,.6);animation:q
 
 <!-- ============ CARGADOR ============ -->
 <div id="cargador">
-    <div class="carg-anillo"><div class="centro"><div class="marca-p mini"><span>P</span></div></div></div>
-    <div class="serif" style="font-size:1.3rem;font-weight:600;">Portanko</div>
-    <div class="carg-msg" id="carg-msg">Verificando credenciales...</div>
-    <div class="carg-barra"><div class="carg-fill" id="carg-fill"></div></div>
+    <div class="sp-aurora"></div>
+    <div class="sp-estrellas"></div>
+    <div class="sp-grilla"></div>
+    <div class="splash-centro" style="position:relative;z-index:2;">
+        <div class="anillo a1"></div><div class="anillo a2"></div><div class="anillo a3"></div>
+        <div class="sp-ticks"></div>
+        <div class="scan"></div><div class="scan s2"></div>
+        <div class="rotor r1" style="--t:10s;--d:0s;"><span class="sat"><i class="fi fi-rr-building"></i></span></div>
+        <div class="rotor r1" style="--t:10s;--d:-3.33s;"><span class="sat"><i class="fi fi-rr-home"></i></span></div>
+        <div class="rotor r1" style="--t:10s;--d:-6.66s;"><span class="sat"><i class="fi fi-rr-briefcase"></i></span></div>
+        <div class="rotor r2" style="--t:16s;--d:0s;"><span class="sat"><i class="fi fi-rr-search"></i></span></div>
+        <div class="rotor r2" style="--t:16s;--d:-5.33s;"><span class="sat"><i class="fi fi-rr-document"></i></span></div>
+        <div class="rotor r2" style="--t:16s;--d:-10.66s;"><span class="sat"><i class="fi fi-rr-stats"></i></span></div>
+        <div class="rotor r3" style="--t:22s;--d:0s;"><span class="sat"><i class="fi fi-rr-graduation-cap"></i></span></div>
+        <div class="rotor r3" style="--t:22s;--d:-11s;"><span class="sat"><i class="fi fi-rr-bell"></i></span></div>
+        <div class="splash-p">P</div>
+    </div>
+    <div style="position:relative;z-index:2;">
+        <div class="splash-nombre" data-t="Portanko">Portanko</div>
+        <div class="splash-sub" id="carg-sub">Verificando acceso</div>
+    </div>
+    <div class="splash-barra-caja" style="position:relative;z-index:2;">
+        <div class="splash-barra"><i id="carg-fill" style="animation:none;transition:width .25s;"></i></div>
+        <span class="splash-pct" id="carg-pct">0%</span>
+    </div>
+    <div class="sp-consola" id="carg-consola" style="position:relative;z-index:2;"></div>
+    <div class="sp-scan"></div>
+    <div class="sp-vineta"></div>
+    <div class="splash-pie">Neuquén · Patagonia Argentina</div>
 </div>
 
 <!-- ============ APP ============ -->
@@ -1560,23 +1637,42 @@ function ingresar() {
     AREA = PERSONA.areas.includes('inm') ? 'inm' : 'jur';
     document.getElementById('pantalla-login').style.display = 'none';
     const carg = document.getElementById('cargador');
+    carg.classList.remove('oculto');
     carg.style.display = 'flex';
-    const msgs = ['Verificando credenciales...', 'Abriendo los fideicomisos...', 'Actualizando planos de lotes...', 'Calculando caja teórica...', 'Preparando el tablero...'];
-    let p = 0, mi = 0;
-    const t = setInterval(() => {
-        p = Math.min(100, p + 4);
-        document.getElementById('carg-fill').style.width = p + '%';
-        const idx = Math.min(msgs.length - 1, Math.floor(p / (100 / msgs.length)));
-        if (idx !== mi) { mi = idx; document.getElementById('carg-msg').innerText = msgs[mi]; }
-        if (p >= 100) {
-            clearInterval(t);
-            setTimeout(() => {
-                carg.classList.add('oculto');
-                document.getElementById('app').style.display = 'block';
-                iniciarApp();
-            }, 350);
-        }
-    }, 55);
+    document.getElementById('carg-sub').innerText = 'Verificando acceso · ' + PERSONA.rotulo;
+    /* Consola del logueo, personalizada con la persona y sus permisos */
+    const nombreCorto = USUARIO.split(' ')[0].replace('Dra.', 'Carla');
+    const areasTxt = PERSONA.areas.map(a => AREAS_INFO[a].nombre).join(' · ');
+    const lineasLog = [
+        ['[ <span class="oro">AUTH</span> ] Verificando credenciales…', 150],
+        [`[ <span class="ok">OK</span> ] Identidad confirmada: <span class="oro">${nombreCorto}</span> · ${PERSONA.rotulo}`, 850],
+        [`[ <span class="ok">OK</span> ] Permisos cargados · Áreas: ${areasTxt}`, 1550],
+        ['[ <span class="oro">SYNC</span> ] Fideicomisos · planos · clientes · caja', 2250],
+        [`[ <span class="ok">OK</span> ] <span class="ok">BIENVENIDO/A, ${nombreCorto.toUpperCase()}</span> <span class="sp-cursor"></span>`, 3000]
+    ];
+    const consLog = document.getElementById('carg-consola');
+    consLog.innerHTML = '';
+    lineasLog.forEach(([txt, tt]) => setTimeout(() => {
+        consLog.querySelectorAll('.sp-cursor').forEach(c => c.remove());
+        consLog.innerHTML += `<div class="lin">${txt}</div>`;
+    }, tt));
+    /* Barra + porcentaje sincronizados (3,4 s) */
+    const t0c = performance.now();
+    const easeC = x => 1 - Math.pow(1 - x, 2.2);
+    (function tickC() {
+        const x = Math.min(1, (performance.now() - t0c) / 3400);
+        const pctC = Math.round(easeC(x) * 100);
+        const f = document.getElementById('carg-fill'), pe = document.getElementById('carg-pct');
+        if (f) f.style.width = pctC + '%';
+        if (pe) pe.innerText = pctC + '%';
+        if (x < 1) requestAnimationFrame(tickC);
+    })();
+    setTimeout(() => {
+        carg.classList.add('oculto');
+        document.getElementById('app').style.display = 'block';
+        iniciarApp();
+        setTimeout(() => { carg.style.display = 'none'; }, 600);
+    }, 3800);
 }
 
 function cerrarSesion() {
@@ -2480,16 +2576,18 @@ window.addEventListener('load', () => {
     const t0 = performance.now();
     const easeOut = x => 1 - Math.pow(1 - x, 2.2);
     (function tick() {
-        const x = Math.min(1, (performance.now() - t0) / 1900);
+        const x = Math.min(1, (performance.now() - t0) / 4200);
         if (pctEl) pctEl.innerText = Math.round(easeOut(x) * 100) + '%';
         if (x < 1) requestAnimationFrame(tick);
     })();
     /* Consola de arranque */
     const lineas = [
-        ['[ <span class="ok">OK</span> ] Núcleo Portanko iniciado', 150],
-        ['[ <span class="ok">OK</span> ] Mapa catastral · 2 loteos · 70 mensuras', 620],
-        ['[ <span class="oro">SYNC</span> ] Portales inmobiliarios · CRM · Academia', 1150],
-        ['[ <span class="ok">OK</span> ] <span class="ok">ACCESO CONCEDIDO</span> <span class="sp-cursor"></span>', 1750]
+        ['[ <span class="ok">OK</span> ] Núcleo Portanko iniciado', 250],
+        ['[ <span class="ok">OK</span> ] Mapa catastral · 2 loteos · 70 mensuras oficiales', 1000],
+        ['[ <span class="ok">OK</span> ] Fideicomisos · clientes · cobranzas · tesorería', 1800],
+        ['[ <span class="oro">SYNC</span> ] Portales inmobiliarios · motor de coincidencias', 2600],
+        ['[ <span class="ok">OK</span> ] Academia · Estudio Jurídico · notificaciones', 3400],
+        ['[ <span class="ok">OK</span> ] <span class="ok">ACCESO CONCEDIDO</span> <span class="sp-cursor"></span>', 4300]
     ];
     const cons = document.getElementById('sp-consola');
     lineas.forEach(([txt, t]) => setTimeout(() => {
@@ -2501,7 +2599,7 @@ window.addEventListener('load', () => {
     setTimeout(() => {
         const s = document.getElementById('splash');
         if (s) { s.classList.add('fuera'); setTimeout(() => s.remove(), 850); }
-    }, 2450);
+    }, 5000);
 });
 
 window.onYouTubeIframeAPIReady = () => { ytApiLista = true; if (cursoAbierto !== null) montarPlayer(); };
