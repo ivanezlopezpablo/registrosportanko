@@ -22,7 +22,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;min-height:100%;}
-body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:13px;}
+body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:13px;zoom:75%;}
 .serif{font-family:'Space Grotesk',sans-serif;}
 i.fi{display:inline-flex;vertical-align:middle;}
 ::-webkit-scrollbar{display:none;}
@@ -346,7 +346,7 @@ body{font-size:17px;line-height:1.6;}
 .leaflet-container{font-family:'Inter',sans-serif;border-radius:0 0 0 0;}
 
 /* ====== MAPAS 2D/3D ====== */
-.mapa-vista-control{position:absolute;top:12px;right:12px;z-index:100;display:flex;gap:6px;background:rgba(255,255,255,.95);border:1px solid var(--linea);border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.mapa-vista-control{position:absolute;top:12px;right:12px;z-index:1000;display:flex;gap:6px;background:rgba(255,255,255,.95);border:1px solid var(--linea);border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
 .btn-vista{background:var(--papel);border:1px solid transparent;color:var(--piedra);font-family:'Inter';font-size:.75rem;padding:8px 12px;cursor:pointer;border-radius:3px;font-weight:600;letter-spacing:.5px;transition:all .2s;text-transform:uppercase;}
 .btn-vista.activo{background:var(--carmin);color:#fff;border-color:var(--carmin);}
 .btn-vista:hover{background:var(--marfil);border-color:var(--piedra);}
@@ -2284,8 +2284,8 @@ function initMapaVivo(fid) {
             <button class="btn-vista activo" onclick="cambiarVistaM('${fid}', '2d')"><i class="fi fi-rr-map"></i> 2D</button>
             <button class="btn-vista" onclick="cambiarVistaM('${fid}', '3d')"><i class="fi fi-rr-globe"></i> 3D</button>
         </div>
-        <div id="mapa-2d-${fid}" style="width:100%;height:100%;"></div>
-        <div id="mapa-3d-${fid}" style="width:100%;height:100%;display:none;"></div>
+        <div id="mapa-2d-${fid}" style="width:100%;height:100%;position:absolute;top:0;left:0;"></div>
+        <div id="mapa-3d-${fid}" style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;"></div>
     </div>`;
     
     renderMapa2D(fid);
@@ -2345,58 +2345,93 @@ function renderMapa2D(fid) {
     /* FitBounds mejorado: espera a que cargue el mapa */
     setTimeout(() => {
         if (bounds && bounds.isValid()) {
-            mapa.fitBounds(bounds, { padding: [80, 80], maxZoom: 15, zoom: 14 });
+            mapa.fitBounds(bounds, { padding: [80, 80], maxZoom: 18, zoom: 17 });
         }
     }, 300);
 }
 
 function renderMapa3D(fid) {
     const mapDiv = document.getElementById('mapa-3d-' + fid);
-    if (!mapDiv || !window.Cesium) return;
+    if (!mapDiv) return;
     
-    if (MAPAS_CESIUM[fid]) { MAPAS_CESIUM[fid].destroy(); }
-    
-    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZDYyNzg1YS01NjU0LTQ0ZTItODg2YS04MDg5Y2FmYTgyMDAiLCJpZCI6MTc3MzU2LCJpYXQiOjE3MjAwNzc5MDh9.zyeSOHDmfJXDzqCPg9wYa7xg0x-KYXvNi_IFDDNfUCw';
-    
-    const viewer = new Cesium.Viewer(mapDiv, {
-        terrainProvider: Cesium.CesiumTerrainProvider.fromUrl(Cesium.IonResource.fromAssetId(1),{requestVertexNormals: true}),
-        imageryProvider: Cesium.ArcGisMapServerImageryProvider.fromUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'),
-        animation: false, timeline: false
-    });
-    viewer.scene.globe.enableLighting = true;
-    
-    const geo = GEOS[fid];
-    let centerLat = -38.95, centerLng = -68.07;
-    
-    if (geo.perimetro && geo.perimetro.length > 0) {
-        centerLat = (geo.perimetro.reduce((a, p) => a + p[0], 0) / geo.perimetro.length);
-        centerLng = (geo.perimetro.reduce((a, p) => a + p[1], 0) / geo.perimetro.length);
+    // Esperar a que Cesium cargue si aún no está disponible
+    if (!window.Cesium) {
+        setTimeout(() => renderMapa3D(fid), 1000);
+        mapDiv.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Cargando vista 3D...</div>';
+        return;
     }
     
-    /* Dibujar lotes en 3D */
-    geo.lotes.forEach(g => {
-        const l = LOTES.find(x => x.fid === fid && x.mza === g.mza && x.nro === g.lote);
-        const estado = l ? l.estado : g.estadoKml;
-        const estilo = COLORES_MAPA[estado] || COLORES_MAPA.disponible;
+    if (MAPAS_CESIUM[fid]) { 
+        try { MAPAS_CESIUM[fid].destroy(); } catch(e) {}
+    }
+    
+    // Limpiar el div antes de crear el viewer
+    mapDiv.innerHTML = '';
+    
+    try {
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZDYyNzg1YS01NjU0LTQ0ZTItODg2YS04MDg5Y2FmYTgyMDAiLCJpZCI6MTc3MzU2LCJpYXQiOjE3MjAwNzc5MDh9.zyeSOHDmfJXDzqCPg9wYa7xg0x-KYXvNi_IFDDNfUCw';
         
-        const coords = g.coords.map(([lat, lng]) => Cesium.Cartesian3.fromDegrees(lng, lat, 20));
-        const polygon = Cesium.Cartesian3.fromDegreesArray(g.coords.flatMap(([lat, lng]) => [lng, lat]));
-        
-        viewer.entities.add({
-            polygon: {
-                hierarchy: new Cesium.PolygonHierarchy(coords),
-                material: Cesium.Color.fromCssColorString(estilo.fillColor),
-                outline: true, outlineColor: Cesium.Color.fromCssColorString(estilo.color)
-            }
+        const viewer = new Cesium.Viewer(mapDiv, {
+            terrainProvider: Cesium.CesiumTerrainProvider.fromUrl(Cesium.IonResource.fromAssetId(1), {requestVertexNormals: true}),
+            imageryProvider: Cesium.ArcGisMapServerImageryProvider.fromUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'),
+            animation: false,
+            timeline: false,
+            fullscreenButton: false,
+            homeButton: false,
+            navigationHelpButton: false,
+            infoBox: false
         });
-    });
-    
-    viewer.camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(centerLng, centerLat, 2500),
-        duration: 2
-    });
-    
-    MAPAS_CESIUM[fid] = viewer;
+        
+        viewer.scene.globe.enableLighting = true;
+        
+        const geo = GEOS[fid];
+        let centerLat = -38.95, centerLng = -68.07;
+        
+        if (geo.perimetro && geo.perimetro.length > 0) {
+            centerLat = (geo.perimetro.reduce((a, p) => a + p[0], 0) / geo.perimetro.length);
+            centerLng = (geo.perimetro.reduce((a, p) => a + p[1], 0) / geo.perimetro.length);
+        }
+        
+        /* Dibujar lotes en 3D */
+        geo.lotes.forEach(g => {
+            const l = LOTES.find(x => x.fid === fid && x.mza === g.mza && x.nro === g.lote);
+            const estado = l ? l.estado : g.estadoKml;
+            const estilo = COLORES_MAPA[estado] || COLORES_MAPA.disponible;
+            
+            const coords = g.coords.map(([lat, lng]) => Cesium.Cartesian3.fromDegrees(lng, lat, 20));
+            
+            viewer.entities.add({
+                polygon: {
+                    hierarchy: new Cesium.PolygonHierarchy(coords),
+                    material: Cesium.Color.fromCssColorString(estilo.fillColor),
+                    outline: true,
+                    outlineColor: Cesium.Color.fromCssColorString(estilo.color),
+                    outlineWidth: 2
+                }
+            });
+        });
+        
+        /* Volar a la ubicación - zoom mucho más cercano */
+        setTimeout(() => {
+            try {
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(centerLng, centerLat, 400),
+                    duration: 2,
+                    pitch: Cesium.Math.toRadians(-35),
+                    complete: () => {
+                        viewer.scene.requestRender();
+                    }
+                });
+            } catch(e) {
+                console.error('Error en flyTo:', e);
+            }
+        }, 400);
+        
+        MAPAS_CESIUM[fid] = viewer;
+    } catch (error) {
+        console.error('Error al cargar Cesium 3D:', error);
+        mapDiv.innerHTML = '<div style="padding:20px;text-align:center;color:#999;font-size:0.9rem;"><i class="fi fi-rr-exclamation"></i> Cesium 3D no disponible.<br>Verifica tu conexión a internet.</div>';
+    }
 }
 
 function cambiarVistaM(fid, vista) {
@@ -2410,14 +2445,26 @@ function cambiarVistaM(fid, vista) {
         btn2d.classList.add('activo');
         btn3d.classList.remove('activo');
         div2d.style.display = 'block';
+        div2d.style.visibility = 'visible';
         div3d.style.display = 'none';
-        if (MAPAS_VIVOS[fid]) MAPAS_VIVOS[fid].invalidateSize();
+        div3d.style.visibility = 'hidden';
+        setTimeout(() => {
+            if (MAPAS_VIVOS[fid]) MAPAS_VIVOS[fid].invalidateSize();
+        }, 100);
     } else {
         btn2d.classList.remove('activo');
         btn3d.classList.add('activo');
         div2d.style.display = 'none';
+        div2d.style.visibility = 'hidden';
         div3d.style.display = 'block';
-        if (!MAPAS_CESIUM[fid]) renderMapa3D(fid);
+        div3d.style.visibility = 'visible';
+        if (!MAPAS_CESIUM[fid]) {
+            renderMapa3D(fid);
+        } else {
+            try {
+                MAPAS_CESIUM[fid].scene.requestRender();
+            } catch(e) {}
+        }
     }
 }
 
