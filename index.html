@@ -317,6 +317,14 @@ body{font-size:17px;line-height:1.6;}
 .hint,.plano-titulo .ref{font-size:.72rem;}
 .plano-titulo .mza{font-size:1.4rem;}
 
+/* Filtros burbuja (chips) */
+.chips-filtro{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 12px 0;}
+.chip-b{border:none;border-radius:999px;padding:9px 16px;font-family:'Inter';font-size:.78rem;font-weight:600;background:#fff;color:#5B6472;box-shadow:0 1px 3px rgba(18,22,28,.08);cursor:pointer;transition:all .15s;}
+.chip-b:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(18,22,28,.12);}
+.chip-b.activo{background:var(--tinta);color:#fff;box-shadow:0 3px 10px rgba(18,22,28,.22);}
+.chip-b.activo.verde{background:var(--ok);}
+.chip-b.activo.rojo{background:var(--carmin);}
+
 /* Etiquetas de los lotes sobre el mapa satelital */
 .lote-label{background:none;border:none;box-shadow:none;}
 .lote-label span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.6);pointer-events:none;white-space:nowrap;}
@@ -462,6 +470,31 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
     .area-switch{border-radius:999px;}
 }
 
+
+/* ===== Controles profesionales: selects, fechas y buscadores ===== */
+select.form-inp{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' stroke='%23B31226' stroke-width='2.2' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;cursor:pointer;font-weight:600;color:var(--tinta);}
+select.form-inp:hover{border-color:var(--carmin);box-shadow:0 2px 8px rgba(179,18,38,.08);}
+input[type="date"].form-inp{font-weight:600;color:var(--tinta);cursor:pointer;}
+input[type="date"].form-inp::-webkit-calendar-picker-indicator{cursor:pointer;padding:4px;border-radius:6px;filter:invert(14%) sepia(84%) saturate(3453%) hue-rotate(340deg) brightness(85%);}
+input[id^="buscar-"]{background-color:#fff;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24'><circle cx='10.5' cy='10.5' r='7' stroke='%23B31226' stroke-width='2.4' fill='none'/><path d='M16 16l5.5 5.5' stroke='%23B31226' stroke-width='2.4' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:14px center;padding-left:44px !important;border:2px solid var(--carmin) !important;border-radius:14px;box-shadow:0 3px 12px rgba(179,18,38,.1);font-weight:500;}
+input[id^="buscar-"]:focus{box-shadow:0 4px 16px rgba(179,18,38,.18);}
+input[id^="buscar-"]::placeholder{color:#9AA1AB;}
+
+/* ===== Campanita de notificaciones ===== */
+.campanita{position:relative;border:none;background:rgba(255,255,255,.1);color:#fff;width:40px;height:40px;border-radius:12px;cursor:pointer;font-size:1.15rem;display:inline-flex;align-items:center;justify-content:center;transition:background .15s;}
+.campanita:hover{background:rgba(255,255,255,.2);}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:var(--oro);color:var(--tinta);font-size:.62rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--tinta);}
+.panel-notifs{display:none;position:fixed;top:64px;right:12px;width:min(94vw,400px);max-height:70vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(18,22,28,.3);z-index:9000;padding:14px;}
+.panel-notifs.abierto{display:block;}
+.notif-item{padding:12px 10px;border-bottom:1px solid var(--linea);font-size:.86rem;line-height:1.5;cursor:pointer;border-radius:10px;}
+.notif-item:hover{background:var(--marfil);}
+.notif-item.nueva{background:var(--carmin-suave);}
+.notif-item small{display:block;color:var(--piedra);font-size:.72rem;margin-top:2px;}
+.push-interna{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:14px 18px;border-radius:14px;box-shadow:0 12px 40px rgba(18,22,28,.4);z-index:9500;font-size:.88rem;max-width:92vw;display:flex;gap:10px;align-items:center;animation:pushBaja .3s ease;}
+@keyframes pushBaja{from{transform:translate(-50%,-80px);opacity:0;}to{transform:translate(-50%,0);opacity:1;}}
+.bitacora-toc{cursor:pointer;border-radius:10px;padding:10px 8px;transition:background .12s;}
+.bitacora-toc:hover{background:var(--marfil);}
+
 </style>
 </head>
 <body>
@@ -485,7 +518,7 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
         </div>
         <button class="btn-ingresar" onclick="ingresar()"><i class="fi fi-rr-lock" style="margin-right:6px;"></i>Ingresar</button>
         <div class="login-proto" style="margin-top:14px;">Un solo ingreso: lo que cada persona puede ver<br>lo definen sus permisos, no la puerta de entrada.</div>
-        <div class="login-proto" style="margin-top:8px;font-size:.68rem;">Demo — probá con: <b>lucia@</b> (Directorio) · <b>maria@</b> (Personal) · <b>carla@</b> (Estudio)</div>
+        <div class="login-proto" style="margin-top:8px;font-size:.68rem;">Demo — probá con: <b>lucia@</b> (todo) · <b>nicolas@</b> o <b>belen@</b> (Directorio, solo lectura) · <b>oficina@</b> (registra, no modifica) · <b>carla@</b> (Estudio)</div>
         <div class="sello-proto">Prototipo · Datos de demostración</div>
     </div>
 </div>
@@ -506,7 +539,9 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <div class="titulo serif">Portanko</div>
             <div class="subt">Fideicomisos</div>
         </div>
-        <div class="der">
+        <div class="der" style="display:flex;align-items:center;gap:8px;justify-content:flex-end;">
+            <button class="campanita" id="btn-ayuda" onclick="mostrarAyuda()" title="¿Cómo funciona esta pantalla?"><i class="fi fi-rr-interrogation"></i></button>
+            <button class="campanita" id="btn-notifs" onclick="toggleNotifs()" title="Notificaciones"><i class="fi fi-rr-bell"></i><span class="notif-badge" id="notif-badge" style="display:none;">0</span></button>
             <span class="usuario-pill" onclick="cerrarSesion()" title="Cerrar sesión"><b id="pill-rol">Dueño</b> · <span id="pill-nombre">Lucía</span> · Salir</span>
         </div>
     </div>
@@ -555,6 +590,19 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <span><span class="cubo x"></span>⚠ A regularizar</span>
         </div>
         <div class="tarjeta" id="tarjeta-valores"></div>
+        <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-calculator"></i> Simulador de financiación</div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Lote (disponibles)</label><select class="form-inp" id="sim-lote" onchange="simular()"></select></div>
+                <div><label class="form-lbl">O valor manual (USD)</label><input class="form-inp" id="sim-valor" inputmode="numeric" placeholder="Ej: 24000" oninput="simular()"></div>
+            </div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Entrega (USD)</label><input class="form-inp" id="sim-entrega" inputmode="numeric" placeholder="2000" oninput="simular()"></div>
+                <div><label class="form-lbl">Cantidad de cuotas</label><select class="form-inp" id="sim-cuotas" onchange="simular()"><option>12</option><option>24</option><option>36</option><option>48</option><option selected>60</option></select></div>
+            </div>
+            <div id="sim-resultado"></div>
+            <div style="font-size:.72rem;color:var(--piedra);margin-top:8px;">Cotización USD de referencia: <b id="sim-bna"></b> · Fuente: <a href="https://bna.com.ar/Personas" target="_blank" style="color:var(--carmin);">Banco Nación (bna.com.ar/Personas)</a> — en la versión real se actualiza sola cada día.</div>
+        </div>
         <div class="tarjeta" id="tarjeta-mapa-vivo" style="padding:0;overflow:hidden;">
             <div style="padding:16px 16px 10px 16px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;">
                 <div class="etiqueta" style="margin:0;"><i class="fi fi-rr-map-marker" style="color:var(--carmin);"></i> Mapa satelital interactivo <span id="mapa-nombre"></span></div>
@@ -628,12 +676,17 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             </div>
             <label class="form-lbl">Detalles / observaciones</label>
             <textarea class="form-inp" id="alta-detalles" rows="2" placeholder="Ej: Realiza el pago en pesos argentinos · Entrega final a 60 días"></textarea>
+            <div class="fila-2">
+                <div><label class="form-lbl">📄 Boleto de Compra (PDF)</label><input type="file" class="form-inp" id="alta-boleto" accept=".pdf,image/*"></div>
+                <div><label class="form-lbl">🧾 Comprobantes de la entrega</label><input type="file" class="form-inp" id="alta-comprobantes" multiple accept=".pdf,image/*"></div>
+            </div>
             <div id="alta-resumen" class="aviso alerta" style="display:none;"></div>
             <button class="btn carmin" onclick="darAltaCliente()">Dar de alta y registrar la venta del lote</button>
             </div>
             <div id="alta-resultado"></div>
         </div>
 
+        <div class="chips-filtro" id="chips-cli"></div>
         <input class="form-inp" id="buscar-cli" placeholder="Buscar por nombre, DNI o lote..." oninput="renderClientes()">
         <div id="lista-clientes" style="margin-top:10px;"></div>
     </div>
@@ -675,11 +728,72 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
     </div>
 
     <!-- TESORERIA -->
+    <div class="vista" id="vista-ainicio">
+        <div class="encabezado-seccion"><i class="fi fi-rr-building"></i><h2 id="titulo-age">Inmobiliaria</h2><div class="filete"></div></div>
+        <div class="acciones-rapidas">
+            <button class="accion-r" onclick="irA('crm')"><span class="accion-circ"><i class="fi fi-rr-search"></i></span>Búsquedas</button>
+            <button class="accion-r" onclick="irA('atasaciones')"><span class="accion-circ"><i class="fi fi-rr-diploma"></i></span>Tasar</button>
+            <button class="accion-r" onclick="cambiarArea()"><span class="accion-circ"><i class="fi fi-rr-apps"></i></span>Áreas</button>
+            <button class="accion-r" onclick="mostrarAyuda('ainicio')"><span class="accion-circ"><i class="fi fi-rr-interrogation"></i></span>Ayuda</button>
+        </div>
+        <div class="kpi-grid" id="age-kpis"></div>
+        <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-time-past"></i> Última actividad de la Inmobiliaria</div>
+            <div id="age-actividad"></div>
+        </div>
+    </div>
+
+    <div class="vista" id="vista-crm">
+        <div class="encabezado-seccion"><i class="fi fi-rr-search"></i><h2>Búsquedas de Propiedades</h2><div class="filete"></div></div>
+        <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-user-add"></i> Nueva consulta de búsqueda</div>
+            <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;margin-bottom:4px;">Cargá lo que busca la persona: el sistema rastrea los portales (Zonaprop, MercadoLibre, Argenprop) para Neuquén y Río Negro y te avisa con notificaciones cada vez que encuentra coincidencias.</p>
+            <div class="fila-2">
+                <div><label class="form-lbl">Nombre y apellido</label><input class="form-inp" id="crm-nombre" placeholder="Ej: Sosa Marina"></div>
+                <div><label class="form-lbl">Teléfono</label><input class="form-inp" id="crm-tel" inputmode="tel" placeholder="299 ..."></div>
+            </div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Operación</label><select class="form-inp" id="crm-op"><option value="alquiler">Alquiler</option><option value="venta">Compra</option></select></div>
+                <div><label class="form-lbl">Tipo de propiedad</label><select class="form-inp" id="crm-tipo"><option value="departamentos">Departamento</option><option value="casas">Casa</option><option value="terrenos">Terreno / Lote</option><option value="locales">Local comercial</option></select></div>
+            </div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Zona</label><select class="form-inp" id="crm-zona"><option value="neuquen">Neuquén Capital</option><option value="plottier">Plottier</option><option value="centenario">Centenario</option><option value="cipolletti">Cipolletti (RN)</option><option value="general-roca">General Roca (RN)</option><option value="rio-negro">Río Negro (toda)</option></select></div>
+                <div><label class="form-lbl">Presupuesto máx. ($ o USD)</label><input class="form-inp" id="crm-presu" placeholder="Ej: 450.000 / 65.000 USD"></div>
+            </div>
+            <label class="form-lbl">Detalles (dormitorios, mascotas, cochera...)</label>
+            <input class="form-inp" id="crm-detalle" placeholder="Ej: 2 dormitorios, acepta mascotas, con patio">
+            <button class="btn carmin" onclick="guardarConsultaCRM()"><i class="fi fi-rr-search"></i> Registrar y buscar coincidencias ahora</button>
+        </div>
+        <input class="form-inp" id="buscar-crm" placeholder="Buscar consulta por nombre o teléfono..." oninput="renderCRM()">
+        <div id="lista-crm" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="vista" id="vista-atasaciones">
+        <div class="encabezado-seccion"><i class="fi fi-rr-diploma"></i><h2>Tasaciones</h2><div class="filete"></div></div>
+        <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-diploma"></i> Tasaciones · presupuesto al instante</div>
+            <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;margin-bottom:4px;">Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad): base coeficiente 1,00 = Terreno-Lote, y cada tipo multiplica según su complejidad. Cualquier usuario puede atender la consulta y entregar el PDF.</p>
+            <div class="fila-2">
+                <div><label class="form-lbl">Cliente</label><input class="form-inp" id="tas-cliente" placeholder="Ej: Ramírez Silvia"></div>
+                <div><label class="form-lbl">Dirección de la propiedad</label><input class="form-inp" id="tas-dir" placeholder="Ej: Av. Argentina 1250"></div>
+            </div>
+            <label class="form-lbl">Tipo de propiedad</label>
+            <select class="form-inp" id="tas-tipo" onchange="calcularTasacion()"></select>
+            <div id="tas-desc" style="margin:4px 2px;"></div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Superficie (m²)</label><input class="form-inp" id="tas-m2" inputmode="numeric" placeholder="Ej: 90" oninput="calcularTasacion()"></div>
+                <div><label class="form-lbl">Base coef. 1,00 ($/m²) · solo Dirección</label><input class="form-inp" id="tas-base" inputmode="numeric" onchange="guardarBaseTasacion()"></div>
+            </div>
+            <div id="tas-resultado"></div>
+            <button class="btn carmin" onclick="pdfTasacion()"><i class="fi fi-rr-document"></i> Descargar presupuesto de tasación (PDF)</button>
+        </div>
+    </div>
+
     <div class="vista" id="vista-tesoreria">
         <div class="encabezado-seccion"><i class="fi fi-rr-safe-box"></i><h2>Tesorería</h2><div class="filete"></div></div>
         <div class="kpi-grid" id="cuentas-grid"></div>
         <div class="tarjeta" style="margin-top:13px;">
-            <div class="etiqueta">Registrar movimiento</div>
+            <div class="etiqueta"><i class="fi fi-rr-exchange"></i> Registrar movimiento</div>
             <label class="form-lbl">Tipo</label>
             <select class="form-inp" id="mov-tipo">
                 <option>Depósito en banco (sale de caja)</option>
@@ -700,7 +814,7 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <div id="mov-resultado"></div>
         </div>
         <div class="tarjeta">
-            <div class="etiqueta">Últimos movimientos</div>
+            <div class="etiqueta"><i class="fi fi-rr-time-past"></i> Últimos movimientos</div>
             <div id="lista-movimientos"></div>
         </div>
     </div>
@@ -755,6 +869,30 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <div id="contable-resultado"></div>
         </div>
         <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-clipboard-list"></i> Actas del Fideicomiso · solo administradores</div>
+            <p style="font-size:.82rem;color:var(--piedra);line-height:1.55;margin-bottom:6px;">Visitas técnicas, informes del desarrollador, avances de obra: todo queda acá con sus fotos y documentos adjuntos. Solo lo ven los usuarios del Directorio.</p>
+            <div class="fila-2">
+                <div><label class="form-lbl">Tipo</label><select class="form-inp" id="acta-tipo"><option>Visita técnica</option><option>Informe del desarrollador</option><option>Avance de obra</option><option>Reunión de Directorio</option><option>Otro</option></select></div>
+                <div><label class="form-lbl">Fideicomiso</label><select class="form-inp" id="acta-fid"><option value="AER">Aeroparque</option><option value="DG">Don Guarino</option></select></div>
+            </div>
+            <label class="form-lbl">Título</label>
+            <input class="form-inp" id="acta-titulo" placeholder="Ej: Visita técnica: apertura de calles Mza D">
+            <label class="form-lbl">Detalle</label>
+            <textarea class="form-inp" id="acta-detalle" rows="2" placeholder="Qué se vio, qué se acordó, próximos pasos..."></textarea>
+            <label class="form-lbl">Fotos y documentos (PDF, imágenes)</label>
+            <input type="file" class="form-inp" id="acta-archivos" multiple accept="image/*,.pdf">
+            <button class="btn tinta" onclick="guardarActa()"><i class="fi fi-rr-add-document"></i> Guardar acta</button>
+            <div class="etiqueta" style="margin-top:14px;">Actas registradas · tocá para ampliar</div>
+            <div id="lista-actas"></div>
+        </div>
+        <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-usd-circle"></i> Administración · Valores del m² por manzana</div>
+            <p style="font-size:.82rem;color:var(--piedra);line-height:1.55;margin-bottom:6px;">Solo el Directorio fija estos valores. Con ellos, el sistema calcula automáticamente el valor estimado de cada lote (m² × valor de su manzana) y arma las financiaciones posibles: contado, con entrega en 30 o 60 cuotas, y sin entrega.</p>
+            <div id="panel-precios"></div>
+            <button class="btn tinta" onclick="guardarPreciosM2()"><i class="fi fi-rr-badge-check"></i> Guardar valores del m²</button>
+            <div id="precios-resultado"></div>
+        </div>
+        <div class="tarjeta">
             <div class="etiqueta"><i class="fi fi-rr-users-alt"></i> Administración · Equipo de vendedores</div>
             <p style="font-size:.82rem;color:var(--piedra);line-height:1.55;margin-bottom:6px;">El Directorio administra el catálogo: en toda la app el vendedor se elige de esta lista (comisiones sin errores de tipeo). En la versión real, cada vendedor tendrá su propio usuario y clave única, con sesión abierta en todos sus dispositivos a la vez.</p>
             <div id="lista-vendedores"></div>
@@ -780,15 +918,23 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
         <div class="encabezado-seccion"><i class="fi fi-rr-briefcase"></i><h2>Casos</h2><div class="filete"></div></div>
         <div class="tarjeta">
             <div class="etiqueta">Nuevo caso</div>
-            <label class="form-lbl">Carátula</label>
+            <label class="form-lbl">Autos caratulados</label>
             <input class="form-inp" id="caso-caratula" placeholder="Ej: Pérez c/ Transporte Sur s/ daños">
+            <label class="form-lbl">Cliente (apellido y nombre)</label>
+            <input class="form-inp" id="caso-cliente" placeholder="Ej: Pérez Juan Alberto">
+            <div class="fila-2">
+                <div><label class="form-lbl">DNI del cliente</label><input class="form-inp" id="caso-dni" inputmode="numeric" placeholder="Ej: 27458963"></div>
+                <div><label class="form-lbl">Teléfono</label><input class="form-inp" id="caso-tel" inputmode="tel" placeholder="Ej: 299 512 4478"></div>
+            </div>
             <div class="fila-2">
                 <div><label class="form-lbl">Abogada/o responsable</label><input class="form-inp" id="caso-abogado" placeholder="Dra. Carla M."></div>
                 <div><label class="form-lbl">Estado</label><select class="form-inp" id="caso-estado"><option>En trámite</option><option>Ganado</option><option>Acordado</option><option>Perdido</option></select></div>
             </div>
             <button class="btn tinta" onclick="crearCaso()">Abrir caso</button>
         </div>
-        <div id="lista-casos"></div>
+        <div class="chips-filtro" id="chips-casos"></div>
+        <input class="form-inp" id="buscar-caso" placeholder="Buscar por carátula, cliente, DNI o teléfono..." oninput="renderCasos()">
+        <div id="lista-casos" style="margin-top:10px;"></div>
     </div>
 
     <div class="vista" id="vista-jcobrar">
@@ -843,6 +989,7 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
     </div>
 </div>
 
+<div class="panel-notifs" id="panel-notifs"></div>
 <!-- MODAL RECIBO / INFORME -->
 <div class="modal-fondo" id="modal-doc" onclick="if(event.target===this)cerrarModal()">
     <div class="modal-envoltura">
@@ -903,6 +1050,27 @@ const DATOS_FID = {
     AER: { razon: 'Fideicomiso Aeroparque', cuit: 'CUIT a completar', rol: 'Desarrollador del loteo' },
     DG:  { razon: 'Fideicomiso Don Guarino', cuit: '33-71703755-9', rol: 'Desarrollador del loteo' }
 };
+
+/* Valores del m² POR MANZANA (los fija el Directorio). Si una manzana
+   no tiene valor propio, rige el del loteo según el tipo de lote. */
+let PRECIOS_M2 = { AER: { 'B': 75, 'C': 75, 'D': 83.5, 'F': 75 }, DG: { 'A': 125, 'B': 110, 'C': 110, 'D': 110 } };
+function precioM2De(fid, mza, nro) {
+    const conf = FIDEICOMISOS[fid].comercial;
+    const propio = (PRECIOS_M2[fid] || {})[mza];
+    return propio != null ? propio : (tipoDeLote(fid, mza, nro) === 'Comercial' ? conf.m2Com : conf.m2Res);
+}
+/* Financiaciones potenciales para un valor dado: contado, con
+   entrega (30 y 60 cuotas) y sin entrega. */
+function planesDe(valor, conf) {
+    if (!valor) return [];
+    const e = Math.min(conf.entregaMin, valor);
+    return [
+        { nombre: 'Pago contado', detalle: `1 pago de ${usd(valor)}` },
+        { nombre: `Con entrega de ${usd(e)} · 30 cuotas`, detalle: `Entrega + 30 cuotas de ≈ ${usd(Math.ceil((valor - e) / 30))}` },
+        { nombre: `Con entrega de ${usd(e)} · 60 cuotas`, detalle: `Entrega + 60 cuotas de ≈ ${usd(Math.ceil((valor - e) / 60))}` },
+        { nombre: 'Sin entrega · 60 cuotas', detalle: `60 cuotas de ≈ ${usd(Math.ceil(valor / 60))}` }
+    ];
+}
 
 /* Lotes COMERCIALES según las capas del mapa oficial */
 const COMERCIALES = { AER: { D: [11,12,13,14,15,16,17,18,19,20,21,22] }, DG: { A: [1,2,3,4,5,6,7] } };
@@ -993,14 +1161,14 @@ let COBROS = [
    ================================================================== */
 const ROLES_REPARTO = ['Abogado/a del caso (socio)', 'Dueños del estudio', 'Médico/a perito', 'Abogado externo colaborador', 'Socio Publicista', 'Otro'];
 let CASOS = [
-    { caratula:'Fernández c/ Aseguradora del Sur s/ daños', abogado:'Dra. Carla M.', estado:'Ganado', moneda:'ARS', cobrado:8400000, pctEstudio:20,
+    { caratula:'Fernández c/ Aseguradora del Sur s/ daños', fechaInicio:'2024-03-10', cliente:'Fernández Marta Susana', dni:'21.458.963', tel:'299 512 4478', abogado:'Dra. Carla M.', estado:'Ganado', moneda:'ARS', cobrado:8400000, pctEstudio:20,
       intervinientes:[
         {nombre:'Dra. Carla M.', rol:'Abogado/a del caso (socio)', pct:40, pagado:2688000},
         {nombre:'Dueños del estudio', rol:'Dueños del estudio', pct:25, pagado:1680000},
         {nombre:'Dr. Pérez (perito médico)', rol:'Médico/a perito', pct:20, pagado:0},
         {nombre:'Pablo Ivañez', rol:'Socio Publicista', pct:15, pagado:0} ],
       cobros:[ {fecha:'2026-07-22', monto:8400000, concepto:'Honorarios regulados', constancias:2, usuario:'Dra. Carla M.'} ] },
-    { caratula:'Suc. de Molina — división de herencia', abogado:'Dra. Carla M.', estado:'Acordado', moneda:'ARS', cobrado:2500000, pctEstudio:25,
+    { caratula:'Suc. de Molina — división de herencia', fechaInicio:'2025-01-20', cliente:'Molina Ricardo (sucesión)', dni:'12.874.556', tel:'299 488 7712', abogado:'Dra. Carla M.', estado:'Acordado', moneda:'ARS', cobrado:2500000, pctEstudio:25,
       intervinientes:[
         {nombre:'Dra. Carla M.', rol:'Abogado/a del caso (socio)', pct:55, pagado:1031250},
         {nombre:'Dra. Inés P. (Cipolletti)', rol:'Abogado externo colaborador', pct:30, pagado:562500},
@@ -1036,11 +1204,33 @@ let capturasCobro = [];
 /* ================== SESIÓN Y NAVEGACIÓN ================== */
 let ROL = 'duenio', USUARIO = 'Lucía', FID = 'AER', AREA = 'inm';
 /* Permisos de área por perfil: el acceso al Estudio es ESPECIAL */
+/* ===== USUARIOS REALES Y SU MATRIZ DE PERMISOS =====
+   vista: qué interfaz ven (duenio = tablero completo del Directorio;
+          personal = panel operativo; abogados = Estudio Jurídico)
+   puede: registrar (cargar cobros/altas/reservas) · modificar (editar
+          o eliminar lo existente) · informes (solicitar y descargar,
+          siempre con constancia de quién pidió) · admin (valores del
+          m², vendedores) */
 const PERFILES = {
-    duenio:   { usuario:'Lucía',        areas:['inm','jur'] },
-    personal: { usuario:'María',        areas:['inm'] },
-    abogados: { usuario:'Dra. Carla M.', areas:['jur'] }
+    lucia:   { usuario: 'Lucía Natalia Bruno Portanko', rotulo: 'Dirección General', vista: 'duenio', areas: ['inm', 'age', 'jur'],
+               puede: { registrar: true, modificar: true, informes: true, admin: true } },
+    nicolas: { usuario: 'Nicolás Portanko', rotulo: 'Directorio · solo lectura', vista: 'duenio', areas: ['inm'],
+               puede: { registrar: false, modificar: false, informes: true, admin: false } },
+    belen:   { usuario: 'Belén Bruno Portanko', rotulo: 'Directorio · solo lectura', vista: 'duenio', areas: ['inm'],
+               puede: { registrar: false, modificar: false, informes: true, admin: false } },
+    oficina: { usuario: 'Oficina', rotulo: 'Usuario general', vista: 'personal', areas: ['inm', 'age'],
+               puede: { registrar: true, modificar: false, informes: false, admin: false } },
+    carla:   { usuario: 'Dra. Carla M.', rotulo: 'Estudio Jurídico', vista: 'abogados', areas: ['jur'],
+               puede: { registrar: true, modificar: true, informes: true, admin: false } }
 };
+let PERSONA = PERFILES.lucia;
+const puede = x => PERSONA.puede[x];
+async function sinPermiso(queCosa) {
+    await pedirConfirmacion({ titulo: 'Permiso insuficiente',
+        mensaje: `Tu usuario <b>${USUARIO}</b> (${PERSONA.rotulo}) no tiene permisos para <b>${queCosa}</b>.<br><br>${PERSONA.puede.informes ? 'Tu acceso es de consulta: podés ver todo y solicitar informes.' : 'Para esto, hablá con los usuarios autorizados (Dirección).'}`,
+        boton: 'Entendido' });
+    return false;
+}
 let fotosCobro = [];
 
 function toggleClave() {
@@ -1055,9 +1245,12 @@ function ingresar() {
        internos (en la versión real, Supabase valida la clave y devuelve
        el perfil; acá la demo lo infiere del correo escrito). */
     const email = (document.getElementById('login-email').value || '').toLowerCase();
-    ROL = email.includes('maria') ? 'personal' : (email.includes('carla') || email.includes('abogad')) ? 'abogados' : 'duenio';
-    USUARIO = PERFILES[ROL].usuario;
-    AREA = PERFILES[ROL].areas.includes('inm') ? 'inm' : 'jur';
+    const clave = email.includes('nicolas') ? 'nicolas' : email.includes('belen') ? 'belen'
+        : email.includes('oficina') ? 'oficina' : (email.includes('carla') || email.includes('abogad')) ? 'carla' : 'lucia';
+    PERSONA = PERFILES[clave];
+    ROL = PERSONA.vista;
+    USUARIO = PERSONA.usuario;
+    AREA = PERSONA.areas.includes('inm') ? 'inm' : 'jur';
     document.getElementById('pantalla-login').style.display = 'none';
     const carg = document.getElementById('cargador');
     carg.style.display = 'flex';
@@ -1088,32 +1281,38 @@ const VISTAS_ROL = {
     personal: ['inicio', 'lotes', 'clientes', 'cobrar', 'novedades', 'docs']
 };
 const VISTAS_JUR = ['jinicio', 'casos', 'jcobrar', 'jgastos', 'jbitacora'];
+const VISTAS_AGE = ['ainicio', 'crm', 'atasaciones'];
+const AREAS_INFO = {
+    inm: { nombre: 'Fideicomisos', icono: '🏛', desc: 'Aeroparque · Don Guarino · lotes, clientes y cobranzas' },
+    age: { nombre: 'Inmobiliaria', icono: '🏢', desc: 'Atención al público · búsquedas en portales · tasaciones' },
+    jur: { nombre: 'Estudio Jurídico', icono: '⚖️', desc: 'Casos, cobros, cascada de reparto y gastos' }
+};
 const NAV_DEF = {
     inicio: ['fi-rr-bank', 'Inicio'], lotes: ['fi-rr-map', 'Lotes'], clientes: ['fi-rr-users-alt', 'Clientes'],
     cobrar: ['fi-rr-hand-holding-usd', 'Cobrar'], tesoreria: ['fi-rr-safe-box', 'Caja'],
+    ainicio: ['fi-rr-building', 'Panel'], crm: ['fi-rr-search', 'Búsquedas'], atasaciones: ['fi-rr-diploma', 'Tasaciones'],
     novedades: ['fi-rr-book-open-cover', 'Libro'], docs: ['fi-rr-folder-open', 'Docs'], informes: ['fi-rr-document', 'Informes'],
     jinicio: ['fi-rr-scale', 'Estudio'], casos: ['fi-rr-briefcase', 'Casos'],
     jcobrar: ['fi-rr-hand-holding-usd', 'Cobrar'], jgastos: ['fi-rr-receipt', 'Gastos'], jbitacora: ['fi-rr-time-past', 'Bitácora']
 };
-function vistasActuales() { return AREA === 'jur' ? VISTAS_JUR : VISTAS_ROL[ROL]; }
+function vistasActuales() { return AREA === 'jur' ? VISTAS_JUR : AREA === 'age' ? VISTAS_AGE : VISTAS_ROL[ROL]; }
 
 function iniciarApp() {
-    const rotulos = { duenio: 'Dueño', personal: 'Personal', abogados: 'Abogada' };
-    document.getElementById('pill-rol').innerText = rotulos[ROL];
+    document.getElementById('pill-rol').innerText = PERSONA.rotulo;
     document.getElementById('pill-nombre').innerText = USUARIO.split(' ')[0].replace('Dra.', 'Carla');
-    document.querySelector('.topbar .subt').innerText = AREA === 'jur' ? 'Estudio Jurídico' : 'Fideicomisos';
-    document.querySelector('.selector-fid').style.display = AREA === 'jur' ? 'none' : 'flex';
+    document.querySelector('.topbar .subt').innerText = AREAS_INFO[AREA].nombre;
+    document.querySelector('.selector-fid').style.display = AREA === 'inm' ? 'flex' : 'none';
 
     /* Cambio de área solo para quien tiene AMBOS accesos */
     let cambio = document.getElementById('btn-area');
-    if (PERFILES[ROL].areas.length > 1) {
+    if (PERSONA.areas.length > 1) {
         if (!cambio) {
             cambio = document.createElement('button');
             cambio.id = 'btn-area'; cambio.className = 'area-switch';
             cambio.onclick = cambiarArea;
             document.querySelector('.topbar .der').appendChild(cambio);
         }
-        cambio.innerText = AREA === 'jur' ? '→ Inmobiliaria' : '→ Estudio ⚖️';
+        cambio.innerText = '⇄ Áreas · ' + AREAS_INFO[AREA].icono;
     } else if (cambio) { cambio.remove(); }
 
     const nav = document.getElementById('nav');
@@ -1124,17 +1323,36 @@ function iniciarApp() {
     /* Ocultar todas las vistas y mostrar la primera del área */
     document.querySelectorAll('.vista').forEach(x => x.classList.remove('activa'));
     document.getElementById('vista-' + vistas[0]).classList.add('activa');
+    window.VISTA_ACTUAL = vistas[0];
     poblarSelects();
     renderTodo();
 }
 
+function cambiarArea_hook() {}
 function cambiarArea() {
-    AREA = AREA === 'jur' ? 'inm' : 'jur';
-    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Ingresó al área ${AREA === 'jur' ? 'Estudio Jurídico' : 'Inmobiliaria'}` });
+    /* Menú de áreas: cada persona ve solo las suyas */
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">¿A qué área querés ir?</h3>
+        <div style="margin-top:12px;">
+        ${PERSONA.areas.map(a => `<button class="btn ${a === AREA ? 'tinta' : 'borde'}" style="display:flex;align-items:center;gap:12px;text-align:left;justify-content:flex-start;" onclick="irAlArea('${a}')">
+            <span style="font-size:1.5rem;">${AREAS_INFO[a].icono}</span>
+            <span><b>${AREAS_INFO[a].nombre}</b>${a === AREA ? ' · estás acá' : ''}<br><small style="font-weight:400;opacity:.75;">${AREAS_INFO[a].desc}</small></span>
+        </button>`).join('')}
+        </div>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
+function irAlArea(a) {
+    cerrarModal();
+    if (a === AREA) return;
+    AREA = a;
+    const bit = a === 'jur' ? JBITACORA : BITACORA;
+    bit.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Ingresó al área ${AREAS_INFO[a].nombre}` });
     iniciarApp();
+    if (AREA === 'jur') setTimeout(recordarRepartos, 700);
 }
 
 function irA(v) {
+    window.VISTA_ACTUAL = v;
     if (v === 'lotes') setTimeout(() => Object.values(MAPAS_VIVOS).forEach(m => m && m.invalidateSize()), 250);
     vistasActuales().forEach(x => {
         document.getElementById('vista-' + x).classList.toggle('activa', x === v);
@@ -1198,12 +1416,125 @@ async function confirmarDoble(titulo, mensaje, detalleFinal) {
     });
 }
 
+
+/* ===== NOTIFICACIONES (campanita + push interna) =====
+   Cada evento importante notifica: cobros, altas, ventas, documentos,
+   modificaciones (estas últimas, a los administradores). En la versión
+   real serán push reales del navegador/celular vía OneSignal. */
+let NOTIFS = [];
+function notificar(texto, detalle, admin) {
+    NOTIFS.unshift({ texto, detalle: detalle || '', fecha: ahora(), nueva: true, admin: !!admin });
+    renderNotifs();
+    mostrarPush(texto);
+}
+function misNotifs() {
+    return NOTIFS.filter(n => !n.admin || PERSONA.puede.modificar || PERSONA.puede.informes);
+}
+function renderNotifs() {
+    const lista = misNotifs();
+    const nuevas = lista.filter(n => n.nueva).length;
+    const badge = document.getElementById('notif-badge');
+    if (badge) { badge.style.display = nuevas ? 'flex' : 'none'; badge.innerText = nuevas; }
+    const panel = document.getElementById('panel-notifs');
+    if (panel) panel.innerHTML = '<div class="etiqueta" style="margin-bottom:4px;"><i class="fi fi-rr-bell"></i> Notificaciones</div>' +
+        (lista.length ? lista.slice(0, 30).map(n =>
+            `<div class="notif-item ${n.nueva ? 'nueva' : ''}">${n.admin ? '🛡 ' : ''}${n.texto}<small>${n.detalle ? n.detalle + ' · ' : ''}${n.fecha} hs</small></div>`).join('')
+        : '<div class="notif-item">Sin novedades por ahora.</div>');
+}
+function toggleNotifs() {
+    const p = document.getElementById('panel-notifs');
+    const abierto = p.classList.toggle('abierto');
+    if (abierto) { renderNotifs(); setTimeout(() => { NOTIFS.forEach(n => n.nueva = false); renderNotifs(); p.classList.add('abierto'); }, 1600); }
+}
+
+/* ===== CENTRO DE AYUDA CONTEXTUAL =====
+   El botón "?" explica la pantalla actual en lenguaje simple, con
+   ejemplos. Enfocado en lo que más cuesta entender del sistema. */
+const AYUDAS = {
+    inicio: { t: '¿Qué veo en el Inicio?', c: `<b>Los números del día.</b> Arriba están los accesos rápidos (lo que más se usa). Los cuadros grandes son el resumen: cuántos lotes se vendieron, cuánta plata entró, quién debe.<br><br>⚠️ <b>Lo que más confunde:</b> el selector de arriba (<b>Aeroparque / Don Guarino / Consolidado</b>) filtra TODA la app. Si no encontrás un cliente o un lote, casi siempre es porque estás parado en el otro fideicomiso. Consolidado = los dos juntos.` },
+    lotes: { t: '¿Cómo leo el mapa y los planos?', c: `<b>Los colores del mapa los pinta el sistema solo:</b> 🟩 verde = disponible · 🟨 oro = reservado · 🟥 carmín = vendido · rojo rayado = "a regularizar" (hay un problema que debe resolver el Directorio; nadie puede tocarlo hasta entonces).<br><br>Pasá el cursor (o dejá el dedo apoyado) sobre un lote: te dice los m² y quién lo compró. <b>Tocalo</b> y se abre su ficha completa.<br><br>💡 <b>Importante:</b> "Vendido" NO significa "pagado". Vendido es el estado del lote; adentro de la ficha ves su condición: <b>Pagado</b> (saldó todo) o <b>Financiación</b> (paga en cuotas).<br><br>El <b>simulador</b> de arriba calcula cuotas al toque, y cada lote tiene su <b>Ficha Comercial PDF</b> con planos para darle al interesado.` },
+    clientes: { t: '¿Cómo manejo los clientes?', c: `<b>"Dar de Alta Cliente"</b> despliega el formulario completo (los mismos campos de la planilla de siempre). Solo muestra lotes disponibles: es imposible vender dos veces el mismo.<br><br>Las <b>burbujas</b> filtran: ✓ Pagaron todo · Financiando · ⚠ Morosos (+30 días sin pagar).<br><br>Cada cliente tiene su <b>Legajo completo</b>: todos sus datos, el historial de pagos cuota por cuota con sus recibos, y el Informe de Pagos en PDF.<br><br>💡 Cuando un cliente completa el valor de su lote, el sistema lo pasa a <b>PAGADO solo</b> — no hay que acordarse de cambiarlo.` },
+    cobrar: { t: '¿Por qué hay DOS números de recibo?', c: `Esto es lo que más preguntas genera, y es simple:<br><br>1️⃣ <b>Recibo físico:</b> el del talonario de papel que se firma en el momento. Cargás su número y de qué talonario es, y le sacás foto.<br><br>2️⃣ <b>Recibo del sistema:</b> lo genera la app automáticamente, numerado y prolijo, <b>a nombre del FIDEICOMISO</b> (que es el desarrollador; Portanko solo comercializa). Por eso no lleva el logo de Portanko.<br><br>Los dos quedan vinculados al mismo cobro. La foto del comprobante es obligatoria si fue transferencia, y hay que tildar que la plata realmente entró.` },
+    ainicio: { t: '¿Qué es el área Inmobiliaria?', c: `El mostrador de Portanko: acá se atiende al público que <b>no</b> es de los loteos. Dos herramientas: <b>Búsquedas</b> (cargar qué busca cada persona y rastrear los portales) y <b>Tasaciones</b> (presupuestar el servicio de tasar con PDF al instante).<br><br>💡 Con el botón <b>⇄ Áreas</b> de arriba te movés entre Fideicomisos, Inmobiliaria y Estudio (según tus permisos).` },
+    atasaciones: { t: '¿Cómo cobro una tasación?', c: `Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad — aclaralo siempre al cliente). Base: coeficiente 1,00 = Terreno-Lote a $ por m² que fija la Dirección; cada tipo multiplica según su complejidad. Cargás tipo y m², sale el total y el <b>PDF con los fundamentos</b> para imprimir o mandar por WhatsApp.` },
+    crm: { t: '¿Qué hace el CRM?', c: `Dos herramientas de atención al público:<br><br>🔎 <b>Búsquedas:</b> cargás qué busca la persona (alquiler, compra, zona, presupuesto) y el sistema te da los enlaces directos a Zonaprop, MercadoLibre y Argenprop ya filtrados. En la versión final, un robot revisa los portales cada pocas horas y te avisa con una notificación cuando aparece algo nuevo que coincide.<br><br>📐 <b>Tasaciones:</b> calcula cuánto cuesta EL SERVICIO de tasar (no el valor de la propiedad — esto confunde, aclaralo siempre al cliente). Elegís el tipo, ponés los m², y sale el PDF con el presupuesto y los fundamentos para entregar en mano o por WhatsApp.` },
+    tesoreria: { t: '¿Qué es la Caja?', c: `Las cuentas del fideicomiso (pesos y dólares) y sus movimientos. Cada ingreso o egreso queda registrado con quién lo cargó.<br><br>💡 Anular un movimiento no lo borra: queda asentado en la bitácora que se anuló, quién y cuándo. "El libro nunca miente".` },
+    novedades: { t: '¿Qué es el Libro?', c: `El libro de novedades diarias: lo que pasó, quién vino, qué se acordó. Como el cuaderno de la oficina, pero que no se pierde y queda firmado por quien escribió cada cosa.` },
+    docs: { t: '¿Cómo funcionan los Documentos?', c: `La biblioteca de documentos del fideicomiso. Para descargar cualquiera, el sistema pide el <b>motivo</b> — no es desconfianza: es que cada descarga queda registrada (quién, cuándo, para qué). Eso protege a todos.` },
+    informes: { t: '¿Por qué me pide el MOTIVO al emitir?', c: `Todos los informes (Ejecutivo, contables, de pagos, fichas) piden el motivo antes de salir. <b>¿Por qué?</b> Porque cada emisión queda registrada con quién la pidió y para qué, y el motivo se imprime en el pie del documento. Es la trazabilidad que protege al Directorio.<br><br>Acá también viven las <b>administraciones exclusivas de la Dirección</b>: valores del m² por manzana, equipo de vendedores, y las Actas del fideicomiso (visitas técnicas, informes del desarrollador). La <b>bitácora</b> de abajo se puede tocar: cada registro se amplía con su detalle y documentación.` },
+    jinicio: { t: '¿Qué veo en el Estudio?', c: `El panel del Estudio Jurídico: totales cobrados, las <b>estadísticas por persona</b> (cuánto cobró cada uno, promedio por caso, cuánto tardan los casos en cobrar) y los movimientos recientes.<br><br>⏰ Si hay repartos sin pagar en casos cobrados hace más de 3 días, el sistema te lo recuerda solo al entrar.` },
+    casos: { t: '¿Cómo funciona la CASCADA de reparto?', c: `<b>Lo más difícil de toda la app — con ejemplo:</b><br><br>Un caso cobra <b>$8.400.000</b>.<br>1️⃣ Primero sale el <b>% del Estudio</b> (ej: 20%) = $1.680.000.<br>2️⃣ Queda el <b>RESTO</b>: $6.720.000.<br>3️⃣ Los porcentajes de las personas se aplican <b>SOBRE ESE RESTO</b> (no sobre el total): Carla 40% del resto = $2.688.000; el publicista 15% del resto = $1.008.000.<br><br>⚠️ El error típico es calcular los % sobre el total cobrado. El sistema lo hace bien solo — pero ahora sabés por qué los números dan "distinto" de lo que esperabas.<br><br>Cada pago del reparto exige <b>constancia adjunta obligatoria</b> (captura o PDF), y los casos terminados se archivan en <b>"Ya cobrados"</b> para que la lista de trabajo quede limpia.` },
+    jcobrar: { t: '¿Cómo registro un cobro del caso?', c: `Regla de oro del Estudio: <b>sin captura del comprobante, no hay registro</b>. El sistema no deja guardar un cobro sin al menos una foto o captura de WhatsApp adjunta. Después, desde el caso, se reparte con la cascada.` },
+    jgastos: { t: '¿Cómo funcionan los Gastos?', c: `Los gastos fijos del Estudio (sueldos, patente, internet...) con su día de vencimiento. El sistema avisa solo: 🔔 cuando faltan 5 días, cuando vence HOY, y en rojo si ya venció. Cada pago con su constancia.` },
+    jbitacora: { t: '¿Qué es la Bitácora?', c: `El registro inviolable de todo lo que pasó en el Estudio: cada cobro, pago, modificación y emisión, con nombre y hora. No se puede borrar ni editar. Tocá cualquier registro para ampliarlo.` }
+};
+function mostrarAyuda(vistaForzada) {
+    const v = vistaForzada || window.VISTA_ACTUAL || (AREA === 'jur' ? 'jinicio' : 'inicio');
+    const a = AYUDAS[v] || AYUDAS[AREA === 'jur' ? 'jinicio' : 'inicio'];
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">${a.t}</h3>
+        <span class="sello oro">Ayuda · ${(NAV_DEF[v] || ['', 'General'])[1]}</span>
+        <div style="margin-top:12px;font-size:.92rem;line-height:1.7;">${a.c}</div>
+        <button class="btn tinta" onclick="mostrarTour()"><i class="fi fi-rr-rocket"></i> Ver el tour de bienvenida de nuevo</button>
+        <button class="btn borde" onclick="cerrarModal()">Entendido</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
+
+/* Tour de bienvenida: 30 segundos, lo esencial según quién entra */
+let tourVisto = false;
+function mostrarTour() {
+    const esJur = AREA === 'jur';
+    if (AREA === 'age') {
+        document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">¡Bienvenido/a a la Inmobiliaria!</h3>
+        <span class="sello carmin">${PERSONA.rotulo}</span>
+        <div style="margin-top:14px;">
+        <div style="display:flex;gap:12px;margin-bottom:14px;"><div style="font-size:1.6rem;">🔎</div><div><b>Búsquedas</b><br><span style="font-size:.85rem;color:var(--piedra);">Cargá qué busca la persona y el sistema te da los portales con coincidencias. Te avisa con la campanita.</span></div></div>
+        <div style="display:flex;gap:12px;margin-bottom:14px;"><div style="font-size:1.6rem;">📐</div><div><b>Tasaciones</b><br><span style="font-size:.85rem;color:var(--piedra);">Presupuesto del servicio de tasar en 10 segundos, con PDF para entregar. No es el valor de la propiedad.</span></div></div>
+        <div style="display:flex;gap:12px;margin-bottom:14px;"><div style="font-size:1.6rem;">⇄</div><div><b>Tres áreas</b><br><span style="font-size:.85rem;color:var(--piedra);">Fideicomisos · Inmobiliaria · Estudio. Cambiás con el botón dorado de arriba.</span></div></div>
+        </div>
+        <button class="btn carmin" onclick="cerrarModal()">¡Empezar!</button>`;
+        document.getElementById('modal-doc').style.display = 'flex';
+        return;
+    }
+    const pasos = esJur ? [
+        ['⚖️', 'Este es tu Estudio', 'Casos, cobros con captura obligatoria, la cascada de reparto y los gastos con alertas.'],
+        ['🧮', 'La cascada, en una línea', 'Primero sale el % del Estudio; los % de las personas van sobre el RESTO. El sistema calcula solo.'],
+        ['📎', 'Regla de oro', 'Nada se registra sin constancia: ni cobros ni pagos del reparto. La bitácora guarda todo.'],
+        ['🔔', 'La campanita te avisa', 'Pagos pendientes de más de 3 días, movimientos importantes, y el "?" de arriba explica cada pantalla.']
+    ] : [
+        ['🗺️', 'El mapa está vivo', 'Los lotes se pintan solos: verde disponible, oro reservado, carmín vendido. Tocá cualquiera y se abre su ficha.'],
+        ['🔀', 'El selector manda', 'Aeroparque / Don Guarino / Consolidado filtra TODO. Si no encontrás algo, fijate dónde estás parado.'],
+        ['💵', 'Vendido ≠ Pagado', 'Vendido es el estado del lote. Adentro ves si está Pagado o en Financiación. Al saldar, pasa a PAGADO solo.'],
+        ['❓', 'Ayuda siempre a mano', 'El botón "?" de arriba explica la pantalla donde estés, en criollo y con ejemplos. La campanita 🔔 te avisa todo.']
+    ];
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">¡Bienvenido/a, ${USUARIO.split(' ')[0].replace('Dra.', 'Carla')}!</h3>
+        <span class="sello carmin">${PERSONA.rotulo}</span>
+        <div style="margin-top:14px;">
+        ${pasos.map(p => `<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;">
+            <div style="font-size:1.6rem;line-height:1;">${p[0]}</div>
+            <div><b style="font-size:.95rem;">${p[1]}</b><br><span style="font-size:.85rem;color:var(--piedra);line-height:1.55;">${p[2]}</span></div>
+        </div>`).join('')}
+        </div>
+        <button class="btn carmin" onclick="cerrarModal()">¡Empezar a usar el sistema!</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
+
+function mostrarPush(texto) {
+    const d = document.createElement('div');
+    d.className = 'push-interna';
+    d.innerHTML = `<i class="fi fi-rr-bell" style="color:var(--oro);"></i><span>${texto}</span>`;
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 3800);
+}
+
 /* El motivo de emisión: obligatorio para todo informe o descarga.
    Queda registrado junto al usuario logueado que lo solicita. */
 async function pedirMotivo(queCosa) {
     const ok = await pedirConfirmacion({
         titulo: 'Motivo de la emisión',
-        mensaje: `<b>${queCosa}</b><br>Solicitado por: <b>${USUARIO}</b> (${ROL === 'duenio' ? 'Dueño' : ROL === 'personal' ? 'Personal' : 'Abogada'})<br><br>Indicá el motivo — queda asentado en el registro de descargas:`,
+        mensaje: `<b>${queCosa}</b><br>Solicitado por: <b>${USUARIO}</b> (${PERSONA.rotulo})<br><br>Indicá el motivo — queda asentado en el registro de descargas:`,
         campo: { label: 'Motivo', placeholder: 'Ej: a pedido del cliente · para el contador · control interno' },
         boton: 'Emitir con este motivo'
     });
@@ -1217,7 +1548,7 @@ let chartCobranza = null, chartEstados = null;
 function renderTodo() {
     if (AREA === 'jur') { renderJur(); return; }
     renderInicio(); renderPlanos(); renderClientes(); renderMovimientos();
-    renderNovedades(); renderDocs(); renderBitacora(); renderCuentas(); renderVendedores(); poblarSelects();
+    renderNovedades(); renderDocs(); renderBitacora(); renderCuentas(); renderVendedores(); renderPanelPrecios(); renderActas(); renderCRM(); renderPanelAge(); poblarTasaciones(); poblarSelects();
 }
 
 function renderInicio() {
@@ -1360,19 +1691,246 @@ function renderMapaVivo() {
     fids.forEach(f => setTimeout(() => initMapaVivo(f), 60));
 }
 
+/* Cotización BNA de referencia (billete venta). En la versión real,
+   una función del servidor la lee cada día de bna.com.ar/Personas. */
+let COTIZ_BNA = { valor: 1096.80, fecha: '21/08/2026', fuente: 'bna.com.ar/Personas' };
+
+function simular() {
+    const selLote = document.getElementById('sim-lote');
+    const fidSim = FID === 'ALL' ? 'AER' : FID;
+    let valor = parseFloat((document.getElementById('sim-valor').value || '').replace(/\./g, '')) || 0;
+    if (!valor && selLote.value) {
+        const [mza, nro] = selLote.value.split('-');
+        const g = GEOS[fidSim].lotes.find(x => x.mza === mza && x.lote === parseInt(nro));
+        const m2num = parseFloat(String(g && g.m2 || '').replace(/\./g, '').replace(',', '.')) || 0;
+        valor = m2num ? Math.round(m2num * precioM2De(fidSim, mza, parseInt(nro))) : 0;
+    }
+    const entrega = parseFloat((document.getElementById('sim-entrega').value || '').replace(/\./g, '')) || 0;
+    const cuotas = parseInt(document.getElementById('sim-cuotas').value) || 60;
+    const res = document.getElementById('sim-resultado');
+    document.getElementById('sim-bna').innerText = `$ ${COTIZ_BNA.valor.toLocaleString('es-AR', { minimumFractionDigits: 2 })} (${COTIZ_BNA.fecha})`;
+    if (!valor) { res.innerHTML = '<div class="aviso alerta">Elegí un lote o escribí un valor para simular.</div>'; return; }
+    const saldo = Math.max(0, valor - entrega);
+    const cuota = Math.ceil(saldo / cuotas);
+    const cuotaPesos = Math.round(cuota * COTIZ_BNA.valor);
+    res.innerHTML = `
+        <div class="recibo-fila"><span>Valor del lote</span><b>${usd(valor)}</b></div>
+        <div class="recibo-fila"><span>Entrega</span><b>${usd(entrega)}</b></div>
+        <div class="recibo-fila"><span>Saldo a financiar</span><b>${usd(saldo)}</b></div>
+        <div class="recibo-fila" style="background:var(--carmin-suave);border-radius:10px;padding:10px;"><span><b>${cuotas} cuotas fijas de</b></span><b style="font-size:1.15rem;">${usd(cuota)}</b></div>
+        <div class="recibo-fila"><span>Cuota en pesos de referencia (BNA)</span><b>$ ${cuotaPesos.toLocaleString('es-AR')}</b></div>`;
+}
+function poblarSimulador() {
+    const sel = document.getElementById('sim-lote');
+    if (!sel) return;
+    const fidSim = FID === 'ALL' ? 'AER' : FID;
+    const libres = LOTES.filter(l => l.fid === fidSim && l.estado === 'disponible').sort((a, b) => (a.mza + a.nro).localeCompare(b.mza + b.nro, 'es', { numeric: true }));
+    sel.innerHTML = '<option value="">— Elegir lote —</option>' + libres.map(l => `<option value="${l.mza}-${l.nro}">Mza ${l.mza} L${l.nro}${l.m2 ? ' · ' + l.m2 + ' m²' : ''}</option>`).join('');
+    simular();
+}
+
+
+
+/* ===== TASACIONES =====
+   Calcula el ARANCEL por el servicio de tasar (no el valor de la
+   propiedad). Base: Terreno-Lote, coeficiente 1,00 = valor de
+   referencia por m². Cada tipo multiplica esa base según la
+   complejidad de tasarlo. Catálogo tomado de la planilla oficial. */
+let TAS_BASE = 1200; /* $ por m² del coeficiente 1,00 — lo fija la Dirección */
+const TAS_TIPOS = [
+    { n: 'Monoambiente', c: 5.00, d: 'Unidad de un solo ambiente que incluye cocina y baño. Ideal para estudiantes o personas solas.' },
+    { n: 'Departamento de 1 Dormitorio', c: 6.00, d: 'Dormitorio independiente, más cocina, baño y living-comedor.' },
+    { n: 'Departamento de 2 o más dormitorios', c: 5.00, d: 'Variantes más grandes y funcionales para familias pequeñas o medianas.' },
+    { n: 'Terreno-Lote', c: 1.00, d: 'Espacio vacío para construcción; su valor depende de ubicación y tamaño.' },
+    { n: 'Casa Pequeña (60 a 90 m²)', c: 1.00, d: 'Vivienda individual: 2 dormitorios, baño, cocina, comedor y patio pequeño.' },
+    { n: 'Casa Mediana (90 a 120 m²)', c: 1.05, d: 'Suburbana de clase media: 3 dormitorios, 2 baños, cocina separada, jardín mediano.' },
+    { n: 'Casa Grande (Alta Gama)', c: 1.10, d: '3 o más dormitorios, 2+ baños, living amplio y patio-jardín amplio.' },
+    { n: 'Casa con Lote Grande', c: 1.00, d: 'Vivienda estándar en terrenos amplios, típica de áreas suburbanas o rurales.' },
+    { n: 'Casa en Barrio Cerrado-Country', c: 1.50, d: 'Alta gama en zona exclusiva con seguridad y amenities.' },
+    { n: 'Chalet', c: 1.60, d: 'Diseño distintivo y generalmente más amplio.' },
+    { n: 'Dúplex', c: 0.90, d: 'Dos niveles dentro de una misma unidad, con distribución vertical.' },
+    { n: 'Triplex', c: 1.60, d: 'Tres niveles, más grande y funcional que un dúplex.' },
+    { n: 'PH (Propiedad Horizontal)', c: 1.60, d: 'Vivienda en terreno compartido con espacios comunes.' },
+    { n: 'Oficina-Estudio Profesional', c: 3.60, d: 'Espacio adaptado para uso administrativo o profesional.' },
+    { n: 'Local Comercial', c: 4.00, d: 'Espacio comercial con valor asociado a su ubicación.' },
+    { n: 'Galpón-Depósito', c: 2.50, d: 'Estructura amplia para almacenamiento o actividad industrial.' },
+    { n: 'Quinta-Finca', c: 1.00, d: 'Casa grande en terreno extenso, uso recreativo o rural.' },
+    { n: 'Edificio Entero', c: 0.40, d: 'Múltiples unidades habitacionales o comerciales, destino inversión.' },
+    { n: 'Campo-Estancia', c: 0.01, d: 'Extensión rural con o sin vivienda, agropecuaria o recreativa.' },
+    { n: 'Bases Operativas', c: 0.06, d: 'Instalación para operaciones industriales y logísticas.' }
+];
+function poblarTasaciones() {
+    const sel = document.getElementById('tas-tipo');
+    if (!sel || sel.options.length > 1) return;
+    sel.innerHTML = TAS_TIPOS.map((t, i) => `<option value="${i}">${t.n} · coef. ${t.c.toLocaleString('es-AR')}</option>`).join('');
+    const base = document.getElementById('tas-base');
+    if (base) { base.value = TAS_BASE; base.disabled = !puede('admin'); }
+    calcularTasacion();
+}
+function calcularTasacion() {
+    const i = parseInt(document.getElementById('tas-tipo').value) || 0;
+    const t = TAS_TIPOS[i];
+    const m2 = parseFloat((document.getElementById('tas-m2').value || '').replace(/\./g, '').replace(',', '.')) || 0;
+    document.getElementById('tas-desc').innerHTML = `<small style="color:var(--piedra);">${t.d}</small>`;
+    const vm2 = t.c * TAS_BASE;
+    const total = Math.round(vm2 * m2);
+    const res = document.getElementById('tas-resultado');
+    if (!m2) { res.innerHTML = '<div class="aviso alerta">Ingresá los m² de la propiedad para calcular el arancel.</div>'; return; }
+    res.innerHTML = `
+        <div class="recibo-fila"><span>Coeficiente del tipo</span><b>${t.c.toLocaleString('es-AR')}</b></div>
+        <div class="recibo-fila"><span>Valor por m² de tasación</span><b>$ ${vm2.toLocaleString('es-AR')}</b></div>
+        <div class="recibo-fila"><span>Superficie declarada</span><b>${m2.toLocaleString('es-AR')} m²</b></div>
+        <div class="recibo-fila" style="background:var(--carmin-suave);border-radius:10px;padding:10px;"><span><b>Arancel de tasación</b></span><b style="font-size:1.2rem;">$ ${total.toLocaleString('es-AR')}</b></div>`;
+}
+async function guardarBaseTasacion() {
+    if (!puede('admin')) return sinPermiso('cambiar el valor de referencia de tasaciones (administración exclusiva de la Dirección)');
+    const v = parseFloat((document.getElementById('tas-base').value || '').replace(/\./g, '').replace(',', '.'));
+    if (!v || v <= 0) return;
+    const ok = await pedirConfirmacion({ titulo: 'Valor de referencia de tasaciones', mensaje: `El coeficiente 1,00 pasará a valer <b>$ ${v.toLocaleString('es-AR')} por m²</b>. Todos los tipos recalculan en proporción.`, boton: 'Guardar' });
+    if (!ok) return;
+    TAS_BASE = v;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Actualizó el valor base de tasaciones a $ ${v.toLocaleString('es-AR')}/m² (coef. 1,00)` });
+    notificar('⚙️ Cambió el valor base de tasaciones', `Nuevo: $ ${v.toLocaleString('es-AR')}/m² · por ${USUARIO}`, true);
+    calcularTasacion();
+}
+async function pdfTasacion() {
+    const i = parseInt(document.getElementById('tas-tipo').value) || 0;
+    const t = TAS_TIPOS[i];
+    const m2 = parseFloat((document.getElementById('tas-m2').value || '').replace(/\./g, '').replace(',', '.')) || 0;
+    const cliente = document.getElementById('tas-cliente').value.trim() || 'Consulta presencial';
+    const dir = document.getElementById('tas-dir').value.trim();
+    if (!m2) return;
+    const vm2 = t.c * TAS_BASE, total = Math.round(vm2 * m2);
+    const w = window.open('', '_blank');
+    w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Presupuesto de Tasación</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>@page{margin:130px 48px 90px 48px;}
+body{font-family:'Inter',sans-serif;color:#12161C;margin:0;font-size:12.5px;line-height:1.6;}
+.membrete-arriba{position:fixed;top:-110px;left:0;right:0;display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #B31226;padding-bottom:12px;}
+.membrete-abajo{position:fixed;bottom:-70px;left:0;right:0;border-top:1px solid #C9A24B;padding-top:8px;font-size:9.5px;color:#5B6472;display:flex;justify-content:space-between;}
+.logo-p{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C4142B, #B31226 55%, #8A0D1C);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:28px;}
+.m-nombre{font-family:'Space Grotesk';font-size:25px;font-weight:700;line-height:1;}
+.m-sub{font-size:9.5px;letter-spacing:3px;color:#C9A24B;text-transform:uppercase;font-weight:600;margin-top:4px;}
+h1{font-family:'Space Grotesk';font-size:22px;margin:0 0 4px 0;}
+.etq{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#5B6472;font-weight:600;margin:16px 0 6px 0;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:#F7F4EE;text-align:left;padding:8px;border-bottom:1.5px solid #12161C;font-weight:600;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+td{padding:8px;border-bottom:1px solid #E4DFD5;} .n{text-align:right;}
+.total{border:2px solid #B31226;border-radius:10px;padding:14px 18px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;background:#FBEAEC;}
+.total b{font-family:'Space Grotesk';font-size:24px;}
+.fund{background:#F7F8FA;border-radius:10px;padding:14px 16px;font-size:11.5px;}
+.pie-emision{margin-top:16px;font-size:10px;color:#5B6472;border-top:1px dashed #E4DFD5;padding-top:8px;}
+</style></head><body>
+<div class="membrete-arriba"><div class="logo-p">P</div>
+<div><div class="m-nombre">Portanko Inmobiliaria</div><div class="m-sub">Tasaciones · Neuquén · Desde 1971</div></div></div>
+<div class="membrete-abajo"><span>Portanko Inmobiliaria · 299 611 8080</span><span>Presupuesto de Tasación</span><span>@portankoinmobiliaria</span></div>
+<h1>Presupuesto del servicio de tasación</h1>
+<div>Cliente: <b>${cliente}</b>${dir ? ' · Propiedad: ' + dir : ''} · Emitido el ${hoyISO()}</div>
+<div class="etq">Detalle del cálculo</div>
+<table>
+<tr><th>Tipo de propiedad</th><th class="n">Coeficiente</th><th class="n">Valor por m²</th><th class="n">Superficie</th><th class="n">Arancel</th></tr>
+<tr><td><b>${t.n}</b><br><small style="color:#5B6472;">${t.d}</small></td><td class="n">${t.c.toLocaleString('es-AR')}</td><td class="n">$ ${vm2.toLocaleString('es-AR')}</td><td class="n">${m2.toLocaleString('es-AR')} m²</td><td class="n"><b>$ ${total.toLocaleString('es-AR')}</b></td></tr>
+</table>
+<div class="total"><span>Arancel total del servicio de tasación</span><b>$ ${total.toLocaleString('es-AR')}</b></div>
+<div class="etq">¿Qué incluye tasar una propiedad?</div>
+<div class="fund">La tasación es un <b>informe técnico profesional</b> que determina el valor de mercado de una propiedad. El servicio comprende: <b>inspección ocular</b> de la propiedad y su entorno · <b>relevamiento fotográfico y de medidas</b> · <b>análisis comparativo de mercado</b> (propiedades similares ofrecidas y vendidas en la zona) · consideración de <b>ubicación, estado, antigüedad, mejoras y servicios</b> · elaboración del <b>informe escrito con fundamentos</b>, firmado por la inmobiliaria. El arancel varía según el tipo de propiedad porque cada tipología exige distinta complejidad de análisis (un local comercial o un departamento requieren estudios de renta y mercado más profundos que un lote). Presupuesto válido por 30 días. El arancel corresponde al servicio de tasación y es independiente del valor de la propiedad.</div>
+<div class="pie-emision">Atendido por <b>${USUARIO}</b> · ${ahora()} hs · Registrado en el sistema.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
+<script>setTimeout(() => window.print(), 600);<\/script>
+</body></html>`);
+    w.document.close();
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió presupuesto de tasación: ${t.n}, ${m2} m², $ ${total.toLocaleString('es-AR')} · cliente ${cliente}` });
+    notificar(`📐 Presupuesto de tasación emitido: $ ${total.toLocaleString('es-AR')}`, `${t.n} · ${m2} m² · atendió ${USUARIO}`);
+    renderBitacora();
+}
+
+/* ===== CRM INMOBILIARIO =====
+   Cada consulta genera búsquedas dirigidas en los portales (Zonaprop,
+   MercadoLibre Inmuebles, Argenprop) para Neuquén y Río Negro. En el
+   prototipo, los enlaces llevan directo a los resultados de cada
+   portal; en la versión real, un robot del servidor los rastrea cada
+   pocas horas y te avisa por push cuando aparece una publicación nueva
+   que coincide. */
+let CONSULTAS_CRM = [];
+const ZONAS_CRM = { 'neuquen': 'Neuquén Capital', 'plottier': 'Plottier', 'centenario': 'Centenario', 'cipolletti': 'Cipolletti', 'general-roca': 'General Roca', 'rio-negro': 'Río Negro' };
+function portalesPara(q) {
+    return [
+        { portal: 'Zonaprop', url: `https://www.zonaprop.com.ar/${q.tipo}-${q.op}-${q.zona}.html` },
+        { portal: 'MercadoLibre Inmuebles', url: `https://inmuebles.mercadolibre.com.ar/${q.tipo}/${q.op === 'venta' ? 'venta' : 'alquiler'}/${q.zona === 'rio-negro' ? 'rio-negro' : q.zona}/` },
+        { portal: 'Argenprop', url: `https://www.argenprop.com/${q.tipo}/${q.op}/${q.zona}` }
+    ];
+}
+async function guardarConsultaCRM() {
+    if (!puede('registrar')) return sinPermiso('cargar consultas del CRM');
+    const nombre = document.getElementById('crm-nombre').value.trim();
+    if (!nombre) return;
+    const q = { nombre, tel: document.getElementById('crm-tel').value.trim(),
+        op: document.getElementById('crm-op').value, tipo: document.getElementById('crm-tipo').value,
+        zona: document.getElementById('crm-zona').value, presu: document.getElementById('crm-presu').value.trim(),
+        detalle: document.getElementById('crm-detalle').value.trim(), fecha: hoyISO(), usuario: USUARIO, coincidencias: [] };
+    q.coincidencias = portalesPara(q);
+    CONSULTAS_CRM.unshift(q);
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CRM: cargó consulta de ${nombre} (${q.op} de ${q.tipo} en ${ZONAS_CRM[q.zona]})` });
+    notificar(`🔎 Coincidencias encontradas para ${nombre}`, `${q.coincidencias.length} portales con resultados de ${q.op} en ${ZONAS_CRM[q.zona]}`);
+    await pedirConfirmacion({ titulo: '🔎 ¡Coincidencias encontradas!',
+        mensaje: `El sistema buscó <b>${q.op} de ${q.tipo}</b> en <b>${ZONAS_CRM[q.zona]}</b> para <b>${nombre}</b> y encontró resultados en:<br><br>` +
+            q.coincidencias.map(c => `• <b>${c.portal}</b><br><small style="word-break:break-all;color:#5B6472;">${c.url}</small>`).join('<br>') +
+            '<br><br>Abrí cada enlace desde la tarjeta de la consulta. El robot seguirá buscando y te avisará por notificación cuando aparezcan publicaciones nuevas.',
+        boton: 'Entendido' });
+    ['crm-nombre', 'crm-tel', 'crm-presu', 'crm-detalle'].forEach(id => document.getElementById(id).value = '');
+    renderCRM();
+}
+function renderPanelAge() {
+    const k = document.getElementById('age-kpis');
+    if (!k) return;
+    const tasHoy = BITACORA.filter(b => b.accion.includes('presupuesto de tasación')).length;
+    k.innerHTML = `
+        <div class="kpi"><div class="valor serif">${CONSULTAS_CRM.length}</div><div class="nombre">Búsquedas activas</div></div>
+        <div class="kpi"><div class="valor serif">${CONSULTAS_CRM.reduce((a, c) => a + c.coincidencias.length, 0)}</div><div class="nombre">Coincidencias en portales</div></div>
+        <div class="kpi"><div class="valor serif">${tasHoy}</div><div class="nombre">Tasaciones emitidas</div></div>
+        <div class="kpi"><div class="valor serif">$ ${TAS_BASE.toLocaleString('es-AR')}</div><div class="nombre">Base tasación (coef. 1)</div></div>`;
+    const act = document.getElementById('age-actividad');
+    if (act) {
+        const items = BITACORA.filter(b => b.accion.includes('CRM') || b.accion.includes('tasación')).slice(0, 8);
+        act.innerHTML = items.length ? items.map(b => `<div class="item-lista">${b.accion}<small>${b.fecha} · ${b.usuario}</small></div>`).join('')
+            : '<div class="item-lista">Todavía sin actividad: cargá la primera búsqueda o tasación.</div>';
+    }
+}
+
+function renderCRM() {
+    const el = document.getElementById('lista-crm');
+    if (!el) return;
+    const q = (document.getElementById('buscar-crm').value || '').toLowerCase();
+    const lista = CONSULTAS_CRM.filter(c => !q || `${c.nombre} ${c.tel}`.toLowerCase().includes(q));
+    el.innerHTML = lista.map((c, i) => `<div class="tarjeta">
+        <b>${c.nombre}</b> ${c.tel ? '· 📞 ' + c.tel : ''}<br>
+        <small style="color:var(--piedra);">Busca: <b>${c.op}</b> de ${c.tipo} en <b>${ZONAS_CRM[c.zona]}</b>${c.presu ? ' · hasta ' + c.presu : ''}${c.detalle ? ' · ' + c.detalle : ''} · cargado ${c.fecha}</small>
+        <div class="etiqueta" style="margin-top:10px;">Coincidencias en portales · el robot sigue buscando 🔄</div>
+        ${c.coincidencias.map(m => `<a href="${m.url}" target="_blank" class="btn-mini" style="text-decoration:none;display:inline-flex;margin:4px 6px 0 0;"><i class="fi fi-rr-link"></i> ${m.portal}</a>`).join('')}
+        <button class="btn-mini" style="border-color:var(--carmin);color:var(--carmin);" onclick="rebuscarCRM(${CONSULTAS_CRM.indexOf(c)})"><i class="fi fi-rr-refresh"></i> Buscar de nuevo ahora</button>
+    </div>`).join('') || '<div class="tarjeta" style="text-align:center;color:var(--piedra);font-size:.9rem;">Sin consultas cargadas. Registrá la primera búsqueda arriba.</div>';
+}
+function rebuscarCRM(i) {
+    const c = CONSULTAS_CRM[i];
+    notificar(`🔎 Nueva búsqueda para ${c.nombre}: ${c.coincidencias.length} portales revisados`, 'Coincidencias actualizadas en su tarjeta del CRM');
+    renderCRM();
+}
+
 function renderTarjetaValores() {
     const cont = document.getElementById('tarjeta-valores');
     if (!cont) return;
     const fids = FID === 'ALL' ? ['AER', 'DG'] : [FID];
     cont.innerHTML = '<div class="etiqueta"><i class="fi fi-rr-usd-circle"></i> Valores y financiación</div>' + fids.map(f => {
         const c = FIDEICOMISOS[f].comercial;
-        return `<div class="item-lista"><b>${FIDEICOMISOS[f].nombre}</b> — m² Residencial: <b>USD ${c.m2Res}</b> · m² Comercial: <b>USD ${c.m2Com}</b><br>
+        const porMza = [...new Set(GEOS[f].lotes.map(l => l.mza))].sort()
+            .map(m => `Mza ${m}: USD ${precioM2De(f, m, 1)}`).join(' · ');
+        return `<div class="item-lista"><b>${FIDEICOMISOS[f].nombre}</b> — valores del m² por manzana: <b>${porMza}</b><br>
         <small>${c.financiacion} · Entrega desde USD ${c.entregaMin.toLocaleString('es-AR')} · Cuota promedio: USD ${c.cuotaProm} · ${c.servicios}</small></div>`;
     }).join('');
 }
 
 function renderPlanos() {
     renderTarjetaValores();
+    poblarSimulador();
     renderMapaVivo();
     const cont = document.getElementById('planos');
     const fids = FID === 'ALL' ? ['AER', 'DG'] : [FID];
@@ -1402,17 +1960,18 @@ function verLote(fid, mza, nro) {
     const tipo = tipoDeLote(fid, mza, nro);
     const conf = FIDEICOMISOS[fid].comercial;
     const m2num = parseFloat(String(l.m2 || '').replace(/\./g, '').replace(',', '.')) || 0;
-    const precioM2 = tipo === 'Comercial' ? conf.m2Com : conf.m2Res;
+    const precioM2 = precioM2De(fid, mza, nro);
     const valorEst = m2num ? Math.round(m2num * precioM2) : 0;
     let cuerpo = `<h3 class="serif">Mza ${mza} · Lote ${nro}</h3>
         <div style="font-size:.72rem;color:var(--piedra);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Fideicomiso ${FIDEICOMISOS[fid].nombre}</div>
         <div style="margin-bottom:10px;">
             <div class="recibo-fila"><span>Superficie</span><b>${l.m2 ? l.m2 + ' m²' : 'A cargar por agrimensura'}</b></div>
             <div class="recibo-fila"><span>Tipo de lote</span><b>${tipo}</b></div>
-            <div class="recibo-fila"><span>Valor m² de referencia</span><b>USD ${precioM2}</b></div>
+            <div class="recibo-fila"><span>Valor m² (Mza ${mza})</span><b>USD ${precioM2}</b></div>
             ${valorEst ? `<div class="recibo-fila"><span>Valor estimado del lote</span><b>${usd(valorEst)}</b></div>` : ''}
-            <div class="recibo-fila"><span>Financiación</span><b style="font-size:.82rem;">${conf.financiacion}</b></div>
-        </div>`;
+        </div>
+        ${valorEst && l.estado === 'disponible' ? `<div class="etiqueta" style="margin-top:4px;">Financiaciones posibles</div>
+        ${planesDe(valorEst, conf).map(p => `<div class="recibo-fila"><span>${p.nombre}</span><b style="font-size:.8rem;">${p.detalle}</b></div>`).join('')}` : ''}`;
     if (l.estado === 'conflicto') {
         cuerpo += `<span class="sello error">⚠ Superposición</span>
             <p style="font-size:.82rem;margin-top:12px;line-height:1.55;">Este lote figura asignado a <b>dos clientes</b> en los registros históricos (caso real detectado en la auditoría de los Excels). El sistema lo marca para regularizar: hasta que el Directorio resuelva a quién pertenece, <b>bloquea nuevos pagos y asignaciones</b> sobre este lote.</p>`;
@@ -1546,6 +2105,7 @@ function svgLote3D(coords, m2) {
 }
 
 async function fichaLotePDF(fid, mza, nro) {
+    if (!puede('informes')) return sinPermiso('emitir la Ficha Comercial (las descargas son decisión de los usuarios autorizados)');
     const motivo = await pedirMotivo(`Ficha Comercial · Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre})`);
     if (motivo === null) return;
     const g = GEOS[fid].lotes.find(x => x.mza === mza && x.lote === nro);
@@ -1553,9 +2113,9 @@ async function fichaLotePDF(fid, mza, nro) {
     const conf = FIDEICOMISOS[fid].comercial;
     const tipo = tipoDeLote(fid, mza, nro);
     const m2num = parseFloat(String(g.m2 || '').replace(/\./g, '').replace(',', '.')) || 0;
-    const precioM2 = tipo === 'Comercial' ? conf.m2Com : conf.m2Res;
+    const precioM2 = precioM2De(fid, mza, nro);
     const valorEst = m2num ? Math.round(m2num * precioM2) : 0;
-    const cuotaEj = valorEst ? Math.round((valorEst - conf.entregaMin) / 60) : conf.cuotaProm;
+    const planes = planesDe(valorEst, conf);
     const w = window.open('', '_blank');
     w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Ficha · Mza ${mza} Lote ${nro}</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1587,9 +2147,8 @@ h1{font-family:'Space Grotesk';font-size:22px;margin:0 0 4px 0;}
     ${valorEst ? `<div><span>Valor estimado</span><b>USD ${valorEst.toLocaleString('es-AR')}</b></div>` : ''}
     <div><span>Servicios y entorno</span><b style="font-size:10.5px;text-align:right;max-width:200px;">${conf.servicios}</b></div>
 </div>
-<div class="etq">Formas de financiación</div>
-<div class="fin"><b>${conf.financiacion}.</b><br>
-Entrega desde <b>USD ${conf.entregaMin.toLocaleString('es-AR')}</b> · Cuota promedio del loteo: <b>USD ${conf.cuotaProm}</b>${valorEst ? ` · Plan de ejemplo para este lote: entrega USD ${conf.entregaMin.toLocaleString('es-AR')} + 60 cuotas de ≈ <b>USD ${cuotaEj.toLocaleString('es-AR')}</b>` : ''}. Valores orientativos sujetos a confirmación de la inmobiliaria.</div>
+<div class="etq">Formas de financiación para este lote</div>
+<div class="fin"><b>${conf.financiacion}.</b>${planes.length ? '<br>' + planes.map(p => `• <b>${p.nombre}:</b> ${p.detalle}`).join('<br>') : ' Consultá valores con la inmobiliaria.'}<br>Valores orientativos sujetos a confirmación de la inmobiliaria.</div>
 <div class="etq">Ubicación en el loteo · con puntos cardinales</div>
 ${svgPlanoLoteo(fid, mza, nro)}
 <div class="etq">Plano del lote — 2D con medidas reales · Vista volumétrica 3D</div>
@@ -1598,13 +2157,14 @@ ${svgPlanoLoteo(fid, mza, nro)}
 <script>setTimeout(() => window.print(), 700);<\\/script>
 </body></html>`);
     w.document.close();
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Emitió Ficha Comercial de Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) · Motivo: ${motivo}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió Ficha Comercial de Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) · Motivo: ${motivo}` });
     renderBitacora();
 }
 
 function cerrarModal() { document.getElementById('modal-doc').style.display = 'none'; }
 
 async function modificarReserva(fid, mza, nro) {
+    if (!puede('modificar')) return sinPermiso('modificar reservas');
     const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
     const r = l.reserva || {};
     const cliente = prompt('¿Quién reserva? (apellido y nombre):', r.cliente || ''); if (cliente === null) return;
@@ -1616,33 +2176,46 @@ async function modificarReserva(fid, mza, nro) {
         mensaje: `<b>Mza ${mza} Lote ${nro}</b> · ${FIDEICOMISOS[fid].nombre}<br>Reservado para: <b>${cliente || '—'}</b><br>Motivo: <b>${motivo || '—'}</b><br>Vendedor: <b>${vendedor}</b>`, boton: 'Guardar reserva' });
     if (!ok) return;
     l.reserva = { cliente: cliente || 'Sin nombre', motivo: motivo || 'Sin motivo indicado', vendedor, fecha: r.fecha || hoyISO(), usuario: USUARIO };
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Modificó la reserva de Mza ${mza} Lote ${nro}: ${cliente} · ${motivo} · vendedor ${vendedor}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó la reserva de Mza ${mza} Lote ${nro}: ${cliente} · ${motivo} · vendedor ${vendedor}` });
     cerrarModal(); renderTodo();
 }
 
 async function convertirReservaEnVenta(fid, mza, nro) {
+    if (!puede('modificar')) return sinPermiso('convertir reservas en ventas');
     const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
     const r = l.reserva || {};
-    const valor = parseFloat((prompt('Valor del lote (USD):', '') || '').replace(/\./g, '')) || 0;
     const ok = await pedirConfirmacion({ titulo: 'Convertir reserva en venta',
-        mensaje: `<b>Mza ${mza} Lote ${nro}</b> pasará a <b>VENDIDO</b> a nombre de <b>${r.cliente || 'Cliente a completar'}</b>${valor ? ' por <b>' + usd(valor) + '</b>' : ''} (vendedor: ${r.vendedor || '—'}).<br><br>Después completá el resto de sus datos desde Clientes → Legajo.`, boton: 'Confirmar venta' });
+        mensaje: `<b>Mza ${mza} Lote ${nro}</b> · reservado para <b>${r.cliente || 'sin datos'}</b>.<br><br>Se abrirá el <b>formulario de alta completo</b> con los datos de la reserva precargados, para terminar de completar todo: cuánto pagó, si es financiado o contado, el plan de cuotas, y adjuntar el <b>Boleto de Compra (PDF)</b> y los comprobantes de la entrega.`, boton: 'Completar la venta' });
     if (!ok) return;
-    l.estado = 'vendido';
-    CLIENTES.push({ fid, nombre: r.cliente || 'Cliente a completar', dni: 'a completar', mza, lote: nro, valor, pagado: 0,
-        cuotas: 0, vCuota: 0, estado: 'FINANCIA', ultPago: hoyISO(), vendedor: r.vendedor || VENDEDORES[0], detalles: r.motivo ? 'Origen: reserva — ' + r.motivo : '' });
-    delete l.reserva;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Convirtió la reserva de Mza ${mza} Lote ${nro} en VENTA a ${r.cliente || 's/n'}${valor ? ' · ' + usd(valor) : ''}` });
-    cerrarModal(); renderTodo();
+    cerrarModal();
+    irA('clientes');
+    const form = document.getElementById('alta-form');
+    if (form && form.style.display === 'none') toggleAlta();
+    document.getElementById('alta-fid').value = fid;
+    poblarAltaLotes();
+    document.getElementById('alta-mza').value = mza;
+    poblarAltaLotes(true);
+    /* El lote reservado se suma como opción elegible para ESTA conversión */
+    const selL = document.getElementById('alta-lote');
+    selL.innerHTML = `<option value="${nro}">Lote ${nro} (su reserva)</option>` + selL.innerHTML;
+    selL.value = nro;
+    document.getElementById('alta-nombre').value = r.cliente || '';
+    if (r.vendedor) document.getElementById('alta-vendedor').value = r.vendedor;
+    if (r.motivo) document.getElementById('alta-detalles').value = 'Origen: reserva — ' + r.motivo;
+    window.conversionReserva = { fid, mza, nro };
+    notificar(`📌→🏷 Conversión iniciada: Mza ${mza} L${nro}`, `Completá el alta de ${r.cliente || 'la persona'} con boleto y comprobantes`);
+    mostrarPush('Formulario de alta abierto con la reserva precargada: completá y guardá.');
 }
 
 async function liberarReserva(fid, mza, nro) {
+    if (!puede('modificar')) return sinPermiso('liberar reservas');
     const ok = await confirmarDoble('Liberar reserva',
         `¿Liberar la reserva de <b>Mza ${mza} Lote ${nro}</b> (${FIDEICOMISOS[fid].nombre})?`,
         `El lote Mza ${mza} Lote ${nro} volverá a estado <b>Disponible</b> para la venta.`);
     if (!ok) return;
     const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
     if (l) { l.estado = 'disponible'; delete l.reserva; }
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Liberó la reserva de Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) · doble confirmación` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Liberó la reserva de Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) · doble confirmación` });
     cerrarModal(); renderTodo();
 }
 
@@ -1656,7 +2229,7 @@ function mensajeAviso(c, dias) {
 function enviarAvisoEmail(idx) {
     const c = CLIENTES[idx];
     AVISOS.unshift({ fecha: ahora(), cliente: c.nombre, via: 'Correo', detalle: `Aviso de deuda · Mza ${c.mza} Lote ${c.lote} · enviado por ${USUARIO}` });
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Envió aviso de deuda por correo a ${c.nombre}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Envió aviso de deuda por correo a ${c.nombre}` });
     const btn = document.getElementById('btn-mail-' + idx);
     if (btn) { btn.innerHTML = '<i class="fi fi-rr-check"></i> Correo enviado hoy ✓'; btn.disabled = true; }
     renderAvisos(); renderBitacora();
@@ -1664,7 +2237,7 @@ function enviarAvisoEmail(idx) {
 function registrarAvisoWA(idx) {
     const c = CLIENTES[idx];
     AVISOS.unshift({ fecha: ahora(), cliente: c.nombre, via: 'WhatsApp', detalle: `Aviso de deuda · Mza ${c.mza} Lote ${c.lote} · enviado por ${USUARIO}` });
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Envió aviso de deuda por WhatsApp a ${c.nombre}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Envió aviso de deuda por WhatsApp a ${c.nombre}` });
     renderAvisos(); renderBitacora();
 }
 function renderAvisos() {
@@ -1702,6 +2275,7 @@ function poblarSelects() {
 }
 
 async function probarAsignacion() {
+    if (!puede('registrar')) return sinPermiso('reservar o vender lotes');
     const fid = FID === 'ALL' ? 'AER' : FID;
     const mza = document.getElementById('asig-mza').value;
     const nro = parseInt(document.getElementById('asig-lote').value);
@@ -1741,7 +2315,7 @@ async function probarAsignacion() {
         CLIENTES.push({ fid, nombre: nuevo, dni: 'a completar', mza, lote: nro, valor: valor || 0, pagado: 0,
             cuotas: 0, vCuota: 0, estado: 'FINANCIA', ultPago: hoyISO(), vendedor: vendedorSel });
     }
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `${op === 'vendido' ? 'VENDIÓ' : 'Reservó'} Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) ${op === 'vendido' ? 'a' : 'para'} ${nuevo}${valor ? ' · ' + usd(valor) : ''}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `${op === 'vendido' ? 'VENDIÓ' : 'Reservó'} Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) ${op === 'vendido' ? 'a' : 'para'} ${nuevo}${valor ? ' · ' + usd(valor) : ''}` });
     res.innerHTML = `<div class="aviso ok">✅ Lote libre verificado. Mza ${mza} Lote ${nro} quedó <b>${op === 'vendido' ? 'VENDIDO a ' + nuevo + ' — miralo pintado en carmín en el mapa de arriba' : 'reservado para ' + nuevo + ' — ya está en oro en el mapa'}</b>. Asentado en la bitácora.</div>`;
     document.getElementById('asig-cliente').value = ''; document.getElementById('asig-valor').value = '';
     renderTodo();
@@ -1752,6 +2326,29 @@ async function probarAsignacion() {
    Replica los cálculos del Excel: Comisión 5% del valor, Debe = Valor
    − Entrega, y Fecha estimada de finalización = 1er cuota + cuotas.
    Solo ofrece lotes DISPONIBLES: la superposición es imposible. */
+function aplicarPermisosUI() {
+    /* La interfaz muestra solo lo que cada usuario puede hacer:
+       lo demás ni aparece (menos confusión, menos tentación). */
+    const btnAlta = document.getElementById('btn-toggle-alta');
+    if (btnAlta) btnAlta.style.display = puede('registrar') ? '' : 'none';
+    const tAlta = document.getElementById('tarjeta-alta');
+    if (tAlta && !puede('registrar')) tAlta.innerHTML = '<div class="aviso alerta">👁 Acceso de consulta: podés ver todos los clientes y sus legajos' + (puede('informes') ? ' y solicitar informes (queda constancia de tu pedido)' : '') + '. Las cargas y cambios los hacen los usuarios autorizados.</div>';
+    const admin = document.getElementById('panel-precios');
+    if (admin && !puede('admin')) {
+        admin.closest('.tarjeta').querySelectorAll('input,button').forEach(el => el.disabled = true);
+        admin.closest('.tarjeta').style.opacity = .65;
+    }
+    const vend = document.getElementById('lista-vendedores');
+    if (vend && !puede('admin')) {
+        vend.closest('.tarjeta').querySelectorAll('button').forEach(el => el.style.display = 'none');
+    }
+}
+
+document.addEventListener('click', e => {
+    const p = document.getElementById('panel-notifs');
+    if (p && p.classList.contains('abierto') && !p.contains(e.target) && !e.target.closest('#btn-notifs')) p.classList.remove('abierto');
+});
+
 function toggleAlta() {
     const f = document.getElementById('alta-form');
     const abierto = f.style.display !== 'none';
@@ -1802,6 +2399,7 @@ function calcularAltaResumen() {
 }
 
 async function darAltaCliente() {
+    if (!puede('registrar')) return sinPermiso('dar de alta clientes');
     const res = document.getElementById('alta-resultado');
     const fid = document.getElementById('alta-fid').value;
     const nombre = document.getElementById('alta-nombre').value.trim();
@@ -1812,7 +2410,8 @@ async function darAltaCliente() {
     if (!dni || dni.replace(/\D/g, '').length < 7) { res.innerHTML = '<div class="aviso error">Ingresá un DNI válido (7 u 8 números).</div>'; return; }
     if (!nro) { res.innerHTML = '<div class="aviso error">No hay lote disponible seleccionado.</div>'; return; }
     const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
-    if (!l || l.estado !== 'disponible') {
+    const esConversion = window.conversionReserva && window.conversionReserva.fid === fid && window.conversionReserva.mza === mza && window.conversionReserva.nro === nro;
+    if (!l || (l.estado !== 'disponible' && !(esConversion && l.estado === 'reservado'))) {
         res.innerHTML = `<div class="aviso error">🚫 <b>Superposición evitada:</b> el lote Mza ${mza} Lote ${nro} ya no está disponible. Actualizá la selección.</div>`;
         poblarAltaLotes(true); return;
     }
@@ -1831,7 +2430,10 @@ async function darAltaCliente() {
         boton: 'Dar de alta' });
     if (!ok) return;
 
-    CLIENTES.push({ fid, nombre, dni, mza, lote: nro, valor, pagado: contado ? valor : entrega,
+    const boleto = (document.getElementById('alta-boleto').files || []).length;
+    const comps = (document.getElementById('alta-comprobantes').files || []).length;
+    if (window.conversionReserva) { delete l.reserva; window.conversionReserva = null; }
+    CLIENTES.push({ fid, nombre, dni, mza, lote: nro, valor, pagado: contado ? valor : entrega, docBoleto: boleto, docComprobantes: comps,
         cuotas, vCuota, estado: contado ? 'PAGADO' : 'FINANCIA',
         ultPago: document.getElementById('alta-fecha').value || hoyISO(), vendedor,
         tipoLote: document.getElementById('alta-tipo').value, obs,
@@ -1839,8 +2441,9 @@ async function darAltaCliente() {
         cotizacion: document.getElementById('alta-cotiz').value, detalles: document.getElementById('alta-detalles').value,
         fechaInicio: document.getElementById('alta-fecha').value || hoyISO(), comision: Math.round(valor * 0.05 * 100) / 100 });
     l.estado = 'vendido';
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`,
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`,
         accion: `ALTA de cliente ${nombre} (DNI ${dni}) · Mza ${mza} Lote ${nro} ${FIDEICOMISOS[fid].nombre} · ${obs} · ${usd(valor)} · vendedor ${vendedor}` });
+    notificar(`👤 Alta de cliente: ${nombre}`, `Mza ${mza} Lote ${nro} · ${FIDEICOMISOS[fid].nombre} · por ${USUARIO}`);
     res.innerHTML = `<div class="aviso ok">✅ <b>${nombre}</b> dado de alta con todos sus datos. El lote Mza ${mza} Lote ${nro} ya figura <b>VENDIDO</b> en el mapa y en los planos. Todo asentado en la bitácora.</div>`;
     ['alta-nombre','alta-dni','alta-vendedor','alta-valor','alta-entrega','alta-cuotas','alta-vcuota','alta-efinal','alta-cotiz','alta-detalles','alta-f1c'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('alta-resumen').style.display = 'none';
@@ -1849,9 +2452,28 @@ async function darAltaCliente() {
 }
 
 /* ====== CLIENTES ====== */
+let filtroCli = 'todos';
+function setFiltroCli(f) { filtroCli = f; renderClientes(); }
+const esMoroso = c => c.estado === 'FINANCIA' && Math.round((new Date() - new Date(c.ultPago + 'T12:00:00')) / 86400000) > 30;
+
 function renderClientes() {
+    const base = enFid(CLIENTES);
+    /* Chips burbuja con sus contadores */
+    const chips = document.getElementById('chips-cli');
+    if (chips) {
+        const n = { todos: base.length, pagados: base.filter(c => c.estado === 'PAGADO').length,
+            financiando: base.filter(c => c.estado === 'FINANCIA').length, morosos: base.filter(esMoroso).length };
+        chips.innerHTML = `
+            <button class="chip-b ${filtroCli === 'todos' ? 'activo' : ''}" onclick="setFiltroCli('todos')">Todos · ${n.todos}</button>
+            <button class="chip-b verde ${filtroCli === 'pagados' ? 'activo' : ''}" onclick="setFiltroCli('pagados')">✓ Pagaron todo · ${n.pagados}</button>
+            <button class="chip-b ${filtroCli === 'financiando' ? 'activo' : ''}" onclick="setFiltroCli('financiando')">Financiando · ${n.financiando}</button>
+            <button class="chip-b rojo ${filtroCli === 'morosos' ? 'activo' : ''}" onclick="setFiltroCli('morosos')">⚠ Morosos +30 días · ${n.morosos}</button>`;
+    }
     const q = (document.getElementById('buscar-cli').value || '').toLowerCase();
-    const lista = enFid(CLIENTES).filter(c => !q || `${c.nombre} ${c.dni} mza ${c.mza} lote ${c.lote}`.toLowerCase().includes(q));
+    const lista = base.filter(c =>
+        (filtroCli === 'todos' || (filtroCli === 'pagados' && c.estado === 'PAGADO') ||
+         (filtroCli === 'financiando' && c.estado === 'FINANCIA') || (filtroCli === 'morosos' && esMoroso(c))) &&
+        (!q || `${c.nombre} ${c.dni} mza ${c.mza} lote ${c.lote}`.toLowerCase().includes(q)));
     document.getElementById('lista-clientes').innerHTML = lista.map(c => {
         const resta = c.valor - c.pagado;
         const pct = Math.round(c.pagado / c.valor * 100);
@@ -1880,18 +2502,21 @@ function renderClientes() {
 }
 
 async function modificarCliente(idx) {
+    if (!puede('modificar')) return sinPermiso('modificar clientes');
     const c = CLIENTES[idx];
     const nombre = prompt('Nombre del cliente:', c.nombre); if (nombre === null) return;
     const vCuota = parseFloat(prompt('Valor de la cuota (USD):', c.vCuota)); if (isNaN(vCuota)) return;
     const ok = await pedirConfirmacion({ titulo: 'Modificar cliente',
         mensaje: `Vas a guardar estos cambios:<br><br><b>${nombre}</b> · cuota <b>${usd(vCuota)}</b><br>Mza ${c.mza} Lote ${c.lote} · ${FIDEICOMISOS[c.fid].nombre}`, boton: 'Guardar cambios' });
     if (!ok) return;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Modificó al cliente ${c.nombre} → ${nombre} (cuota ${usd(vCuota)})` });
+    notificar(`✎ ${USUARIO} modificó un cliente`, 'Detalle en la bitácora', true);
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó al cliente ${c.nombre} → ${nombre} (cuota ${usd(vCuota)})` });
     c.nombre = nombre; c.vCuota = vCuota;
     renderTodo();
 }
 
 async function eliminarCliente(idx) {
+    if (!puede('modificar')) return sinPermiso('eliminar clientes');
     const c = CLIENTES[idx];
     const ok = await confirmarDoble('Eliminar cliente',
         `¿Eliminar a <b>${c.nombre}</b> (Mza ${c.mza} Lote ${c.lote}, ${FIDEICOMISOS[c.fid].nombre})?<br>Lleva pagados <b>${usd(c.pagado)}</b>.`,
@@ -1899,7 +2524,7 @@ async function eliminarCliente(idx) {
     if (!ok) return;
     const l = LOTES.find(x => x.fid === c.fid && x.mza === c.mza && x.nro === c.lote);
     if (l && l.estado !== 'conflicto') l.estado = 'disponible';
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `ELIMINÓ al cliente ${c.nombre} (Mza ${c.mza} Lote ${c.lote}) · doble confirmación` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `ELIMINÓ al cliente ${c.nombre} (Mza ${c.mza} Lote ${c.lote}) · doble confirmación` });
     CLIENTES.splice(idx, 1);
     renderTodo();
 }
@@ -1960,6 +2585,9 @@ function fichaCliente(idx) {
             ${c.cotizacion ? `<div class="recibo-fila"><span>Cotización BNA de referencia</span><b>${c.cotizacion}</b></div>` : ''}
         </div>
         ${c.detalles ? `<div class="aviso alerta" style="margin-top:10px;">📝 ${c.detalles}</div>` : ''}
+        <div class="etiqueta" style="margin-top:14px;">Documentación del legajo</div>
+        <div class="recibo-fila"><span>📄 Boleto de Compra</span><b>${c.docBoleto ? 'Adjuntado ✓' : '⚠ Pendiente de adjuntar'}</b></div>
+        <div class="recibo-fila"><span>🧾 Comprobantes de entrega</span><b>${c.docComprobantes ? c.docComprobantes + ' archivo/s ✓' : '⚠ Pendientes'}</b></div>
         <div class="etiqueta" style="margin-top:16px;">Historial de pagos (${pagos.length}) · con constancias 📎</div>
         ${filas}
         <button class="btn carmin" onclick="pdfInformeCliente(${idx})"><i class="fi fi-rr-document"></i> Informe de Pagos (PDF con membrete)</button>
@@ -1968,6 +2596,7 @@ function fichaCliente(idx) {
 }
 
 async function pdfInformeCliente(idx) {
+    if (!puede('informes')) return sinPermiso('emitir el Informe de Pagos (las descargas son decisión de los usuarios autorizados)');
     const c = CLIENTES[idx];
     const motivo = await pedirMotivo('Informe de Pagos de ' + c.nombre);
     if (motivo === null) return;
@@ -2013,7 +2642,7 @@ td{padding:6px 8px;border-bottom:1px solid #E4DFD5;} td.n,th.n{text-align:right;
 <script>setTimeout(() => window.print(), 600);<\/script>
 </body></html>`);
     w.document.close();
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Emitió Informe de Pagos de ${c.nombre} (Mza ${c.mza} Lote ${c.lote}) · Motivo: ${motivo}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió Informe de Pagos de ${c.nombre} (Mza ${c.mza} Lote ${c.lote}) · Motivo: ${motivo}` });
     renderBitacora();
 }
 
@@ -2043,7 +2672,8 @@ function agregarFotos(inp) {
     if (fotosCobro.length >= 5) add.style.display = 'none';
     inp.value = '';
 }
-function registrarCobro() {
+async function registrarCobro() {
+    if (!puede('registrar')) return sinPermiso('registrar cobros');
     const res = document.getElementById('cobro-resultado');
     const sel = document.getElementById('cobro-cliente');
     const c = CLIENTES[parseInt(sel.value)];
@@ -2059,10 +2689,21 @@ function registrarCobro() {
     const reciboFisico = document.getElementById('cobro-recibo-fisico').value.trim();
     const talonario = document.getElementById('cobro-talonario').value.trim();
     c.pagado += monto;
+    c.ultPago = hoyISO();
+    /* Si con este cobro completó el valor del lote, el sistema lo pasa
+       a PAGADO automáticamente (sin cargas manuales que se olvidan) */
+    let saldoCompleto = false;
+    if (c.estado !== 'PAGADO' && c.pagado >= c.valor && c.valor > 0) {
+        c.estado = 'PAGADO';
+        saldoCompleto = true;
+        BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `🎉 ${c.nombre} COMPLETÓ EL PAGO de Mza ${c.mza} Lote ${c.lote} (${FIDEICOMISOS[c.fid].nombre}) · pasó a PAGADO automáticamente` });
+    }
     COBROS.unshift({ fid: c.fid, fecha: hoyISO(), cliente: c.nombre, monto, recibo: nroRecibo, reciboFisico, talonario, usuario: USUARIO });
+    notificar(`💵 Cobro registrado: ${usd(monto)} a ${c.nombre}`, `Por ${USUARIO} · Recibo ${nroRecibo}`);
+    if (saldoCompleto) notificar(`🎉 ${c.nombre} saldó su lote Mza ${c.mza} L${c.lote}`, FIDEICOMISOS[c.fid].nombre);
     const cuentaCaja = CUENTAS.find(x => x.fid === c.fid && x.moneda === 'USD');
     if (cuentaCaja && !medio.includes('Transferencia')) cuentaCaja.saldo += monto;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Cobró ${usd(monto)} a ${c.nombre} · Recibo sistema ${nroRecibo}${reciboFisico ? ' · Recibo físico ' + reciboFisico + (talonario ? ' (' + talonario + ')' : '') : ''} · ${medio} · ${fotosCobro.length} comprobante/s` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Cobró ${usd(monto)} a ${c.nombre} · Recibo sistema ${nroRecibo}${reciboFisico ? ' · Recibo físico ' + reciboFisico + (talonario ? ' (' + talonario + ')' : '') : ''} · ${medio} · ${fotosCobro.length} comprobante/s` });
     res.innerHTML = `<div class="aviso ok">✅ Cobro registrado con ${fotosCobro.length} comprobante/s.</div>`;
     /* Recibo institucional */
     const df = DATOS_FID[c.fid];
@@ -2078,7 +2719,8 @@ function registrarCobro() {
             <div class="recibo-fila"><span>Importe</span><b>${usd(monto)}</b></div>
             <div class="recibo-fila"><span>Medio</span><b>${medio}</b></div>
             ${reciboFisico ? `<div class="recibo-fila"><span>Recibo físico</span><b>Nro. ${reciboFisico}${talonario ? ' · ' + talonario : ''}</b></div>` : ''}
-            <div class="recibo-fila"><span>Saldo restante</span><b>${usd(Math.max(0, c.valor - c.pagado))}</b></div>
+            <div class="recibo-fila"><span>Saldo restante</span><b style="${saldoCompleto ? 'color:var(--ok);' : ''}">${saldoCompleto ? 'USD 0 — ¡LOTE SALDADO! ✓' : usd(Math.max(0, c.valor - c.pagado))}</b></div>
+            ${saldoCompleto ? '<div class="aviso ok" style="margin-top:10px;">🎉 Con este pago el cliente <b>completó el valor del lote</b>: el sistema lo pasó a PAGADO automáticamente (mapa, filtros y estadísticas ya actualizados).</div>' : ''}
             <div class="pie-auditoria">Emitido por ${USUARIO} · ${ahora()} hs · Comprobantes adjuntos: ${fotosCobro.length} · Registrado en bitácora<br>Comercializa: Portanko Inmobiliaria · Documento de gestión interna del fideicomiso (no fiscal)</div>
         </div>
         <button class="btn carmin" onclick="cerrarModal()"><i class="fi fi-rr-comment"></i> Enviar al cliente por WhatsApp</button>
@@ -2105,7 +2747,7 @@ function registrarMovimiento() {
     const tipo = document.getElementById('mov-tipo').value;
     const detalle = document.getElementById('mov-detalle').value || tipo;
     MOVIMIENTOS.unshift({ fid: FID === 'ALL' ? 'AER' : FID, fecha: hoyISO(), tipo: tipo.split(' (')[0], detalle, monto, usuario: USUARIO });
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Tesorería: ${tipo.split(' (')[0]} por ${usd(monto)} · ${detalle}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Tesorería: ${tipo.split(' (')[0]} por ${usd(monto)} · ${detalle}` });
     res.innerHTML = '<div class="aviso ok">✅ Movimiento asentado con su comprobante. La caja teórica se recalculó.</div>';
     document.getElementById('mov-monto').value = ''; document.getElementById('mov-detalle').value = '';
     renderMovimientos(); renderBitacora();
@@ -2118,12 +2760,13 @@ function renderMovimientos() {
 }
 
 async function anularMovimiento(i) {
+    if (!puede('modificar')) return sinPermiso('anular movimientos de tesorería');
     const m = MOVIMIENTOS[i];
     const ok = await confirmarDoble('Anular movimiento',
         `¿Anular el movimiento <b>${m.tipo}</b> por <b>${usd(m.monto)}</b>?<br><small>${m.detalle}</small>`,
         `Se anulará el movimiento de tesorería por ${usd(m.monto)} y la caja teórica se recalculará.`);
     if (!ok) return;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `ANULÓ movimiento ${m.tipo} por ${usd(m.monto)} (${m.detalle}) · doble confirmación` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `ANULÓ movimiento ${m.tipo} por ${usd(m.monto)} (${m.detalle}) · doble confirmación` });
     MOVIMIENTOS.splice(i, 1);
     renderMovimientos(); renderBitacora();
 }
@@ -2145,12 +2788,13 @@ function renderNovedades() {
 }
 
 async function eliminarNovedad(i) {
+    if (!puede('modificar')) return sinPermiso('eliminar novedades del libro');
     const n = NOVEDADES[i];
     const ok = await confirmarDoble('Eliminar asiento del libro',
         `¿Eliminar la novedad <b>"${n.tipo}"</b> del ${n.fecha}?<br><small>${n.texto}</small>`,
         `El asiento se eliminará del Libro de Novedades. La eliminación en sí queda registrada en la bitácora (el libro nunca miente).`);
     if (!ok) return;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `ELIMINÓ la novedad "${n.tipo}" del ${n.fecha} (${n.texto.slice(0, 60)}...) · doble confirmación` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `ELIMINÓ la novedad "${n.tipo}" del ${n.fecha} (${n.texto.slice(0, 60)}...) · doble confirmación` });
     NOVEDADES.splice(i, 1);
     renderNovedades(); renderBitacora();
 }
@@ -2163,11 +2807,91 @@ function renderDocs() {
         </div>`).join('');
 }
 async function descargarDoc(nombre) {
+    if (!puede('informes')) return sinPermiso('descargar documentos (las descargas son decisión de los usuarios autorizados)');
     const motivo = await pedirMotivo('Documento: ' + nombre);
     if (motivo === null) return;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Descargó "${nombre}" · Motivo: ${motivo}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Descargó "${nombre}" · Motivo: ${motivo}` });
     renderBitacora();
 }
+function renderPanelPrecios() {
+    const el = document.getElementById('panel-precios');
+    if (!el) return;
+    el.innerHTML = ['AER', 'DG'].map(fid => {
+        const manzanas = [...new Set(GEOS[fid].lotes.map(l => l.mza))].sort();
+        return `<div style="margin-bottom:10px;"><b style="font-size:.9rem;">${FIDEICOMISOS[fid].nombre}</b>
+        <div class="fila-2" style="grid-template-columns:repeat(${Math.min(manzanas.length, 4)},1fr);gap:8px;margin-top:6px;">` +
+            manzanas.map(m => `<div><label class="form-lbl" style="margin-top:4px;">Mza ${m} · USD/m²</label>
+            <input class="form-inp" id="precio-${fid}-${m}" inputmode="decimal" value="${(PRECIOS_M2[fid] || {})[m] ?? ''}" placeholder="—"></div>`).join('') +
+        `</div></div>`;
+    }).join('');
+}
+
+async function guardarPreciosM2() {
+    if (!puede('admin')) return sinPermiso('cambiar los valores del m² (administración exclusiva de la Dirección)');
+    const nuevos = { AER: {}, DG: {} };
+    let resumen = [];
+    ['AER', 'DG'].forEach(fid => {
+        [...new Set(GEOS[fid].lotes.map(l => l.mza))].forEach(m => {
+            const v = parseFloat((document.getElementById(`precio-${fid}-${m}`).value || '').replace(',', '.'));
+            if (!isNaN(v) && v > 0) { nuevos[fid][m] = v; resumen.push(`${FIDEICOMISOS[fid].nombre} Mza ${m}: USD ${v}`); }
+        });
+    });
+    const ok = await pedirConfirmacion({ titulo: 'Guardar valores del m²',
+        mensaje: `Los valores nuevos regirán en fichas, financiaciones y fichas comerciales PDF:<br><br><b>${resumen.join(' · ')}</b>`, boton: 'Guardar valores' });
+    if (!ok) return;
+    PRECIOS_M2 = nuevos;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Actualizó los valores del m² por manzana: ${resumen.join(' · ')}` });
+    document.getElementById('precios-resultado').innerHTML = '<div class="aviso ok">✅ Valores guardados. Todo el sistema ya calcula con los nuevos precios.</div>';
+    renderTodo();
+}
+
+
+/* ===== ACTAS DEL FIDEICOMISO (solo administradores) ===== */
+let ACTAS = [
+    { tipo: 'Visita técnica', fid: 'AER', titulo: 'Recorrida por apertura de calles Mza D', detalle: 'Se verificó el avance de la apertura de calles del sector comercial. La maquinaria trabajó sobre la calle colectora. Próximo paso: nivelación fina y compactado.', fecha: '2026-08-18', usuario: 'Lucía Natalia Bruno Portanko', archivos: 3 },
+    { tipo: 'Informe del desarrollador', fid: 'DG', titulo: 'Informe mensual · red de agua Ecovilla', detalle: 'El desarrollador informa la finalización del tendido troncal de agua sobre la Mza A. Pendiente: conexiones domiciliarias y prueba de presión.', fecha: '2026-08-10', usuario: 'Lucía Natalia Bruno Portanko', archivos: 2 }
+];
+function renderActas() {
+    const el = document.getElementById('lista-actas');
+    if (!el) return;
+    el.innerHTML = ACTAS.map((a, i) => `<div class="item-lista bitacora-toc" onclick="verActa(${i})">
+        <b>${a.titulo}</b><br><small>${a.tipo} · ${FIDEICOMISOS[a.fid].nombre} · ${a.fecha} · por ${a.usuario} · 📎 ${a.archivos} adjunto/s — tocá para ampliar</small></div>`).join('')
+        || '<div class="item-lista">Sin actas todavía.</div>';
+}
+function verActa(i) {
+    const a = ACTAS[i];
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">${a.titulo}</h3>
+        <span class="sello oro">${a.tipo}</span>
+        <div style="margin-top:12px;">
+            <div class="recibo-fila"><span>Fideicomiso</span><b>${FIDEICOMISOS[a.fid].nombre}</b></div>
+            <div class="recibo-fila"><span>Fecha · cargó</span><b>${a.fecha} · ${a.usuario}</b></div>
+        </div>
+        <div class="aviso alerta" style="margin-top:10px;">${a.detalle}</div>
+        <div class="etiqueta" style="margin-top:12px;">Documentación adjunta (${a.archivos})</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;">
+            ${Array.from({ length: a.archivos }, (_, j) => `<div style="background:var(--marfil);border:1.5px dashed var(--linea);border-radius:12px;height:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.68rem;color:var(--piedra);"><i class="fi fi-rr-picture" style="font-size:1.3rem;margin-bottom:4px;"></i>Adjunto ${j + 1}</div>`).join('')}
+        </div>
+        <div style="font-size:.72rem;color:var(--piedra);margin-top:8px;">En la versión real, acá se ven las fotos y se abren los PDF a pantalla completa (visor incorporado).</div>
+        <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
+async function guardarActa() {
+    if (!puede('admin')) return sinPermiso('cargar actas del fideicomiso (administración exclusiva de la Dirección)');
+    const titulo = document.getElementById('acta-titulo').value.trim();
+    if (!titulo) return;
+    const archivos = (document.getElementById('acta-archivos').files || []).length;
+    const tipo = document.getElementById('acta-tipo').value, fidA = document.getElementById('acta-fid').value;
+    const ok = await pedirConfirmacion({ titulo: 'Guardar acta', mensaje: `<b>${titulo}</b><br>${tipo} · ${FIDEICOMISOS[fidA].nombre} · 📎 ${archivos} adjunto/s`, boton: 'Guardar' });
+    if (!ok) return;
+    ACTAS.unshift({ tipo, fid: fidA, titulo, detalle: document.getElementById('acta-detalle').value.trim(), fecha: hoyISO(), usuario: USUARIO, archivos });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Cargó acta: "${titulo}" (${tipo}, ${FIDEICOMISOS[fidA].nombre}) · 📎 ${archivos}` });
+    notificar(`📋 Nueva acta del fideicomiso: ${titulo}`, `${tipo} · por ${USUARIO}`, true);
+    ['acta-titulo', 'acta-detalle'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('acta-archivos').value = '';
+    renderActas(); renderBitacora();
+}
+
 function renderVendedores() {
     const el = document.getElementById('lista-vendedores');
     if (el) el.innerHTML = VENDEDORES.map((v, i) =>
@@ -2176,41 +2900,63 @@ function renderVendedores() {
         <button class="btn-mini rojo" style="margin:0;" onclick="eliminarVendedor(${i})"><i class="fi fi-rr-trash"></i></button></span></div>`).join('');
 }
 async function nuevoVendedor() {
+    if (!puede('admin')) return sinPermiso('dar de alta vendedores (administración exclusiva de la Dirección)');
     const n = prompt('Nombre completo del vendedor:'); if (!n) return;
     const ok = await pedirConfirmacion({ titulo: 'Alta de vendedor', mensaje: `Se agregará <b>${n}</b> al equipo de ventas. Aparecerá en todos los selectores de vendedor de la app.`, boton: 'Dar de alta' });
     if (!ok) return;
     VENDEDORES.push(n);
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Dio de alta al vendedor ${n}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Dio de alta al vendedor ${n}` });
     renderVendedores(); renderBitacora(); poblarSelects();
 }
 async function modificarVendedor(i) {
+    if (!puede('admin')) return sinPermiso('modificar vendedores (administración exclusiva de la Dirección)');
     const n = prompt('Nombre del vendedor:', VENDEDORES[i]); if (!n) return;
     const ok = await pedirConfirmacion({ titulo: 'Modificar vendedor', mensaje: `<b>${VENDEDORES[i]}</b> pasará a llamarse <b>${n}</b>.`, boton: 'Guardar' });
     if (!ok) return;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Modificó al vendedor ${VENDEDORES[i]} → ${n}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó al vendedor ${VENDEDORES[i]} → ${n}` });
     VENDEDORES[i] = n;
     renderVendedores(); renderBitacora(); poblarSelects();
 }
 async function eliminarVendedor(i) {
+    if (!puede('admin')) return sinPermiso('eliminar vendedores (administración exclusiva de la Dirección)');
     const v = VENDEDORES[i];
     const ok = await confirmarDoble('Eliminar vendedor', `¿Quitar a <b>${v}</b> del equipo de ventas?`, `Se quitará a ${v} de los selectores (sus ventas y comisiones históricas se conservan).`);
     if (!ok) return;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `ELIMINÓ al vendedor ${v} del catálogo · doble confirmación` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `ELIMINÓ al vendedor ${v} del catálogo · doble confirmación` });
     VENDEDORES.splice(i, 1);
     renderVendedores(); renderBitacora(); poblarSelects();
 }
 
 function renderBitacora() {
     const el = document.getElementById('lista-bitacora');
-    if (el) el.innerHTML = BITACORA.slice(0, 12).map(b =>
-        `<div class="item-lista">${b.accion}<small>${b.fecha} · ${b.usuario}</small></div>`).join('');
+    if (el) el.innerHTML = BITACORA.slice(0, 20).map((b, i) =>
+        `<div class="item-lista bitacora-toc" onclick="verBitacora(${i})">${b.accion}<small>${b.fecha} · ${b.usuario} · tocá para ampliar 🔍</small></div>`).join('');
+}
+function verBitacora(i) {
+    const b = BITACORA[i];
+    const conAdjuntos = /📎 (\d+)/.exec(b.accion);
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">Registro de auditoría</h3>
+        <span class="sello carmin">Contralor · Administradores</span>
+        <div style="margin-top:12px;">
+            <div class="recibo-fila"><span>Fecha y hora</span><b>${b.fecha} hs</b></div>
+            <div class="recibo-fila"><span>Usuario responsable</span><b>${b.usuario}</b></div>
+        </div>
+        <div class="aviso alerta" style="margin-top:10px;line-height:1.6;">${b.accion}</div>
+        ${conAdjuntos ? `<div class="etiqueta" style="margin-top:12px;">Documentación vinculada (${conAdjuntos[1]})</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;">
+        ${Array.from({ length: Math.min(parseInt(conAdjuntos[1]), 6) }, (_, j) => `<div style="background:var(--marfil);border:1.5px dashed var(--linea);border-radius:12px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.66rem;color:var(--piedra);"><i class="fi fi-rr-document" style="font-size:1.2rem;margin-bottom:4px;"></i>Ver adjunto ${j + 1}</div>`).join('')}</div>
+        <div style="font-size:.7rem;color:var(--piedra);margin-top:6px;">En la versión real, cada adjunto se abre acá mismo con el visor incorporado (fotos y PDF a pantalla completa).</div>` : ''}
+        <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
 }
 async function emitirInforme() {
+    if (!puede('informes')) return sinPermiso('emitir el Informe Ejecutivo (las descargas son decisión de los usuarios autorizados)');
     const aPedido = document.getElementById('informe-pedido').checked;
     const nombre = FID === 'ALL' ? 'Consolidado' : FIDEICOMISOS[FID].nombre;
     const motivo = await pedirMotivo('Informe Ejecutivo · ' + nombre);
     if (motivo === null) return;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Emitió Informe Ejecutivo · ${nombre} · ${aPedido ? 'a pedido de cliente/fiduciante' : 'de oficio'} · Motivo: ${motivo}` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Emitió Informe Ejecutivo · ${nombre} · ${aPedido ? 'a pedido de cliente/fiduciante' : 'de oficio'} · Motivo: ${motivo}` });
     const clientes = enFid(CLIENTES);
     const recaudado = clientes.reduce((a, c) => a + c.pagado, 0);
     const porCobrar = clientes.reduce((a, c) => a + (c.valor - c.pagado), 0);
@@ -2243,7 +2989,64 @@ const montoCaso = (c, n) => c.moneda === 'USD' ? usd(n) : ars(n);
 function restoDe(c) { return c.cobrado * (100 - (c.pctEstudio || 0)) / 100; }
 function leTocaA(c, i) { return restoDe(c) * i.pct / 100; }
 
+
+/* ===== ESTADÍSTICAS DEL ESTUDIO =====
+   Cuánto cobró cada persona (abogados, peritos, publicista...), en
+   cuántos casos interviene, su promedio por caso, y cuánto tardan
+   los casos en cobrarse desde su inicio. */
+function renderStatsPersonas() {
+    const el = document.getElementById('stats-personas');
+    if (!el) return;
+    const personas = {};
+    CASOS.forEach(c => {
+        c.intervinientes.forEach(x => {
+            if (!personas[x.nombre]) personas[x.nombre] = { rol: x.rol || '', total: 0, casos: 0, asignado: 0 };
+            personas[x.nombre].casos++;
+            personas[x.nombre].total += x.pagado;
+            personas[x.nombre].asignado += leTocaA(c, x);
+        });
+    });
+    /* Tiempo promedio hasta el primer cobro */
+    const tiempos = CASOS.filter(c => c.fechaInicio && c.cobros.length)
+        .map(c => Math.round((new Date(c.cobros[c.cobros.length - 1].fecha) - new Date(c.fechaInicio)) / 86400000));
+    const promDias = tiempos.length ? Math.round(tiempos.reduce((a, b) => a + b, 0) / tiempos.length) : 0;
+    el.innerHTML = Object.entries(personas).sort((a, b) => b[1].total - a[1].total).map(([n, p]) =>
+        `<div class="reparto-fila"><span><b>${n}</b><br><small>${p.rol} · ${p.casos} caso/s · promedio $ ${Math.round(p.total / Math.max(1, p.casos)).toLocaleString('es-AR')} por caso</small></span>
+        <b>$ ${p.total.toLocaleString('es-AR')}<br><small style="font-weight:400;color:var(--piedra);">de $ ${Math.round(p.asignado).toLocaleString('es-AR')} asignados</small></b></div>`).join('') +
+        (promDias ? `<div class="aviso alerta" style="margin-top:10px;">⏱ <b>Tiempo promedio de cobro:</b> los casos cobran a los <b>${promDias} días</b> (${(promDias / 30).toFixed(1)} meses) desde su inicio — calculado sobre ${tiempos.length} caso/s con fecha de inicio y cobro registrados.</div>` : '');
+}
+
+function repartosPendientes() {
+    /* Personas con plata asignada sin pagar, en casos que cobraron
+       hace más de 3 días: hay que pagarles. */
+    const hoy = new Date();
+    const avisos = [];
+    CASOS.forEach((c, ci) => {
+        if (!c.cobros.length || c.liquidado) return;
+        const ultCobro = new Date(c.cobros[0].fecha + 'T12:00:00');
+        const dias = Math.floor((hoy - ultCobro) / 86400000);
+        if (dias < 3) return;
+        c.intervinientes.forEach(x => {
+            const debe = leTocaA(c, x) - x.pagado;
+            if (debe > 0) avisos.push({ ci, nombre: x.nombre, debe: montoCaso(c, debe), caso: c.caratula, dias });
+        });
+    });
+    return avisos;
+}
+let recordatorioMostrado = false;
+function recordarRepartos() {
+    const avisos = repartosPendientes();
+    if (!avisos.length || recordatorioMostrado) return;
+    recordatorioMostrado = true;
+    avisos.slice(0, 4).forEach(a => notificar(`⏰ Pago pendiente hace ${a.dias} días: ${a.debe} a ${a.nombre}`, a.caso, true));
+    pedirConfirmacion({ titulo: '⏰ Repartos pendientes de pago',
+        mensaje: 'Hay pagos del reparto sin realizar en casos cobrados hace más de 3 días:<br><br>' +
+            avisos.slice(0, 6).map(a => `• <b>${a.nombre}</b>: ${a.debe} — "${a.caso}" (hace ${a.dias} días)`).join('<br>') +
+            '<br><br>Recordá que cada pago exige su constancia adjunta.', boton: 'Entendido' });
+}
+
 function renderJur() {
+    renderStatsPersonas();
     /* KPIs del estudio */
     const ganados = CASOS.filter(c => c.estado === 'Ganado').length;
     const cobradoTotal = CASOS.reduce((a, c) => a + c.cobrado, 0);
@@ -2274,17 +3077,33 @@ function renderJur() {
     renderCasos(); renderGastos(); renderJurBitacora(); poblarSelectCasos();
 }
 
+let filtroCasos = 'curso';
+function setFiltroCasos(f) { filtroCasos = f; renderCasos(); }
+
 function renderCasos() {
     const cont = document.getElementById('lista-casos');
     if (!cont) return;
+    /* Los casos LIQUIDADOS (cobrados y repartidos) viven aparte:
+       la lista de trabajo solo muestra lo que está en curso. */
+    const chips = document.getElementById('chips-casos');
+    const nCurso = CASOS.filter(c => !c.liquidado).length, nCobrados = CASOS.filter(c => c.liquidado).length;
+    if (chips) chips.innerHTML = `
+        <button class="chip-b ${filtroCasos === 'curso' ? 'activo' : ''}" onclick="setFiltroCasos('curso')">Casos en curso · ${nCurso}</button>
+        <button class="chip-b verde ${filtroCasos === 'cobrados' ? 'activo' : ''}" onclick="setFiltroCasos('cobrados')">✓ Ya cobrados y liquidados · ${nCobrados}</button>`;
     const claseEstado = { 'Ganado': 'ganado', 'En trámite': 'tramite', 'Acordado': 'acordado', 'Perdido': 'perdido' };
-    cont.innerHTML = CASOS.map((c, i) => {
+    const q = (document.getElementById('buscar-caso') ? document.getElementById('buscar-caso').value : '').toLowerCase().trim();
+    const visibles = CASOS.map((c, i) => ({ c, i }))
+        .filter(x => filtroCasos === 'cobrados' ? x.c.liquidado : !x.c.liquidado)
+        .filter(x => !q || `${x.c.caratula} ${x.c.cliente || ''} ${x.c.dni || ''} ${x.c.tel || ''}`.toLowerCase().replace(/\./g, '').includes(q.replace(/\./g, '')));
+    if (!visibles.length) { cont.innerHTML = `<div class="tarjeta" style="text-align:center;color:var(--piedra);font-size:.9rem;">${filtroCasos === 'cobrados' ? 'Todavía no hay casos liquidados.' : 'No hay casos en curso.'}</div>`; return; }
+    cont.innerHTML = visibles.map(({ c, i }) => {
         const repartido = c.intervinientes.reduce((a, x) => a + x.pagado, 0);
         return `<div class="tarjeta">
             <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
                 <div><b style="font-size:.92rem;">${c.caratula}</b>
+                ${c.cliente ? `<small style="display:block;color:var(--tinta);font-size:.78rem;margin-top:2px;">👤 ${c.cliente}${c.dni ? ' · DNI ' + c.dni : ''}${c.tel ? ' · 📞 ' + c.tel : ''}</small>` : ''}
                 <small style="display:block;color:var(--piedra);font-size:.72rem;">Responsable: ${c.abogado} · ${c.intervinientes.length} intervinientes · ${c.cobros.length} cobro/s</small></div>
-                <span class="caso-estado ${claseEstado[c.estado]}">${c.estado}</span>
+                <span class="caso-estado ${c.liquidado ? 'ganado' : claseEstado[c.estado]}">${c.liquidado ? '✓ Liquidado' : c.estado}</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:.76rem;color:var(--piedra);margin-top:10px;">
                 <span>Cobrado: <b style="color:var(--tinta);">${montoCaso(c, c.cobrado)}</b></span>
@@ -2300,6 +3119,12 @@ function renderCasos() {
 function verCaso(i) {
     const c = CASOS[i];
     const resto = restoDe(c);
+    const datosCliente = c.cliente || c.dni || c.tel ?
+        `<div style="margin:8px 0 4px 0;">
+        <div class="recibo-fila"><span>Cliente</span><b>${c.cliente || '—'}</b></div>
+        <div class="recibo-fila"><span>DNI</span><b>${c.dni || '—'}</b></div>
+        <div class="recibo-fila"><span>Teléfono</span><b>${c.tel || '—'}</b></div></div>` :
+        '<div class="aviso alerta" style="margin:8px 0;">Sin datos del cliente: tocá Modificar para cargar nombre, DNI y teléfono.</div>';
     const sumaPct = c.intervinientes.reduce((a, x) => a + x.pct, 0);
     const filas = c.intervinientes.map((x, ii) => {
         const leToca = leTocaA(c, x);
@@ -2324,6 +3149,7 @@ function verCaso(i) {
         : '<div class="item-lista">Sin cobros registrados aún.</div>';
     document.getElementById('modal-doc-caja').innerHTML = `
         <h3 class="serif">${c.caratula}</h3>
+        ${datosCliente}
         <div style="margin:6px 0 12px 0;"><span class="caso-estado ${c.estado === 'Ganado' ? 'ganado' : c.estado === 'En trámite' ? 'tramite' : c.estado === 'Acordado' ? 'acordado' : 'perdido'}">${c.estado}</span></div>
         <div class="etiqueta">Cascada de reparto</div>
         ${cascada}
@@ -2336,6 +3162,9 @@ function verCaso(i) {
             : '<div class="item-lista">Aún sin pagos internos registrados.</div>'}
         <div class="etiqueta" style="margin-top:16px;">Cobros del caso</div>
         ${cobros}
+        ${!c.liquidado && c.cobrado >= c.monto && c.monto > 0 ? '<div class="aviso ok">💡 El caso ya cobró el total. Cuando estén hechos todos los repartos, podés <b>marcarlo como liquidado</b> para archivarlo en "Ya cobrados".</div>' : ''}
+        ${c.liquidado ? `<button class="btn borde" onclick="reabrirCaso(${i})"><i class="fi fi-rr-refresh"></i> Reabrir caso (volver a "en curso")</button>`
+            : `<button class="btn tinta" onclick="liquidarCaso(${i})"><i class="fi fi-rr-badge-check"></i> Marcar como liquidado · pasa a "Ya cobrados"</button>`}
         <button class="btn carmin" onclick="pdfResumenCaso(${i})"><i class="fi fi-rr-document"></i> Descargar PDF resumen del caso</button>
         <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
     document.getElementById('modal-doc').style.display = 'flex';
@@ -2372,10 +3201,15 @@ async function pagarInterno(ci, ii) {
     const c = CASOS[ci], x = c.intervinientes[ii];
     const debe = leTocaA(c, x) - x.pagado;
     const ok = await pedirConfirmacion({ titulo: 'Pago interno del reparto', adjunto: true,
-        mensaje: `¿Registrar el pago de <b>${montoCaso(c, debe)}</b> a <b>${x.nombre}</b>?<br><small>"${c.caratula}"</small>`,
+        mensaje: `¿Registrar el pago de <b>${montoCaso(c, debe)}</b> a <b>${x.nombre}</b>?<br><small>"${c.caratula}"</small><br><br>📎 <b>Constancia obligatoria:</b> adjuntá la captura de la transferencia o el PDF del pago. Sin constancia, el sistema no aprueba.`,
         boton: 'Confirmar pago' });
     if (!ok) return;
+    if (!pcArchivos) {
+        await pedirConfirmacion({ titulo: 'Falta la constancia', mensaje: `El pago a <b>${x.nombre}</b> <b>NO se registró</b>: es obligatorio adjuntar la constancia (captura de pantalla, PDF de la transferencia, etc.) antes de aprobar. Volvé a intentarlo con el comprobante.`, boton: 'Entendido' });
+        return;
+    }
     x.pagado += debe;
+    notificar(`💸 Pago del reparto: ${montoCaso(c, debe)} a ${x.nombre}`, `"${c.caratula}" · 📎 ${pcArchivos} constancia/s · por ${USUARIO}`, true);
     if (!c.pagosInternos) c.pagosInternos = [];
     c.pagosInternos.unshift({ fecha: hoyISO(), a: x.nombre, rol: x.rol || '', monto: debe, constancias: pcArchivos, usuario: USUARIO });
     JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Pagó ${montoCaso(c, debe)} a ${x.nombre} · reparto de "${c.caratula}" · 📎 ${pcArchivos} constancia/s` });
@@ -2384,9 +3218,12 @@ async function pagarInterno(ci, ii) {
 
 function crearCaso() {
     const caratula = document.getElementById('caso-caratula').value.trim();
+    const cliente = document.getElementById('caso-cliente').value.trim();
+    const dniC = document.getElementById('caso-dni').value.trim();
+    const telC = document.getElementById('caso-tel').value.trim();
     if (!caratula) return;
     const abogado = document.getElementById('caso-abogado').value || USUARIO;
-    CASOS.unshift({ caratula, abogado,
+    CASOS.unshift({ caratula, cliente, dni: dniC, tel: telC, abogado,
         estado: document.getElementById('caso-estado').value, moneda: 'ARS', cobrado: 0, pctEstudio: 20,
         intervinientes: [
             { nombre: abogado, rol: 'Abogado/a del caso (socio)', pct: 50, pagado: 0 },
@@ -2394,22 +3231,26 @@ function crearCaso() {
             { nombre: 'Pablo Ivañez', rol: 'Socio Publicista', pct: 15, pagado: 0 }
         ], cobros: [] });
     JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Abrió el caso "${caratula}"` });
-    document.getElementById('caso-caratula').value = '';
+    ['caso-caratula','caso-cliente','caso-dni','caso-tel'].forEach(id => document.getElementById(id).value = '');
     renderJur();
 }
 
 async function modificarCaso(i) {
     const c = CASOS[i];
-    const caratula = prompt('Carátula del caso:', c.caratula); if (caratula === null) return;
+    const caratula = prompt('Autos caratulados:', c.caratula); if (caratula === null) return;
+    const cliente = prompt('Cliente (apellido y nombre):', c.cliente || ''); if (cliente === null) return;
+    const dni = prompt('DNI del cliente:', c.dni || ''); if (dni === null) return;
+    const tel = prompt('Teléfono del cliente:', c.tel || ''); if (tel === null) return;
     const estados = ['En trámite', 'Ganado', 'Acordado', 'Perdido'];
     const nro = prompt('Estado:\n' + estados.map((e, j) => (j + 1) + '. ' + e).join('\n') + '\n(escribí el número)', String(estados.indexOf(c.estado) + 1));
     if (nro === null) return;
     const estado = estados[parseInt(nro) - 1] || c.estado;
     const ok = await pedirConfirmacion({ titulo: 'Modificar caso',
-        mensaje: `Vas a guardar:<br><br><b>${caratula}</b><br>Estado: <b>${estado}</b>`, boton: 'Guardar cambios' });
+        mensaje: `Vas a guardar:<br><br><b>${caratula}</b><br>Cliente: <b>${cliente || '—'}</b> · DNI ${dni || '—'} · 📞 ${tel || '—'}<br>Estado: <b>${estado}</b>`, boton: 'Guardar cambios' });
     if (!ok) return;
-    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Modificó el caso "${c.caratula}" → "${caratula}" (${estado})` });
-    c.caratula = caratula; c.estado = estado;
+    notificar(`✎ ${USUARIO} modificó el caso "${caratula}"`, 'Ver detalle en la bitácora del Estudio', true);
+    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Modificó el caso "${c.caratula}" → "${caratula}" · cliente ${cliente} (DNI ${dni}, tel ${tel}) · ${estado}` });
+    c.caratula = caratula; c.cliente = cliente; c.dni = dni; c.tel = tel; c.estado = estado;
     renderJur();
 }
 
@@ -2620,6 +3461,31 @@ async function pagarGasto(i) {
    Abre la versión imprimible con membrete arriba y abajo; el navegador
    la guarda como PDF (Destino: "Guardar como PDF"). Membrete provisorio
    hasta recibir el logo definitivo. */
+async function liquidarCaso(i) {
+    const c = CASOS[i];
+    const repartido = c.intervinientes.reduce((a, x) => a + x.pagado, 0);
+    const pendiente = c.cobrado < c.monto || repartido < restoDe(c);
+    const ok = await pedirConfirmacion({ titulo: 'Marcar caso como liquidado',
+        mensaje: `<b>${c.caratula}</b><br>Cobrado: ${montoCaso(c, c.cobrado)} de ${montoCaso(c, c.monto)} · Repartido: ${montoCaso(c, repartido)}` +
+            (pendiente ? '<br><br>⚠ <b>Atención:</b> aún figuran cobros o repartos pendientes. Podés liquidarlo igual, pero quedará asentado.' : '<br><br>Cobros y repartos completos ✓') +
+            '<br>El caso saldrá de la lista de trabajo y pasará a <b>"Ya cobrados y liquidados"</b>.',
+        boton: 'Liquidar y archivar' });
+    if (!ok) return;
+    c.liquidado = true;
+    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `LIQUIDÓ el caso "${c.caratula}" → archivado en Ya cobrados${pendiente ? ' (con pendientes declarados)' : ''}` });
+    cerrarModal(); renderJur();
+}
+
+async function reabrirCaso(i) {
+    const c = CASOS[i];
+    const ok = await pedirConfirmacion({ titulo: 'Reabrir caso',
+        mensaje: `<b>${c.caratula}</b> volverá a la lista de casos en curso.`, boton: 'Reabrir' });
+    if (!ok) return;
+    c.liquidado = false;
+    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Reabrió el caso "${c.caratula}" (vuelve a en curso)` });
+    cerrarModal(); renderJur();
+}
+
 async function pdfResumenCaso(i) {
     const c = CASOS[i];
     const motivo = await pedirMotivo('PDF Resumen del caso: ' + c.caratula);
@@ -2673,6 +3539,7 @@ td.n,th.n{text-align:right;}
 </div>
 
 <h1>${c.caratula}</h1>
+${c.cliente ? `<div style="font-size:12px;margin-bottom:2px;">Cliente: <b>${c.cliente}</b>${c.dni ? ' · DNI ' + c.dni : ''}${c.tel ? ' · Tel. ' + c.tel : ''}</div>` : ''}
 <span class="sello">${c.estado}</span>
 <div>Abogada/o responsable: <b>${c.abogado}</b> · Emitido el ${hoyISO()}</div>
 
@@ -2714,6 +3581,7 @@ function renderJurBitacora() {
 function numAR(n) { return String(Math.round(n * 100) / 100).replace('.', ','); }
 
 async function descargarContable(tipo) {
+    if (!puede('informes')) return sinPermiso('descargar informes contables (las descargas son decisión de los usuarios autorizados)');
     const periodo = document.getElementById('contable-periodo').value;
     const mes = hoyISO().slice(0, 7);
     const filtraPeriodo = arr => periodo === 'mes' ? arr.filter(x => (x.fecha || '').startsWith(mes)) : arr;
@@ -2766,7 +3634,7 @@ async function descargarContable(tipo) {
     a.click();
     URL.revokeObjectURL(a.href);
 
-    BITACORA.unshift({ fecha: ahora(), usuario: USUARIO + ' (Dueño)', accion: 'Descargó "' + nombre + '" (' + nombreFid + ', ' + (periodo === 'mes' ? 'mes en curso' : 'histórico') + ') · Motivo: ' + motivo });
+    BITACORA.unshift({ fecha: ahora(), usuario: USUARIO + ' (' + PERSONA.rotulo + ')', accion: 'Descargó "' + nombre + '" (' + nombreFid + ', ' + (periodo === 'mes' ? 'mes en curso' : 'histórico') + ') · Motivo: ' + motivo });
     document.getElementById('contable-resultado').innerHTML = '<div class="aviso ok">✅ ' + nombre + ' descargado. Abrilo con Excel: llega con encabezado institucional, totales y el detalle del período. Quedó asentado en la bitácora.</div>';
     renderBitacora();
 }
