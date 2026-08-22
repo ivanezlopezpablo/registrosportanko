@@ -1,11 +1,11 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Portanko · Administración de Fideicomisos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -20,15 +20,15 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;min-height:100%;}
-body{font-family:'Jost',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:16px;}
-.serif{font-family:'Cormorant Garamond',serif;}
+body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:16px;}
+.serif{font-family:'Space Grotesk',sans-serif;}
 i.fi{display:inline-flex;vertical-align:middle;}
 ::-webkit-scrollbar{display:none;}
 *{scrollbar-width:none;}
 
 /* ====== MARCA: círculo P ====== */
 .marca-p{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C21E2A, var(--carmin) 55%, var(--carmin-prof));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(122,14,23,.35);flex-shrink:0;}
-.marca-p span{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;transform:translateY(-1px);}
+.marca-p span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:2rem;color:#fff;line-height:1;transform:translateY(-1px);}
 .marca-p.mini{width:38px;height:38px;}
 .marca-p.mini span{font-size:1.4rem;}
 
@@ -42,9 +42,9 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .login-desde{font-size:.64rem;letter-spacing:3.5px;color:var(--oro);font-weight:600;text-transform:uppercase;}
 .login-sub{font-size:.8rem;color:var(--piedra);margin:10px 0 20px 0;line-height:1.5;}
 .login-lbl{display:block;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--piedra);font-weight:600;margin:12px 0 5px 2px;}
-.login-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:12px;font-family:'Jost';font-size:.92rem;color:var(--tinta);outline:none;}
+.login-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:12px;font-family:'Inter';font-size:.92rem;color:var(--tinta);outline:none;}
 .login-inp:focus{border-color:var(--carmin);}
-.btn-ingresar{width:100%;margin-top:18px;background:var(--carmin);color:#fff;border:none;border-radius:3px;padding:14px;font-family:'Jost';font-size:.9rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+.btn-ingresar{width:100%;margin-top:18px;background:var(--carmin);color:#fff;border:none;border-radius:3px;padding:14px;font-family:'Inter';font-size:.9rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
 .btn-ingresar:hover{background:var(--carmin-prof);}
 .login-roles{display:flex;gap:8px;margin-top:14px;}
 .rol-chip{flex:1;border:1px solid var(--linea);background:var(--papel);border-radius:3px;padding:9px 6px;font-size:.72rem;font-weight:600;color:var(--piedra);cursor:pointer;transition:all .2s;}
@@ -72,7 +72,7 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .usuario-pill{font-size:.66rem;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);padding:5px 10px;border-radius:2px;letter-spacing:.5px;cursor:pointer;}
 .usuario-pill b{color:var(--oro);}
 .selector-fid{display:flex;gap:6px;padding:12px 16px 4px 16px;}
-.fid-btn{flex:1;border:1px solid var(--linea);background:var(--papel);border-radius:3px;padding:9px 4px;font-family:'Jost';font-size:.72rem;font-weight:600;letter-spacing:.5px;color:var(--piedra);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.fid-btn{flex:1;border:1px solid var(--linea);background:var(--papel);border-radius:3px;padding:9px 4px;font-family:'Inter';font-size:.72rem;font-weight:600;letter-spacing:.5px;color:var(--piedra);cursor:pointer;transition:all .2s;text-transform:uppercase;}
 .fid-btn.activo{background:var(--tinta);color:var(--marfil);border-color:var(--tinta);}
 .fid-btn.activo .fid-punto{background:var(--oro);}
 .fid-punto{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--linea);margin-right:5px;vertical-align:middle;}
@@ -81,7 +81,7 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .vista.activa{display:block;}
 .tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:4px;padding:16px;margin-bottom:13px;}
 .encabezado-seccion{display:flex;align-items:baseline;gap:9px;margin:6px 0 13px 0;}
-.encabezado-seccion h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;}
+.encabezado-seccion h2{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;font-weight:600;}
 .encabezado-seccion .filete{flex:1;height:1px;background:var(--linea);}
 .encabezado-seccion i{color:var(--carmin);font-size:1.05rem;}
 .etiqueta{font-size:.74rem;letter-spacing:1.8px;text-transform:uppercase;color:var(--piedra);font-weight:600;margin-bottom:6px;}
@@ -91,19 +91,19 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .kpi{background:var(--papel);border:1px solid var(--linea);border-radius:4px;padding:13px 14px;position:relative;overflow:hidden;}
 .kpi::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--carmin);}
 .kpi.oro::after{background:var(--oro);} .kpi.ok::after{background:var(--ok);} .kpi.tinta::after{background:var(--tinta);}
-.kpi .valor{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;line-height:1.1;}
+.kpi .valor{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;line-height:1.1;}
 .kpi .nombre{font-size:.72rem;letter-spacing:1.2px;text-transform:uppercase;color:var(--piedra);font-weight:600;margin-top:3px;}
 .chart-caja{position:relative;height:210px;}
 
 /* ====== PLANO DE LOTES (firma del diseño) ====== */
 .plano{background:var(--papel);border:1px solid var(--linea);border-radius:4px;padding:16px;background-image:linear-gradient(rgba(23,20,18,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(23,20,18,.028) 1px,transparent 1px);background-size:22px 22px;margin-bottom:13px;}
 .plano-titulo{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
-.plano-titulo .mza{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;}
+.plano-titulo .mza{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;}
 .plano-titulo .ref{font-size:.62rem;color:var(--piedra);letter-spacing:.5px;}
 .lotes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:7px;}
 .lote{position:relative;aspect-ratio:1;border:1.4px solid var(--tinta);border-radius:2px;background:var(--papel);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s,box-shadow .15s;}
 .lote:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(23,20,18,.14);}
-.lote .nro{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.25rem;line-height:1;}
+.lote .nro{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.25rem;line-height:1;}
 .lote .est{font-size:.56rem;letter-spacing:.8px;text-transform:uppercase;font-weight:700;margin-top:2px;}
 .lote.disponible{border-style:dashed;border-color:var(--piedra);color:var(--piedra);}
 .lote.vendido{background:var(--tinta);border-color:var(--tinta);color:var(--marfil);}
@@ -122,14 +122,14 @@ i.fi{display:inline-flex;vertical-align:middle;}
 
 /* Formularios */
 .form-lbl{display:block;font-size:.75rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--piedra);font-weight:600;margin:11px 0 5px 1px;}
-.form-inp,select.form-inp,textarea.form-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:13px 14px;font-family:'Jost';font-size:1rem;color:var(--tinta);outline:none;}
+.form-inp,select.form-inp,textarea.form-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:13px 14px;font-family:'Inter';font-size:1rem;color:var(--tinta);outline:none;}
 .form-inp:focus{border-color:var(--carmin);background:var(--papel);}
 .fila-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.btn{width:100%;border:none;border-radius:3px;padding:13px;font-family:'Jost';font-size:.86rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:14px;transition:all .2s;}
+.btn{width:100%;border:none;border-radius:3px;padding:13px;font-family:'Inter';font-size:.86rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:14px;transition:all .2s;}
 .btn.carmin{background:var(--carmin);color:#fff;} .btn.carmin:hover{background:var(--carmin-prof);}
 .btn.tinta{background:var(--tinta);color:var(--marfil);}
 .btn.borde{background:var(--papel);border:1px solid var(--tinta);color:var(--tinta);}
-.btn-mini{border:1px solid var(--linea);background:var(--papel);border-radius:3px;padding:10px 14px;font-family:'Jost';font-size:.8rem;font-weight:600;cursor:pointer;color:var(--tinta);margin:8px 6px 0 0;display:inline-flex;align-items:center;gap:5px;}
+.btn-mini{border:1px solid var(--linea);background:var(--papel);border-radius:3px;padding:10px 14px;font-family:'Inter';font-size:.8rem;font-weight:600;cursor:pointer;color:var(--tinta);margin:8px 6px 0 0;display:inline-flex;align-items:center;gap:5px;}
 .btn-mini.rojo{border-color:var(--rojo-error);color:var(--rojo-error);}
 .aviso{border-radius:3px;padding:13px 15px;font-size:.9rem;line-height:1.5;margin-top:10px;}
 .aviso.ok{background:var(--ok-suave);color:var(--ok);}
@@ -140,7 +140,7 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .item-lista{border-bottom:1px solid var(--linea);padding:13px 2px;font-size:.94rem;line-height:1.55;}
 .item-lista:last-child{border-bottom:none;}
 .item-lista small{color:var(--piedra);display:block;font-size:.8rem;margin-top:2px;}
-.monto-usd{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.15rem;}
+.monto-usd{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;}
 .semaforo{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;}
 .semaforo.verde{background:var(--ok);} .semaforo.ambar{background:var(--oro);} .semaforo.rojo{background:var(--rojo-error);}
 
@@ -162,7 +162,7 @@ i.fi{display:inline-flex;vertical-align:middle;}
 /* Modales */
 .modal-fondo{position:fixed;inset:0;background:rgba(23,20,18,.55);backdrop-filter:blur(3px);z-index:8000;display:none;justify-content:center;align-items:center;padding:18px;}
 .modal-caja{background:var(--papel);border-radius:4px;max-width:400px;width:100%;max-height:86vh;overflow-y:auto;padding:22px;border:1px solid var(--linea);}
-.modal-caja h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;margin-bottom:8px;}
+.modal-caja h3{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:8px;}
 .recibo{border:1px solid var(--tinta);border-radius:2px;padding:16px;position:relative;background:var(--papel);}
 .recibo::before{content:'';position:absolute;top:6px;left:6px;right:6px;bottom:6px;border:1px solid var(--linea);pointer-events:none;}
 .recibo-fila{display:flex;justify-content:space-between;font-size:.9rem;padding:4px 0;border-bottom:1px dashed var(--linea);}
@@ -319,9 +319,9 @@ body{font-size:17px;line-height:1.6;}
 
 /* Etiquetas de los lotes sobre el mapa satelital */
 .lote-label{background:none;border:none;box-shadow:none;}
-.lote-label span{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:15px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.6);pointer-events:none;white-space:nowrap;}
-.leaflet-tooltip{font-family:'Jost',sans-serif;font-size:.88rem;border-radius:10px;border:1.5px solid var(--tinta);padding:8px 12px;line-height:1.5;}
-.leaflet-container{font-family:'Jost',sans-serif;border-radius:0 0 0 0;}
+.lote-label span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.6);pointer-events:none;white-space:nowrap;}
+.leaflet-tooltip{font-family:'Inter',sans-serif;font-size:.88rem;border-radius:10px;border:1.5px solid var(--tinta);padding:8px 12px;line-height:1.5;}
+.leaflet-container{font-family:'Inter',sans-serif;border-radius:0 0 0 0;}
 
 /* Escritorio: la letra de la barra lateral y espacios, a la altura */
 @media (min-width:1024px){
@@ -335,35 +335,94 @@ body{font-size:17px;line-height:1.6;}
     .modal-caja{max-width:640px;}
 }
 
+
+/* ============================================================
+   REDISEÑO v4 — moderno, futurista y profesional
+   Space Grotesk + Inter, superficies limpias, sombras suaves,
+   botones con gradiente y relieve, acentos precisos.
+   ============================================================ */
+:root{
+  --carmin:#B31226; --carmin-prof:#8A0D1C; --carmin-suave:#FBEAEC;
+  --tinta:#12161C; --marfil:#F3F5F8; --papel:#FFFFFF; --piedra:#5B6472;
+  --oro:#C9A24B; --oro-suave:#F6EFDD; --linea:#E2E6EC;
+  --ok:#1F7A4D; --ok-suave:#E4F3EB;
+}
+body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixed;letter-spacing:-0.01em;}
+.serif{letter-spacing:-0.02em;}
+.tarjeta{border:1px solid var(--linea);box-shadow:0 1px 2px rgba(18,22,28,.04), 0 4px 16px rgba(18,22,28,.04);}
+.topbar{background:linear-gradient(90deg,#12161C,#1A2029);}
+.topbar .subt{letter-spacing:3px;}
+.nav-inferior{background:linear-gradient(180deg,#12161C,#171C24);}
+.nav-it{color:#7C8698;}
+.nav-it.activo{color:#E8C97C;}
+
+/* Botones con presencia */
+.btn{letter-spacing:.5px;text-transform:none;font-weight:600;transition:transform .12s, box-shadow .12s, filter .12s;}
+.btn.carmin{background:linear-gradient(135deg,#C4142B,#8A0D1C);box-shadow:0 4px 14px rgba(179,18,38,.3);}
+.btn.carmin:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(179,18,38,.36);filter:brightness(1.04);}
+.btn.tinta{background:linear-gradient(135deg,#1A2029,#12161C);box-shadow:0 4px 12px rgba(18,22,28,.24);}
+.btn.tinta:hover{transform:translateY(-1px);}
+.btn.borde:hover{background:var(--marfil);}
+.btn:active{transform:translateY(0) scale(.99);}
+.btn-mini{transition:all .12s;font-weight:600;text-transform:none;letter-spacing:.2px;}
+.btn-mini:hover{border-color:var(--tinta);transform:translateY(-1px);box-shadow:0 3px 10px rgba(18,22,28,.08);}
+.btn-mini.rojo:hover{border-color:var(--carmin);background:var(--carmin-suave);}
+.btn-ingresar{background:linear-gradient(135deg,#C4142B,#8A0D1C);box-shadow:0 4px 14px rgba(179,18,38,.3);text-transform:none;letter-spacing:.5px;}
+.area-switch{background:linear-gradient(135deg,#E8C97C,#C9A24B);}
+
+/* Sellos y etiquetas: rectos y modernos */
+.sello,.caso-estado,.sello-proto{transform:none;border-width:1.5px;letter-spacing:1.5px;border-radius:7px;}
+.etiqueta,.form-lbl,.login-lbl,.login-desde{letter-spacing:1.2px;}
+.kpi{background:linear-gradient(180deg,#FFFFFF,#FCFDFE);}
+.kpi .valor{letter-spacing:-0.03em;}
+.marca-p{box-shadow:0 8px 24px rgba(179,18,38,.32), inset 0 1px 2px rgba(255,255,255,.25);}
+.fid-btn.activo{background:linear-gradient(135deg,#1A2029,#12161C);}
+.pill-pagado.no{border-style:solid;}
+
+/* Login con candado */
+#pantalla-login{background:linear-gradient(160deg,#FAFBFC 0%,#EFF2F7 55%,#E7EBF2 100%);}
+#pantalla-login::before{background-image:radial-gradient(circle at 85% 10%, rgba(179,18,38,.06), transparent 45%),radial-gradient(circle at 10% 90%, rgba(201,162,75,.08), transparent 45%);}
+.login-caja{box-shadow:0 24px 60px rgba(18,22,28,.14);}
+.login-caja::before{display:none;}
+.login-candado{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#C4142B,#8A0D1C);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.35rem;box-shadow:0 8px 20px rgba(179,18,38,.32);}
+.login-candado i{display:inline-flex;}
+#ojo-clave:hover{color:var(--tinta);}
+.plano{background-image:linear-gradient(rgba(18,22,28,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(18,22,28,.025) 1px,transparent 1px);}
+.lote.vendido{background:linear-gradient(135deg,#1A2029,#12161C);}
+.lote.conflicto{background:repeating-linear-gradient(45deg,var(--carmin-suave),var(--carmin-suave) 6px,#fff 6px,#fff 12px);}
+
+
+/* ===== Cierre de modales: X al costado y clic afuera ===== */
+.modal-envoltura{position:relative;width:100%;max-width:430px;}
+.modal-envoltura .modal-caja{max-width:100%;width:100%;}
+.modal-x{position:absolute;top:-12px;right:-12px;width:38px;height:38px;border-radius:12px;background:var(--tinta);color:#fff;border:2px solid var(--papel);font-size:1rem;font-weight:700;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(18,22,28,.3);transition:all .12s;line-height:1;}
+.modal-x:hover{background:var(--carmin);transform:scale(1.08);}
+@media (min-width:1024px){ .modal-envoltura{max-width:640px;} #popup-conf .modal-envoltura{max-width:410px;} }
+
 </style>
 </head>
 <body>
 
 <!-- ============ LOGIN ============ -->
 <div id="pantalla-login">
-    <div class="login-caja">
-        <div class="login-marca">
-            <div class="marca-p"><span>P</span></div>
-            <div>
-                <div class="login-nombre serif">Portanko</div>
-                <div class="login-desde">Inmobiliaria · Desde 1971</div>
+    <div class="login-caja" style="max-width:330px;padding:28px 24px 20px 24px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px;">
+            <div class="login-candado"><i class="fi fi-rr-lock"></i></div>
+            <div style="text-align:center;">
+                <div class="login-nombre serif" style="font-size:1.6rem;">Portanko</div>
+                <div class="login-desde">Acceso al sistema</div>
             </div>
         </div>
-        <p class="login-sub">Sistema de Administración de Fideicomisos<br>Aeroparque · Don Guarino</p>
         <label class="login-lbl">Correo</label>
-        <input type="email" class="login-inp" id="login-email" placeholder="usuario@portankoinmobiliaria.com.ar">
+        <input type="email" class="login-inp" id="login-email" placeholder="tu@portanko.com" autocomplete="username">
         <label class="login-lbl">Contraseña</label>
-        <input type="password" class="login-inp" id="login-pass" placeholder="••••••••">
-        <label class="login-lbl">Ingresar como</label>
-        <div class="login-roles">
-            <button class="rol-chip activo" id="chip-duenio" onclick="elegirRol('duenio')">Dueño / Directorio</button>
-            <button class="rol-chip" id="chip-personal" onclick="elegirRol('personal')">Personal</button>
+        <div style="position:relative;">
+            <input type="password" class="login-inp" id="login-pass" placeholder="••••••••" style="padding-right:46px;" autocomplete="current-password">
+            <button type="button" id="ojo-clave" onclick="toggleClave()" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:none;cursor:pointer;color:var(--piedra);padding:8px;font-size:1.05rem;" title="Mostrar contraseña"><i class="fi fi-rr-eye"></i></button>
         </div>
-        <div class="login-roles" style="margin-top:8px;">
-            <button class="rol-chip" id="chip-abogados" onclick="elegirRol('abogados')">⚖️ Estudio Jurídico · acceso especial</button>
-        </div>
-        <button class="btn-ingresar" onclick="ingresar()">Ingresar</button>
-        <div class="login-proto">La sesión queda abierta en este dispositivo.</div>
+        <button class="btn-ingresar" onclick="ingresar()"><i class="fi fi-rr-lock" style="margin-right:6px;"></i>Ingresar</button>
+        <div class="login-proto" style="margin-top:14px;">Un solo ingreso: lo que cada persona puede ver<br>lo definen sus permisos, no la puerta de entrada.</div>
+        <div class="login-proto" style="margin-top:8px;font-size:.68rem;">Demo — probá con: <b>lucia@</b> (Directorio) · <b>maria@</b> (Personal) · <b>carla@</b> (Estudio)</div>
         <div class="sello-proto">Prototipo · Datos de demostración</div>
     </div>
 </div>
@@ -706,15 +765,24 @@ body{font-size:17px;line-height:1.6;}
 </div>
 
 <!-- MODAL RECIBO / INFORME -->
-<div class="modal-fondo" id="modal-doc">
-    <div class="modal-caja" id="modal-doc-caja"></div>
+<div class="modal-fondo" id="modal-doc" onclick="if(event.target===this)cerrarModal()">
+    <div class="modal-envoltura">
+        <button class="modal-x" onclick="cerrarModal()" title="Cerrar" aria-label="Cerrar">✕</button>
+        <div class="modal-caja" id="modal-doc-caja"></div>
+    </div>
 </div>
 
 <!-- POPUP DE CONFIRMACIÓN (siempre por encima de todo) -->
-<div class="modal-fondo" id="popup-conf" style="z-index:8600;">
-    <div class="modal-caja" style="max-width:380px;">
+<div class="modal-fondo" id="popup-conf" style="z-index:8600;" onclick="if(event.target===this)document.getElementById('pc-no').click()">
+    <div class="modal-envoltura" style="max-width:390px;">
+        <button class="modal-x" onclick="document.getElementById('pc-no').click()" title="Cerrar" aria-label="Cerrar">✕</button>
+    <div class="modal-caja">
         <h3 class="serif" id="pc-titulo">Confirmar</h3>
         <p id="pc-msg" style="font-size:.92rem;line-height:1.6;color:var(--tinta);margin:8px 0 4px 0;"></p>
+        <div id="pc-campo" style="display:none;margin-top:8px;">
+            <label class="form-lbl" id="pc-campo-lbl">Motivo</label>
+            <input class="form-inp" id="pc-input" placeholder="">
+        </div>
         <div id="pc-adjunto" style="display:none;margin-top:10px;">
             <div class="etiqueta">Constancia (opcional): comprobante, captura o PDF</div>
             <div style="display:flex;align-items:center;gap:10px;">
@@ -724,6 +792,7 @@ body{font-size:17px;line-height:1.6;}
         </div>
         <button class="btn tinta" id="pc-ok">Confirmar</button>
         <button class="btn borde" id="pc-no">Cancelar</button>
+    </div>
     </div>
 </div>
 
@@ -876,13 +945,19 @@ const PERFILES = {
 };
 let fotosCobro = [];
 
-function elegirRol(r) {
-    ROL = r;
-    ['duenio', 'personal', 'abogados'].forEach(x =>
-        document.getElementById('chip-' + x).classList.toggle('activo', x === r));
+function toggleClave() {
+    const inp = document.getElementById('login-pass');
+    const esClave = inp.type === 'password';
+    inp.type = esClave ? 'text' : 'password';
+    document.getElementById('ojo-clave').innerHTML = esClave ? '<i class="fi fi-rr-eye-crossed"></i>' : '<i class="fi fi-rr-eye"></i>';
 }
 
 function ingresar() {
+    /* Login ÚNICO: el sistema reconoce a la persona y sus permisos
+       internos (en la versión real, Supabase valida la clave y devuelve
+       el perfil; acá la demo lo infiere del correo escrito). */
+    const email = (document.getElementById('login-email').value || '').toLowerCase();
+    ROL = email.includes('maria') ? 'personal' : (email.includes('carla') || email.includes('abogad')) ? 'abogados' : 'duenio';
     USUARIO = PERFILES[ROL].usuario;
     AREA = PERFILES[ROL].areas.includes('inm') ? 'inm' : 'jur';
     document.getElementById('pantalla-login').style.display = 'none';
@@ -998,12 +1073,20 @@ function pedirConfirmacion(op) {
         pcArchivos = 0;
         document.getElementById('pc-adj-info').innerText = 'Sin archivos adjuntos';
         document.getElementById('pc-adjunto').style.display = op.adjunto ? 'block' : 'none';
+        const campo = document.getElementById('pc-campo');
+        campo.style.display = op.campo ? 'block' : 'none';
+        if (op.campo) {
+            document.getElementById('pc-campo-lbl').innerText = op.campo.label || 'Motivo';
+            const inp = document.getElementById('pc-input');
+            inp.value = ''; inp.placeholder = op.campo.placeholder || '';
+            setTimeout(() => inp.focus(), 80);
+        }
         const ok = document.getElementById('pc-ok');
         ok.innerText = op.boton || 'Confirmar';
         ok.className = 'btn ' + (op.peligro ? 'carmin' : 'tinta');
         const f = document.getElementById('popup-conf');
         f.style.display = 'flex';
-        ok.onclick = () => { f.style.display = 'none'; res(true); };
+        ok.onclick = () => { window.pcValor = (document.getElementById('pc-input').value || '').trim(); f.style.display = 'none'; res(true); };
         document.getElementById('pc-no').onclick = () => { f.style.display = 'none'; res(false); };
     });
 }
@@ -1015,6 +1098,19 @@ async function confirmarDoble(titulo, mensaje, detalleFinal) {
         mensaje: (detalleFinal || mensaje) + '<br><br><b>Esta acción quedará asentada en la bitácora con tu usuario y no se puede deshacer.</b>',
         boton: 'Sí, confirmar definitivamente'
     });
+}
+
+/* El motivo de emisión: obligatorio para todo informe o descarga.
+   Queda registrado junto al usuario logueado que lo solicita. */
+async function pedirMotivo(queCosa) {
+    const ok = await pedirConfirmacion({
+        titulo: 'Motivo de la emisión',
+        mensaje: `<b>${queCosa}</b><br>Solicitado por: <b>${USUARIO}</b> (${ROL === 'duenio' ? 'Dueño' : ROL === 'personal' ? 'Personal' : 'Abogada'})<br><br>Indicá el motivo — queda asentado en el registro de descargas:`,
+        campo: { label: 'Motivo', placeholder: 'Ej: a pedido del cliente · para el contador · control interno' },
+        boton: 'Emitir con este motivo'
+    });
+    if (!ok) return null;
+    return window.pcValor || 'Sin motivo indicado';
 }
 
 /* ================== RENDERS ================== */
@@ -1084,7 +1180,7 @@ function renderInicio() {
                 datasets: [{ data: ['vendido', 'reservado', 'disponible', 'conflicto'].map(e => lotes.filter(l => l.estado === e).length),
                     backgroundColor: ['#171412', '#B08D3E', '#D8D2C4', '#A31621'], borderColor: '#FDFCF9', borderWidth: 2 }] },
             options: { responsive: true, maintainAspectRatio: false, cutout: '62%',
-                plugins: { legend: { position: 'right', labels: { font: { family: 'Jost', size: 10 }, boxWidth: 10 } } } } });
+                plugins: { legend: { position: 'right', labels: { font: { family: 'Inter', size: 10 }, boxWidth: 10 } } } } });
     }
 }
 
@@ -1534,30 +1630,32 @@ function fichaCliente(idx) {
     document.getElementById('modal-doc').style.display = 'flex';
 }
 
-function pdfInformeCliente(idx) {
+async function pdfInformeCliente(idx) {
     const c = CLIENTES[idx];
+    const motivo = await pedirMotivo('Informe de Pagos de ' + c.nombre);
+    if (motivo === null) return;
     const pagos = pagosDe(c);
     const deuda = Math.max(0, c.valor - c.pagado);
     const filas = pagos.map(p => `<tr><td>${p.mes}</td><td>${p.fecha}</td><td>${p.detalle}</td><td class="n">${p.recibo}</td><td class="n">${usd(p.monto)}</td><td class="n">📎 ${p.constancias}</td></tr>`).join('')
         || '<tr><td colspan="6" style="color:#8A8378;">Sin pagos registrados.</td></tr>';
     const w = window.open('', '_blank');
     w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Informe de Pagos · ${c.nombre}</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 @page{margin:130px 48px 90px 48px;}
-body{font-family:'Jost',sans-serif;color:#171412;margin:0;font-size:12.5px;line-height:1.55;}
+body{font-family:'Inter',sans-serif;color:#171412;margin:0;font-size:12.5px;line-height:1.55;}
 .membrete-arriba{position:fixed;top:-110px;left:0;right:0;display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #A31621;padding-bottom:12px;}
 .membrete-abajo{position:fixed;bottom:-70px;left:0;right:0;border-top:1px solid #B08D3E;padding-top:8px;font-size:9.5px;color:#8A8378;display:flex;justify-content:space-between;letter-spacing:.5px;}
-.logo-p{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C21E2A, #A31621 55%, #7A0E17);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:30px;}
-.m-nombre{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;line-height:1;}
+.logo-p{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C21E2A, #A31621 55%, #7A0E17);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;}
+.m-nombre{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;line-height:1;}
 .m-sub{font-size:9.5px;letter-spacing:3.5px;color:#B08D3E;text-transform:uppercase;font-weight:600;margin-top:4px;}
-h1{font-family:'Cormorant Garamond',serif;font-size:21px;margin:0 0 2px 0;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:21px;margin:0 0 2px 0;}
 .etq{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A8378;font-weight:600;margin:18px 0 6px 0;}
 table{width:100%;border-collapse:collapse;font-size:11.5px;}
 th{background:#F7F4EE;text-align:left;padding:7px 8px;border-bottom:1.5px solid #171412;font-weight:600;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
 td{padding:6px 8px;border-bottom:1px solid #E4DFD5;} td.n,th.n{text-align:right;}
 .resumen{border:1.2px solid #171412;padding:12px 14px;margin:6px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-.resumen b{font-family:'Cormorant Garamond',serif;font-size:17px;}
+.resumen b{font-family:'Space Grotesk',sans-serif;font-size:17px;}
 .pie-emision{margin-top:22px;font-size:10px;color:#8A8378;border-top:1px dashed #E4DFD5;padding-top:8px;}
 </style></head><body>
 <div class="membrete-arriba"><div class="logo-p">P</div>
@@ -1574,11 +1672,11 @@ td{padding:6px 8px;border-bottom:1px solid #E4DFD5;} td.n,th.n{text-align:right;
 </div>
 <div class="etq">Historial de cobro al cliente</div>
 <table><tr><th>Mes</th><th>Fecha</th><th>Detalle</th><th class="n">Recibo Nro.</th><th class="n">Importe</th><th class="n">Constancias</th></tr>${filas}</table>
-<div class="pie-emision">Documento emitido por ${USUARIO} el ${ahora()} hs · La emisión queda asentada en la bitácora.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
+<div class="pie-emision">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo}<br>Emitido el ${ahora()} hs · La emisión queda asentada en la bitácora.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
 <script>setTimeout(() => window.print(), 600);<\/script>
 </body></html>`);
     w.document.close();
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Emitió Informe de Pagos de ${c.nombre} (Mza ${c.mza} Lote ${c.lote})` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Emitió Informe de Pagos de ${c.nombre} (Mza ${c.mza} Lote ${c.lote}) · Motivo: ${motivo}` });
     renderBitacora();
 }
 
@@ -1722,20 +1820,23 @@ function renderDocs() {
             <button class="btn-mini" style="margin:0;" onclick="descargarDoc('${d.nombre}')"><i class="fi fi-rr-download"></i></button>
         </div>`).join('');
 }
-function descargarDoc(nombre) {
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Descargó "${nombre}"` });
+async function descargarDoc(nombre) {
+    const motivo = await pedirMotivo('Documento: ' + nombre);
+    if (motivo === null) return;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Descargó "${nombre}" · Motivo: ${motivo}` });
     renderBitacora();
-    alert('Descarga registrada en la bitácora (prototipo).');
 }
 function renderBitacora() {
     const el = document.getElementById('lista-bitacora');
     if (el) el.innerHTML = BITACORA.slice(0, 12).map(b =>
         `<div class="item-lista">${b.accion}<small>${b.fecha} · ${b.usuario}</small></div>`).join('');
 }
-function emitirInforme() {
+async function emitirInforme() {
     const aPedido = document.getElementById('informe-pedido').checked;
     const nombre = FID === 'ALL' ? 'Consolidado' : FIDEICOMISOS[FID].nombre;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Emitió Informe Ejecutivo · ${nombre} · ${aPedido ? 'a pedido de cliente/fiduciante' : 'de oficio'}` });
+    const motivo = await pedirMotivo('Informe Ejecutivo · ' + nombre);
+    if (motivo === null) return;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Emitió Informe Ejecutivo · ${nombre} · ${aPedido ? 'a pedido de cliente/fiduciante' : 'de oficio'} · Motivo: ${motivo}` });
     const clientes = enFid(CLIENTES);
     const recaudado = clientes.reduce((a, c) => a + c.pagado, 0);
     const porCobrar = clientes.reduce((a, c) => a + (c.valor - c.pagado), 0);
@@ -1751,7 +1852,7 @@ function emitirInforme() {
             <div class="recibo-fila"><span>Lotes vendidos</span><b>${enFid(LOTES).filter(l => l.estado === 'vendido').length} de ${enFid(LOTES).length}</b></div>
             <div class="recibo-fila"><span>Lotes reservados</span><b>${enFid(LOTES).filter(l => l.estado === 'reservado').length}</b></div>
             <div class="recibo-fila"><span>Novedades del período</span><b>${enFid(NOVEDADES).length}</b></div>
-            <div class="pie-auditoria">La versión real genera el PDF completo con gráficos, detalle de movimientos y diseño institucional.<br>Emitido por ${USUARIO} · ${ahora()} hs · ${aPedido ? 'A pedido de cliente' : 'De oficio'} · Registrado en bitácora</div>
+            <div class="pie-auditoria">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo}<br>Emitido el ${ahora()} hs · ${aPedido ? 'A pedido de cliente' : 'De oficio'} · Registrado en bitácora</div>
         </div>
         <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
     document.getElementById('modal-doc').style.display = 'flex';
@@ -2145,8 +2246,10 @@ async function pagarGasto(i) {
    Abre la versión imprimible con membrete arriba y abajo; el navegador
    la guarda como PDF (Destino: "Guardar como PDF"). Membrete provisorio
    hasta recibir el logo definitivo. */
-function pdfResumenCaso(i) {
+async function pdfResumenCaso(i) {
     const c = CASOS[i];
+    const motivo = await pedirMotivo('PDF Resumen del caso: ' + c.caratula);
+    if (motivo === null) return;
     const resto = restoDe(c);
     const filasInterv = c.intervinientes.map(x => {
         const t = leTocaA(c, x);
@@ -2163,16 +2266,16 @@ function pdfResumenCaso(i) {
 
     const w = window.open('', '_blank');
     w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Resumen · ${c.caratula}</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 @page{margin:130px 48px 90px 48px;}
-body{font-family:'Jost',sans-serif;color:#171412;margin:0;font-size:12.5px;line-height:1.55;}
+body{font-family:'Inter',sans-serif;color:#171412;margin:0;font-size:12.5px;line-height:1.55;}
 .membrete-arriba{position:fixed;top:-110px;left:0;right:0;display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #A31621;padding-bottom:12px;}
 .membrete-abajo{position:fixed;bottom:-70px;left:0;right:0;border-top:1px solid #B08D3E;padding-top:8px;font-size:9.5px;color:#8A8378;display:flex;justify-content:space-between;letter-spacing:.5px;}
-.logo-p{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C21E2A, #A31621 55%, #7A0E17);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:30px;}
-.m-nombre{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;line-height:1;}
+.logo-p{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C21E2A, #A31621 55%, #7A0E17);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;}
+.m-nombre{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;line-height:1;}
 .m-sub{font-size:9.5px;letter-spacing:3.5px;color:#B08D3E;text-transform:uppercase;font-weight:600;margin-top:4px;}
-h1{font-family:'Cormorant Garamond',serif;font-size:21px;margin:0 0 2px 0;}
+h1{font-family:'Space Grotesk',sans-serif;font-size:21px;margin:0 0 2px 0;}
 .sello{display:inline-block;border:1.5px solid #2F6B4F;color:#2F6B4F;font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;transform:rotate(-2deg);margin:6px 0 14px 0;}
 .etq{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A8378;font-weight:600;margin:18px 0 6px 0;}
 table{width:100%;border-collapse:collapse;font-size:11.5px;}
@@ -2215,11 +2318,11 @@ td.n,th.n{text-align:right;}
 <div class="etq">Cobros del caso</div>
 <table><tr><th>Fecha</th><th>Concepto</th><th class="n">Monto</th><th class="n">Constancias</th><th>Registró</th></tr>${filasCobros}</table>
 
-<div class="pie-emision">Documento emitido por ${USUARIO} el ${ahora()} hs · Queda constancia de la emisión en la bitácora del Estudio.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
+<div class="pie-emision">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo}<br>Emitido el ${ahora()} hs · Queda constancia en la bitácora del Estudio.<br>Membrete provisorio de demostración — se reemplazará por el diseño definitivo con el logo oficial.</div>
 <script>setTimeout(() => window.print(), 600);<\/script>
 </body></html>`);
     w.document.close();
-    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Emitió el PDF resumen del caso "${c.caratula}"` });
+    JBITACORA.unshift({ fecha: ahora(), usuario: USUARIO, accion: `Emitió el PDF resumen del caso "${c.caratula}" · Motivo: ${motivo}` });
     renderJurBitacora();
 }
 
@@ -2236,12 +2339,15 @@ function renderJurBitacora() {
    que los acentos se vean bien. Cada descarga queda en la bitácora. */
 function numAR(n) { return String(Math.round(n * 100) / 100).replace('.', ','); }
 
-function descargarContable(tipo) {
+async function descargarContable(tipo) {
     const periodo = document.getElementById('contable-periodo').value;
     const mes = hoyISO().slice(0, 7);
     const filtraPeriodo = arr => periodo === 'mes' ? arr.filter(x => (x.fecha || '').startsWith(mes)) : arr;
     const nombreFid = FID === 'ALL' ? 'Consolidado' : FIDEICOMISOS[FID].nombre;
     let filas = [], nombre = '';
+    const nombres = { cobranzas: 'Libro de Cobranzas', tesoreria: 'Movimientos de Tesorería', clientes: 'Cuentas Corrientes de Clientes', avisos: 'Registro de Avisos de Deuda' };
+    const motivo = await pedirMotivo(nombres[tipo] + ' · ' + nombreFid);
+    if (motivo === null) return;
 
     if (tipo === 'cobranzas') {
         nombre = 'Libro de Cobranzas';
@@ -2275,7 +2381,7 @@ function descargarContable(tipo) {
     const encabezado = [
         ['PORTANKO INMOBILIARIA · Desde 1971'],
         [nombre + ' · ' + nombreFid],
-        ['Período: ' + (periodo === 'mes' ? 'Mes en curso (' + mes + ')' : 'Histórico completo') + ' · Emitido: ' + ahora() + ' hs · Por: ' + USUARIO],
+        ['Período: ' + (periodo === 'mes' ? 'Mes en curso (' + mes + ')' : 'Histórico completo') + ' · Emitido: ' + ahora() + ' hs · Solicitado por: ' + USUARIO + ' · Motivo: ' + motivo],
         []
     ];
     const csv = '\ufeff' + encabezado.concat(filas).map(f => f.map(c => '"' + String(c ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
@@ -2286,7 +2392,7 @@ function descargarContable(tipo) {
     a.click();
     URL.revokeObjectURL(a.href);
 
-    BITACORA.unshift({ fecha: ahora(), usuario: USUARIO + ' (Dueño)', accion: 'Descargó "' + nombre + '" (' + nombreFid + ', ' + (periodo === 'mes' ? 'mes en curso' : 'histórico') + ') · para registro del contador' });
+    BITACORA.unshift({ fecha: ahora(), usuario: USUARIO + ' (Dueño)', accion: 'Descargó "' + nombre + '" (' + nombreFid + ', ' + (periodo === 'mes' ? 'mes en curso' : 'histórico') + ') · Motivo: ' + motivo });
     document.getElementById('contable-resultado').innerHTML = '<div class="aviso ok">✅ ' + nombre + ' descargado. Abrilo con Excel: llega con encabezado institucional, totales y el detalle del período. Quedó asentado en la bitácora.</div>';
     renderBitacora();
 }
