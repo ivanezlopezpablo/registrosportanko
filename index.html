@@ -539,9 +539,37 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
 .tabla-capa th{text-align:left;padding:8px 6px;border-bottom:2px solid var(--tinta);font-size:.66rem;letter-spacing:1px;text-transform:uppercase;}
 .tabla-capa td{padding:8px 6px;border-bottom:1px solid var(--linea);}
 
+
+/* ===== PANTALLA DE CARGA · PC, tablet y celular ===== */
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+background:radial-gradient(1200px 800px at 50% 30%, #1B212B 0%, #12161C 55%, #0C0F14 100%);transition:opacity .7s ease;}
+#splash.fuera{opacity:0;pointer-events:none;}
+.splash-p{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C4142B, #B31226 55%, #8A0D1C);
+display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:48px;color:#fff;
+box-shadow:0 0 0 10px rgba(179,18,38,.12), 0 0 60px rgba(179,18,38,.45);animation:splashLatido 1.6s ease-in-out infinite;}
+@keyframes splashLatido{0%,100%{transform:scale(1);box-shadow:0 0 0 10px rgba(179,18,38,.12),0 0 60px rgba(179,18,38,.45);}
+50%{transform:scale(1.06);box-shadow:0 0 0 16px rgba(179,18,38,.07),0 0 90px rgba(179,18,38,.6);}}
+.splash-nombre{font-family:'Space Grotesk';font-weight:700;font-size:2rem;color:#fff;letter-spacing:.5px;text-align:center;line-height:1.1;}
+.splash-sub{font-size:.68rem;letter-spacing:4px;color:var(--oro);text-transform:uppercase;font-weight:600;margin-top:6px;text-align:center;}
+.splash-barra{width:min(260px,60vw);height:3px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;}
+.splash-barra i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--oro),#E8C97A);border-radius:99px;animation:splashCarga 1.6s ease-out forwards;}
+@keyframes splashCarga{0%{width:0%;}45%{width:58%;}75%{width:86%;}100%{width:100%;}}
+.splash-pie{position:absolute;bottom:26px;font-size:.62rem;letter-spacing:2px;color:#5B6472;text-transform:uppercase;}
+
 </style>
 </head>
 <body>
+<!-- PANTALLA DE CARGA -->
+<div id="splash">
+    <div class="splash-p">P</div>
+    <div>
+        <div class="splash-nombre">Portanko</div>
+        <div class="splash-sub">Administración · Desde 1971</div>
+    </div>
+    <div class="splash-barra"><i></i></div>
+    <div class="splash-pie">Neuquén · Patagonia Argentina</div>
+</div>
+
 
 <!-- ============ LOGIN ============ -->
 <div id="pantalla-login">
@@ -849,17 +877,21 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
         <div class="encabezado-seccion"><i class="fi fi-rr-diploma"></i><h2>Tasaciones</h2><div class="filete"></div></div>
         <div class="tarjeta">
             <div class="etiqueta"><i class="fi fi-rr-diploma"></i> Tasaciones · presupuesto al instante</div>
-            <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;margin-bottom:4px;">Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad): base coeficiente 1,00 = Terreno-Lote, y cada tipo multiplica según su complejidad. Cualquier usuario puede atender la consulta y entregar el PDF.</p>
+            <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;margin-bottom:4px;">Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad). Elegí el tipo, cargá los m² y listo: el valor por m² de cada tipo ya está configurado por la Dirección. Cualquier usuario puede atender la consulta y entregar el PDF.</p>
             <div class="fila-2">
                 <div><label class="form-lbl">Cliente</label><input class="form-inp" id="tas-cliente" placeholder="Ej: Ramírez Silvia"></div>
                 <div><label class="form-lbl">Dirección de la propiedad</label><input class="form-inp" id="tas-dir" placeholder="Ej: Av. Argentina 1250"></div>
             </div>
             <label class="form-lbl">Tipo de propiedad</label>
-            <select class="form-inp" id="tas-tipo" onchange="calcularTasacion()"></select>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <select class="form-inp" id="tas-tipo" onchange="calcularTasacion()" style="flex:1;"></select>
+                <button class="btn-mini" id="tas-btn-modif" style="display:none;flex-shrink:0;margin:0;" onclick="modificarTipoTasacion()"><i class="fi fi-rr-pencil"></i> Modificar</button>
+            </div>
+            <div id="tas-foto" style="margin-top:8px;"></div>
             <div id="tas-desc" style="margin:4px 2px;"></div>
             <div class="fila-2">
                 <div><label class="form-lbl">Superficie (m²)</label><input class="form-inp" id="tas-m2" inputmode="numeric" placeholder="Ej: 90" oninput="calcularTasacion()"></div>
-                <div><label class="form-lbl">Base coef. 1,00 ($/m²) · solo Dirección</label><input class="form-inp" id="tas-base" inputmode="numeric" onchange="guardarBaseTasacion()"></div>
+                <div><label class="form-lbl">Valor base ($/m²) · solo Dirección</label><input class="form-inp" id="tas-base" inputmode="numeric" onchange="guardarBaseTasacion()"></div>
             </div>
             <div id="tas-resultado"></div>
             <button class="btn carmin" onclick="pdfTasacion()"><i class="fi fi-rr-document"></i> Descargar presupuesto de tasación (PDF)</button>
@@ -1579,7 +1611,7 @@ const AYUDAS = {
     clientes: { t: '¿Cómo manejo los clientes?', c: `<b>"Dar de Alta Cliente"</b> despliega el formulario completo (los mismos campos de la planilla de siempre). Solo muestra lotes disponibles: es imposible vender dos veces el mismo.<br><br>Las <b>burbujas</b> filtran: ✓ Pagaron todo · Financiando · ⚠ Morosos (+30 días sin pagar).<br><br>Cada cliente tiene su <b>Legajo completo</b>: todos sus datos, el historial de pagos cuota por cuota con sus recibos, y el Informe de Pagos en PDF.<br><br>💡 Cuando un cliente completa el valor de su lote, el sistema lo pasa a <b>PAGADO solo</b> — no hay que acordarse de cambiarlo.` },
     cobrar: { t: '¿Por qué hay DOS números de recibo?', c: `Esto es lo que más preguntas genera, y es simple:<br><br>1️⃣ <b>Recibo físico:</b> el del talonario de papel que se firma en el momento. Cargás su número y de qué talonario es, y le sacás foto.<br><br>2️⃣ <b>Recibo del sistema:</b> lo genera la app automáticamente, numerado y prolijo, <b>a nombre del FIDEICOMISO</b> (que es el desarrollador; Portanko solo comercializa). Por eso no lleva el logo de Portanko.<br><br>Los dos quedan vinculados al mismo cobro. La foto del comprobante es obligatoria si fue transferencia, y hay que tildar que la plata realmente entró.` },
     ainicio: { t: '¿Qué es el área Inmobiliaria?', c: `El mostrador de Portanko: acá se atiende al público que <b>no</b> es de los loteos. Dos herramientas: <b>Búsquedas</b> (cargar qué busca cada persona y rastrear los portales) y <b>Tasaciones</b> (presupuestar el servicio de tasar con PDF al instante).<br><br>💡 Con el botón <b>⇄ Áreas</b> de arriba te movés entre Fideicomisos, Inmobiliaria y Estudio (según tus permisos).` },
-    atasaciones: { t: '¿Cómo cobro una tasación?', c: `Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad — aclaralo siempre al cliente). Base: coeficiente 1,00 = Terreno-Lote a $ por m² que fija la Dirección; cada tipo multiplica según su complejidad. Cargás tipo y m², sale el total y el <b>PDF con los fundamentos</b> para imprimir o mandar por WhatsApp.` },
+    atasaciones: { t: '¿Cómo cobro una tasación?', c: `Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad — aclaralo siempre al cliente). Elegís el tipo (con su foto de referencia), cargás los m², y sale el total con el <b>PDF con los fundamentos</b> para imprimir o mandar por WhatsApp.<br><br>⚙️ Los valores por m² de cada tipo los configura la Dirección: si sos administrador, al lado del tipo te aparece el botón <b>Modificar</b>.` },
     crm: { t: '¿Cómo funcionan las Búsquedas?', c: `Cargás qué busca la persona (alquiler o compra, tipo, zona, presupuesto, detalles como "2 dormitorios, mascotas") y el sistema te muestra las propiedades <b>acá adentro</b>: foto, precio, ubicación, características y una insignia con el <b>% de coincidencia</b> — verde 80%+, oro 65-79%, gris 55-64%. Lo que da menos de 55% ni aparece.<br><br>💡 Cuanto más completes los detalles, mejor puntúa el sistema. En la versión final, un robot revisa los portales cada pocas horas y suma publicaciones nuevas a estas tarjetas, avisándote por notificación.<br><br>📐 <b>Tasaciones:</b> calcula cuánto cuesta EL SERVICIO de tasar (no el valor de la propiedad — esto confunde, aclaralo siempre al cliente). Elegís el tipo, ponés los m², y sale el PDF con el presupuesto y los fundamentos para entregar en mano o por WhatsApp.` },
     capa: { t: '¿Cómo funcionan las Capacitaciones?', c: `La academia interna de Portanko: cursos armados con <b>videos de YouTube</b> (los que encuentren por internet o graben ustedes).<br><br>▶️ Le das play y el video <b>se pausa solo</b> en los minutos marcados: aparece una tarjeta con una pregunta sobre lo que acabás de ver. Respondés bien → sigue solo. Mal → repasás y reintentás.<br><br>🎓 Al terminar con todas las preguntas respondidas, el curso queda <b>"✓ Visto"</b> a tu nombre, con fecha — y los administradores tienen el <b>tablero de control</b> de quién completó qué.<br><br>💡 En la versión real, la <b>IA lee la transcripción del video y genera las preguntas automáticamente</b> — pegás la URL y listo.` },
     tesoreria: { t: '¿Qué es la Caja?', c: `Las cuentas del fideicomiso (pesos y dólares) y sus movimientos. Cada ingreso o egreso queda registrado con quién lo cargó.<br><br>💡 Anular un movimiento no lo borra: queda asentado en la bitácora que se anuló, quién y cuándo. "El libro nunca miente".` },
@@ -1901,31 +1933,33 @@ function poblarSimulador() {
    complejidad de tasarlo. Catálogo tomado de la planilla oficial. */
 let TAS_BASE = 1200; /* $ por m² del coeficiente 1,00 — lo fija la Dirección */
 const TAS_TIPOS = [
-    { n: 'Monoambiente', c: 5.00, d: 'Unidad de un solo ambiente que incluye cocina y baño. Ideal para estudiantes o personas solas.' },
-    { n: 'Departamento de 1 Dormitorio', c: 6.00, d: 'Dormitorio independiente, más cocina, baño y living-comedor.' },
-    { n: 'Departamento de 2 o más dormitorios', c: 5.00, d: 'Variantes más grandes y funcionales para familias pequeñas o medianas.' },
-    { n: 'Terreno-Lote', c: 1.00, d: 'Espacio vacío para construcción; su valor depende de ubicación y tamaño.' },
-    { n: 'Casa Pequeña (60 a 90 m²)', c: 1.00, d: 'Vivienda individual: 2 dormitorios, baño, cocina, comedor y patio pequeño.' },
-    { n: 'Casa Mediana (90 a 120 m²)', c: 1.05, d: 'Suburbana de clase media: 3 dormitorios, 2 baños, cocina separada, jardín mediano.' },
-    { n: 'Casa Grande (Alta Gama)', c: 1.10, d: '3 o más dormitorios, 2+ baños, living amplio y patio-jardín amplio.' },
-    { n: 'Casa con Lote Grande', c: 1.00, d: 'Vivienda estándar en terrenos amplios, típica de áreas suburbanas o rurales.' },
-    { n: 'Casa en Barrio Cerrado-Country', c: 1.50, d: 'Alta gama en zona exclusiva con seguridad y amenities.' },
-    { n: 'Chalet', c: 1.60, d: 'Diseño distintivo y generalmente más amplio.' },
-    { n: 'Dúplex', c: 0.90, d: 'Dos niveles dentro de una misma unidad, con distribución vertical.' },
-    { n: 'Triplex', c: 1.60, d: 'Tres niveles, más grande y funcional que un dúplex.' },
-    { n: 'PH (Propiedad Horizontal)', c: 1.60, d: 'Vivienda en terreno compartido con espacios comunes.' },
-    { n: 'Oficina-Estudio Profesional', c: 3.60, d: 'Espacio adaptado para uso administrativo o profesional.' },
-    { n: 'Local Comercial', c: 4.00, d: 'Espacio comercial con valor asociado a su ubicación.' },
-    { n: 'Galpón-Depósito', c: 2.50, d: 'Estructura amplia para almacenamiento o actividad industrial.' },
-    { n: 'Quinta-Finca', c: 1.00, d: 'Casa grande en terreno extenso, uso recreativo o rural.' },
-    { n: 'Edificio Entero', c: 0.40, d: 'Múltiples unidades habitacionales o comerciales, destino inversión.' },
-    { n: 'Campo-Estancia', c: 0.01, d: 'Extensión rural con o sin vivienda, agropecuaria o recreativa.' },
-    { n: 'Bases Operativas', c: 0.06, d: 'Instalación para operaciones industriales y logísticas.' }
+    { i: 'https://www.shutterstock.com/image-photo/big-cozy-bed-shower-behind-260nw-2143973871.jpg', n: 'Monoambiente', c: 5.00, d: 'Unidad de un solo ambiente que incluye cocina y baño. Ideal para estudiantes o personas solas.' },
+    { i: 'https://img.properati.com/eyJidWNrZXQiOiJwcmQtbGlmdWxsY29ubmVjdC1iYWNrZW5kLWIyYi1pbWFnZXMiLCJrZXkiOiJpbmdlc3Rlci8wMTkyYjk2NS04ODQ5LTc5M2MtOTYzMS05ZjY3MzQwMzY3MWQvYWQwYTMyNmYxYjlhZTZhYTk5YzdmODYxODA1YzIzZjE1Y2Y2YzlmYmZhYTRlZGM2YmNmMGIyMTM2YjBkNzIwOS5qcGVnIiwiYnJhbmQiOiJQUk9QRVJBVEkiLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjMyMCwiaGVpZ2h0IjoyNDAsImZpdCI6ImNvdmVyIn19fQ==', n: 'Departamento de 1 Dormitorio', c: 6.00, d: 'Dormitorio independiente, más cocina, baño y living-comedor.' },
+    { i: 'https://pics.nuroa.com/venta_departamento_1_dormitorio_en_nueva_cordoba_increibles_amenities_8380000728483340104.jpg', n: 'Departamento de 2 o más dormitorios', c: 5.00, d: 'Variantes más grandes y funcionales para familias pequeñas o medianas.' },
+    { i: 'https://img.freepik.com/foto-gratis/delimitacion-terreno-arboles_23-2149721837.jpg', n: 'Terreno-Lote', c: 1.00, d: 'Espacio vacío para construcción; su valor depende de ubicación y tamaño.' },
+    { i: 'https://planosdecasas.shop/wp-content/uploads/2021/04/Diseno-de-casa-pequena-y-bonita-60-M2.webp', n: 'Casa Pequeña (60 a 90 m²)', c: 1.00, d: 'Vivienda individual: 2 dormitorios, baño, cocina, comedor y patio pequeño.' },
+    { i: 'https://image.made-in-china.com/2f0j00qKtbToLfVRku/Design-100m2-House-Plans-with-Modular-Kitchen-Luxury-Living-Room-Prefabricadas-Homes.webp', n: 'Casa Mediana (90 a 120 m²)', c: 1.05, d: 'Suburbana de clase media: 3 dormitorios, 2 baños, cocina separada, jardín mediano.' },
+    { i: 'https://cloudfront-us-east-1.images.arcpublishing.com/infobae/7ZIGXTX7ZNGAVDV7OT6ALNDG54.jpg', n: 'Casa Grande (Alta Gama)', c: 1.10, d: '3 o más dormitorios, 2+ baños, living amplio y patio-jardín amplio.' },
+    { i: 'https://static1.sosiva451.com/02801821/92cbff25-d2e5-4988-97e4-73a501a98742_u_medium.jpg', n: 'Casa con Lote Grande', c: 1.00, d: 'Vivienda estándar en terrenos amplios, típica de áreas suburbanas o rurales.' },
+    { i: 'https://www.infobae.com/resizer/v2/LUI4ELW5RFDRJFLS73S66ZEGDU.png?auth=b0313248364fc3729c04b3e576e9a2260f36aa2c994aecb1e67afd33ace55f2a&smart=true&width=350&height=233&quality=85', n: 'Casa en Barrio Cerrado-Country', c: 1.50, d: 'Alta gama en zona exclusiva con seguridad y amenities.' },
+    { i: 'https://cdn.lecollectionist.com/__lecollectionist__/production/houses/5807/photos/jfVOsBdHSqYgdvhGY07O_bbaf20fd-a6f9-4c44-cccd-a38431aaa479.jpg?width=2880&q=65', n: 'Chalet', c: 1.60, d: 'Diseño distintivo y generalmente más amplio.' },
+    { i: 'https://images.adsttc.com/media/images/5e5c/53ba/6ee6/7e0f/0100/0519/newsletter/03b.jpg?1583109042', n: 'Dúplex', c: 0.90, d: 'Dos niveles dentro de una misma unidad, con distribución vertical.' },
+    { i: 'https://images.adsttc.com/media/images/54da/9faa/e58e/cecf/1600/0099/large_jpg/portada_150109_1501_1424-edit.jpg?1423613845', n: 'Triplex', c: 1.60, d: 'Tres niveles, más grande y funcional que un dúplex.' },
+    { i: 'https://www.seti-argentina.com.ar/ws/image.php?img=https%3A%2F%2Fstatic.tokkobroker.com%2Fpictures%2F108427155332846603328579488267946266169956866622622580354481071480039825796270.jpg', n: 'PH (Propiedad Horizontal)', c: 1.60, d: 'Vivienda en terreno compartido con espacios comunes.' },
+    { i: 'https://img.freepik.com/foto-gratis/habitacion-vacia-sillas-escritorios_23-2149008873.jpg', n: 'Oficina-Estudio Profesional', c: 3.60, d: 'Espacio adaptado para uso administrativo o profesional.' },
+    { i: 'https://inmobiliaria.cushmanwakefield.es/wp-content/uploads/2022/07/diseno-locales-comerciales.jpg', n: 'Local Comercial', c: 4.00, d: 'Espacio comercial con valor asociado a su ubicación.' },
+    { i: 'https://imgar.zonapropcdn.com/avisos/1/00/54/33/35/50/360x266/1928435567.jpg?isFirstImage=true', n: 'Galpón-Depósito', c: 2.50, d: 'Estructura amplia para almacenamiento o actividad industrial.' },
+    { i: 'https://cristinaleonpropiedades.com/uploads/cristinaleonpropiedades/images/1632118067x85zt-whatsapp-image-2020-11-21-at-094742-1.jpeg', n: 'Quinta-Finca', c: 1.00, d: 'Casa grande en terreno extenso, uso recreativo o rural.' },
+    { i: 'https://www.radiojai.com/wp-content/uploads/2024/08/Park-Avenue.jpg', n: 'Edificio Entero', c: 0.40, d: 'Múltiples unidades habitacionales o comerciales, destino inversión.' },
+    { i: 'https://estanciasargentinas.tur.ar/images/imgLarge/20170609123239.jpg', n: 'Campo-Estancia', c: 0.01, d: 'Extensión rural con o sin vivienda, agropecuaria o recreativa.' },
+    { i: 'https://nqn3.com/galeria/fotos/2023/10/31/e_1698779172.jpeg', n: 'Bases Operativas', c: 0.06, d: 'Instalación para operaciones industriales y logísticas.' }
 ];
 function poblarTasaciones() {
     const sel = document.getElementById('tas-tipo');
     if (!sel || sel.options.length > 1) return;
-    sel.innerHTML = TAS_TIPOS.map((t, i) => `<option value="${i}">${t.n} · coef. ${t.c.toLocaleString('es-AR')}</option>`).join('');
+    sel.innerHTML = TAS_TIPOS.map((t, i) => `<option value="${i}">${t.n}</option>`).join('');
+    const bm = document.getElementById('tas-btn-modif');
+    if (bm) bm.style.display = puede('admin') ? '' : 'none';
     const base = document.getElementById('tas-base');
     if (base) { base.value = TAS_BASE; base.disabled = !puede('admin'); }
     calcularTasacion();
@@ -1935,16 +1969,36 @@ function calcularTasacion() {
     const t = TAS_TIPOS[i];
     const m2 = parseFloat((document.getElementById('tas-m2').value || '').replace(/\./g, '').replace(',', '.')) || 0;
     document.getElementById('tas-desc').innerHTML = `<small style="color:var(--piedra);">${t.d}</small>`;
+    const foto = document.getElementById('tas-foto');
+    if (foto) foto.innerHTML = t.i ? `<img src="${t.i}" alt="${t.n}" loading="lazy" style="width:100%;max-height:170px;object-fit:cover;border-radius:12px;box-shadow:0 2px 10px rgba(18,22,28,.12);" onerror="this.parentElement.innerHTML=''">` : '';
     const vm2 = t.c * TAS_BASE;
     const total = Math.round(vm2 * m2);
     const res = document.getElementById('tas-resultado');
     if (!m2) { res.innerHTML = '<div class="aviso alerta">Ingresá los m² de la propiedad para calcular el arancel.</div>'; return; }
     res.innerHTML = `
-        <div class="recibo-fila"><span>Coeficiente del tipo</span><b>${t.c.toLocaleString('es-AR')}</b></div>
         <div class="recibo-fila"><span>Valor por m² de tasación</span><b>$ ${vm2.toLocaleString('es-AR')}</b></div>
         <div class="recibo-fila"><span>Superficie declarada</span><b>${m2.toLocaleString('es-AR')} m²</b></div>
         <div class="recibo-fila" style="background:var(--carmin-suave);border-radius:10px;padding:10px;"><span><b>Arancel de tasación</b></span><b style="font-size:1.2rem;">$ ${total.toLocaleString('es-AR')}</b></div>`;
 }
+
+async function modificarTipoTasacion() {
+    if (!puede('admin')) return sinPermiso('modificar los coeficientes de tasación (administración exclusiva de la Dirección)');
+    const i = parseInt(document.getElementById('tas-tipo').value) || 0;
+    const t = TAS_TIPOS[i];
+    const f = await pedirFormulario({ titulo: 'Modificar tipo de tasación', sub: t.n + ' · el coeficiente multiplica el valor base ($ ' + TAS_BASE.toLocaleString('es-AR') + '/m²)',
+        campos: [
+            { id: 'c', label: 'Coeficiente interno (Terreno-Lote = 1,00)', tipo: 'numero', valor: String(t.c).replace('.', ',') },
+            { id: 'd', label: 'Descripción del tipo', tipo: 'textarea', valor: t.d }
+        ] });
+    if (!f || !f.c || f.c <= 0) return;
+    const ok = await pedirConfirmacion({ titulo: 'Confirmar cambio', mensaje: `<b>${t.n}</b><br>Coeficiente: ${t.c.toLocaleString('es-AR')} → <b>${f.c.toLocaleString('es-AR')}</b><br>Arancel por m²: <b>$ ${(f.c * TAS_BASE).toLocaleString('es-AR')}</b>`, boton: 'Guardar' });
+    if (!ok) return;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Modificó el tipo de tasación "${t.n}": coeficiente ${t.c} → ${f.c}` });
+    notificar('⚙️ Cambió un coeficiente de tasación', `${t.n}: ahora $ ${(f.c * TAS_BASE).toLocaleString('es-AR')}/m² · por ${USUARIO.split(' ')[0]}`, true);
+    t.c = f.c; if (f.d) t.d = f.d;
+    calcularTasacion();
+}
+
 async function guardarBaseTasacion() {
     if (!puede('admin')) return sinPermiso('cambiar el valor de referencia de tasaciones (administración exclusiva de la Dirección)');
     const v = parseFloat((document.getElementById('tas-base').value || '').replace(/\./g, '').replace(',', '.'));
@@ -1991,8 +2045,8 @@ td{padding:8px;border-bottom:1px solid #E4DFD5;} .n{text-align:right;}
 <div>Cliente: <b>${cliente}</b>${dir ? ' · Propiedad: ' + dir : ''} · Emitido el ${hoyISO()}</div>
 <div class="etq">Detalle del cálculo</div>
 <table>
-<tr><th>Tipo de propiedad</th><th class="n">Coeficiente</th><th class="n">Valor por m²</th><th class="n">Superficie</th><th class="n">Arancel</th></tr>
-<tr><td><b>${t.n}</b><br><small style="color:#5B6472;">${t.d}</small></td><td class="n">${t.c.toLocaleString('es-AR')}</td><td class="n">$ ${vm2.toLocaleString('es-AR')}</td><td class="n">${m2.toLocaleString('es-AR')} m²</td><td class="n"><b>$ ${total.toLocaleString('es-AR')}</b></td></tr>
+<tr><th>Tipo de propiedad</th><th class="n">Valor por m²</th><th class="n">Superficie</th><th class="n">Arancel</th></tr>
+<tr><td>${t.i ? `<img src="${t.i}" style="width:150px;max-height:95px;object-fit:cover;border-radius:8px;margin-bottom:6px;" onerror="this.style.display='none'"><br>` : ''}<b>${t.n}</b><br><small style="color:#5B6472;">${t.d}</small></td><td class="n">$ ${vm2.toLocaleString('es-AR')}</td><td class="n">${m2.toLocaleString('es-AR')} m²</td><td class="n"><b>$ ${total.toLocaleString('es-AR')}</b></td></tr>
 </table>
 <div class="total"><span>Arancel total del servicio de tasación</span><b>$ ${total.toLocaleString('es-AR')}</b></div>
 <div class="etq">¿Qué incluye tasar una propiedad?</div>
@@ -2265,6 +2319,15 @@ function cargarYTApi() {
     s.id = 'yt-api'; s.src = 'https://www.youtube.com/iframe_api';
     document.head.appendChild(s);
 }
+
+/* Pantalla de carga: en PC, tablet y celular por igual */
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const s = document.getElementById('splash');
+        if (s) { s.classList.add('fuera'); setTimeout(() => s.remove(), 750); }
+    }, 1700);
+});
+
 window.onYouTubeIframeAPIReady = () => { ytApiLista = true; if (cursoAbierto !== null) montarPlayer(); };
 
 function miProgreso() { if (!PROGRESO[USUARIO]) PROGRESO[USUARIO] = {}; return PROGRESO[USUARIO]; }
