@@ -3545,6 +3545,8 @@ function verHistorialScraping() {
         <button class="btn borde" onclick="cerrarModal()" style="margin-top:8px;width:100%;">Cerrar</button>`;
     document.getElementById('modal-doc').style.display = 'flex';
 }
+
+function renderTarjetaValores() {
     const cont = document.getElementById('tarjeta-valores');
     if (!cont) return;
     const fids = FID === 'ALL' ? ['AER', 'DG'] : [FID];
