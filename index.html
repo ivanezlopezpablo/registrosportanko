@@ -834,7 +834,7 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
         <div class="der" style="display:flex;align-items:center;gap:8px;justify-content:flex-end;">
             <button class="campanita" id="btn-ayuda" onclick="mostrarAyuda()" title="¿Cómo funciona esta pantalla?"><i class="fi fi-rr-interrogation"></i></button>
             <button class="campanita" id="btn-notifs" onclick="toggleNotifs()" title="Notificaciones"><i class="fi fi-rr-bell"></i><span class="notif-badge" id="notif-badge" style="display:none;">0</span></button>
-            <span class="usuario-pill" onclick="cerrarSesion()" title="Cerrar sesión"><b id="pill-rol">Dueño</b> · <span id="pill-nombre">Lucía</span> · Salir</span>
+            <span class="usuario-pill" onclick="miPerfil()" title="Mi perfil"><b id="pill-rol">Dueño</b> · <span id="pill-nombre">Lucía</span> <i class="fi fi-rr-angle-small-down" style="font-size:.7rem;"></i></span>
         </div>
     </div>
 
@@ -1121,6 +1121,14 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
     <div class="vista" id="vista-capa">
         <div class="encabezado-seccion"><i class="fi fi-rr-graduation-cap"></i><h2>Capacitaciones</h2><div class="filete"></div></div>
         <div id="capa-mi-progreso"></div>
+        <div class="tarjeta" style="padding:14px;">
+            <div class="etiqueta" style="margin-bottom:8px;"><i class="fi fi-rr-settings-sliders"></i> Guías sugeridas y filtros</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <button class="btn-mini" id="ruta-inicial" style="justify-content:flex-start;text-align:left;padding:10px;" onclick="elegirRuta('inicial')">🌱 <b>&nbsp;Ruta principiantes</b>&nbsp;· para quienes recién arrancan</button>
+                <button class="btn-mini" id="ruta-repaso" style="justify-content:flex-start;text-align:left;padding:10px;" onclick="elegirRuta('repaso')">🔁 <b>&nbsp;Ruta repaso</b>&nbsp;· con experiencia, para refrescar</button>
+            </div>
+            <div class="prop-chips" id="capa-tipos"></div>
+        </div>
         <div id="lista-cursos"></div>
         <div class="tarjeta" id="capa-admin-alta">
             <div class="etiqueta"><i class="fi fi-rr-add-document"></i> Agregar curso desde YouTube · solo administradores</div>
@@ -1675,6 +1683,48 @@ function ingresar() {
     }, 3800);
 }
 
+
+/* ===== MI PERFIL: ver y editar los datos propios ===== */
+function miPerfil() {
+    const prog = miProgreso();
+    const vistos = Object.values(prog).filter(x => x.visto).length;
+    const repasos = Object.values(prog).reduce((a, x) => a + ((x.repasos || []).length), 0);
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+            <div class="pagar-avatar" style="width:56px;height:56px;font-size:1.3rem;">${(PERSONA.apodo || USUARIO).split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase()}</div>
+            <div>
+                <h3 class="serif" style="margin:0;">${PERSONA.apodo || USUARIO}</h3>
+                <span class="sello carmin">${PERSONA.rotulo}</span>
+            </div>
+        </div>
+        <div class="recibo-fila"><span>Nombre completo (registros)</span><b>${USUARIO}</b></div>
+        <div class="recibo-fila"><span>Áreas habilitadas</span><b>${PERSONA.areas.map(a => AREAS_INFO[a].icono + ' ' + AREAS_INFO[a].nombre).join(' · ')}</b></div>
+        <div class="recibo-fila"><span>Teléfono</span><b>${PERSONA.tel || '— sin cargar'}</b></div>
+        <div class="recibo-fila"><span>Correo de contacto</span><b>${PERSONA.mail || '— sin cargar'}</b></div>
+        <div class="recibo-fila"><span>Capacitaciones</span><b>${vistos} completadas · ${repasos} repasos</b></div>
+        <button class="btn tinta" onclick="editarPerfil()"><i class="fi fi-rr-pencil"></i> Editar mis datos</button>
+        <button class="btn borde" onclick="cerrarModal()">Cerrar</button>
+        <button class="btn borde" style="border-color:var(--carmin);color:var(--carmin);" onclick="cerrarSesion()"><i class="fi fi-rr-sign-out-alt"></i> Cerrar sesión</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
+async function editarPerfil() {
+    cerrarModal();
+    const f = await pedirFormulario({ titulo: 'Editar mi perfil', sub: 'El nombre de los registros oficiales no se cambia desde acá (lo administra la Dirección).',
+        campos: [
+            { id: 'apodo', label: 'Nombre para mostrar (cómo te ven en la app)', valor: PERSONA.apodo || USUARIO.split(' ')[0] },
+            { id: 'tel', label: 'Teléfono', valor: PERSONA.tel || '', placeholder: 'Ej: 299 ...' },
+            { id: 'mail', label: 'Correo de contacto', valor: PERSONA.mail || '', placeholder: 'tu@correo.com' }
+        ] });
+    if (!f) return;
+    PERSONA.apodo = f.apodo || USUARIO.split(' ')[0];
+    PERSONA.tel = f.tel; PERSONA.mail = f.mail;
+    document.getElementById('pill-nombre').innerText = PERSONA.apodo;
+    const bit = AREA === 'jur' ? JBITACORA : BITACORA;
+    bit.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Actualizó su perfil (nombre visible: ${PERSONA.apodo}${f.tel ? ', tel: ' + f.tel : ''}${f.mail ? ', mail: ' + f.mail : ''})` });
+    mostrarPush('✓ Perfil actualizado');
+    miPerfil();
+}
+
 function cerrarSesion() {
     location.reload();
 }
@@ -1861,7 +1911,7 @@ const AYUDAS = {
     ainicio: { t: '¿Qué es el área Inmobiliaria?', c: `El mostrador de Portanko: acá se atiende al público que <b>no</b> es de los loteos. Dos herramientas: <b>Búsquedas</b> (cargar qué busca cada persona y rastrear los portales) y <b>Tasaciones</b> (presupuestar el servicio de tasar con PDF al instante).<br><br>💡 Con el botón <b>⇄ Áreas</b> de arriba te movés entre Fideicomisos, Inmobiliaria y Estudio (según tus permisos).` },
     atasaciones: { t: '¿Cómo cobro una tasación?', c: `Calcula el <b>arancel por el servicio de tasar</b> (no el valor de la propiedad — aclaralo siempre al cliente). Elegís el tipo (con su foto de referencia), cargás los m², y sale el total con el <b>PDF con los fundamentos</b> para imprimir o mandar por WhatsApp.<br><br>⚙️ Los valores por m² de cada tipo los configura la Dirección: si sos administrador, al lado del tipo te aparece el botón <b>Modificar</b>.` },
     crm: { t: '¿Cómo funcionan las Búsquedas?', c: `Cargás qué busca la persona (alquiler o compra, tipo, zona, presupuesto, detalles como "2 dormitorios, mascotas") y el sistema te muestra las propiedades <b>acá adentro</b>: foto, precio, ubicación, características y una insignia con el <b>% de coincidencia</b> — verde 80%+, oro 65-79%, gris 55-64%. Lo que da menos de 55% ni aparece.<br><br>💡 Cuanto más completes los detalles, mejor puntúa el sistema. En la versión final, un robot revisa los portales cada pocas horas y suma publicaciones nuevas a estas tarjetas, avisándote por notificación.<br><br>📐 <b>Tasaciones:</b> calcula cuánto cuesta EL SERVICIO de tasar (no el valor de la propiedad — esto confunde, aclaralo siempre al cliente). Elegís el tipo, ponés los m², y sale el PDF con el presupuesto y los fundamentos para entregar en mano o por WhatsApp.` },
-    capa: { t: '¿Cómo funcionan las Capacitaciones?', c: `La academia interna de Portanko: cursos armados con <b>videos de YouTube</b> (los que encuentren por internet o graben ustedes).<br><br>▶️ Le das play y el video <b>se pausa solo</b> en los minutos marcados: aparece una tarjeta con una pregunta sobre lo que acabás de ver. Respondés bien → sigue solo. Mal → repasás y reintentás.<br><br>🎓 Al terminar con todas las preguntas respondidas, el curso queda <b>"✓ Visto"</b> a tu nombre, con fecha — y los administradores tienen el <b>tablero de control</b> de quién completó qué.<br><br>💡 En la versión real, la <b>IA lee la transcripción del video y genera las preguntas automáticamente</b> — pegás la URL y listo.` },
+    capa: { t: '¿Cómo funcionan las Capacitaciones?', c: `La academia interna de Portanko: cursos armados con <b>videos de YouTube</b>.<br><br>🎯 <b>Tocá la portada o el título</b> de cualquier curso para entrar a su <b>ficha</b>: objetivo del contenido, temario, tipo, nivel y tu historial.<br><br>🌱🔁 Arriba están las <b>guías sugeridas</b>: "Ruta principiantes" para quienes recién arrancan y "Ruta repaso" para gente con experiencia que quiere refrescar. También podés filtrar por tipo de capacitación.<br><br>▶️ El video se pausa solo en las preguntas; al completar queda <b>"✓ Visto"</b> a tu nombre. Si lo volvés a hacer, queda registrado como <b>repaso</b> (con su contador ↻).<br><br>👤 Tocando tu nombre arriba a la derecha entrás a <b>Mi perfil</b>, donde podés editar tus datos.<br><br>💡 En la versión real, la <b>IA genera las preguntas automáticamente</b> desde la transcripción del video.` },
     tesoreria: { t: '¿Qué es la Caja?', c: `Las cuentas del fideicomiso (pesos y dólares) y sus movimientos. Cada ingreso o egreso queda registrado con quién lo cargó.<br><br>💡 Anular un movimiento no lo borra: queda asentado en la bitácora que se anuló, quién y cuándo. "El libro nunca miente".` },
     novedades: { t: '¿Qué es el Libro?', c: `El libro de novedades diarias: lo que pasó, quién vino, qué se acordó. Como el cuaderno de la oficina, pero que no se pierde y queda firmado por quien escribió cada cosa.` },
     docs: { t: '¿Cómo funcionan los Documentos?', c: `La biblioteca de documentos del fideicomiso. Para descargar cualquiera, el sistema pide el <b>motivo</b> — no es desconfianza: es que cada descarga queda registrada (quién, cuándo, para qué). Eso protege a todos.` },
@@ -2551,13 +2601,21 @@ async function guardarConsultaCRM() {
    la transcripción del video automáticamente. */
 let CURSOS = [
     { yt: 'jNQXAC9IVRw', titulo: 'Demo · Cómo funcionan las preguntas en el video', desc: 'Curso corto de prueba: mirá cómo el video se pausa solo y aparece la pregunta.',
+      tipo: 'Sistema Portanko', subtipo: 'Uso de la Academia', nivel: 'inicial', duracion: '1 min',
+      objetivo: 'Que cualquier persona del equipo entienda en un minuto la mecánica de la Academia: el video se pausa solo en los puntos de control, respondés la pregunta y continúa. Al terminar, el curso queda registrado a tu nombre.',
+      temario: ['Cómo se reproduce un curso', 'Qué es un checkpoint y cómo responder', 'Qué queda registrado al completar'],
       checkpoints: [{ seg: 5, preg: '¿Qué hace el sistema cuando el video llega al minuto marcado?', ops: ['Pausa el video y muestra la pregunta', 'Cierra el curso', 'Salta al final'], ok: 0 }] },
     { yt: 'Ks-_Mh1QhMc', titulo: 'Oratoria y atención al cliente (ejemplo de curso de internet)', desc: 'Ejemplo de curso externo de YouTube incorporado a la academia de Portanko.',
+      tipo: 'Atención al público', subtipo: 'Comunicación', nivel: 'ambos', duracion: '~18 min',
+      objetivo: 'Mejorar la recepción y el trato con las personas que llegan al mostrador o llaman: escucha activa, respuesta a objeciones y cierre cordial. Útil como primera formación y como repaso periódico antes de temporadas de alta consulta.',
+      temario: ['La primera impresión y la predisposición', 'Escucha activa: dejar hablar y registrar', 'Objeciones: escuchar y responder con información', 'Cierre y seguimiento de la consulta'],
       checkpoints: [
         { seg: 120, preg: '¿Cuál es la actitud correcta al recibir a un cliente?', ops: ['Atenderlo con predisposición y escucha activa', 'Esperar a que hable solo', 'Derivarlo siempre'], ok: 0 },
         { seg: 300, preg: 'Ante una objeción del cliente, conviene…', ops: ['Ignorarla', 'Escucharla y responder con información', 'Cambiar de tema'], ok: 1 }
       ] }
 ];
+const NIVELES_CAPA = { inicial: '🌱 Inicial', repaso: '🔁 Repaso', ambos: '🌱🔁 Inicial y repaso' };
+let FILTRO_CAPA = { tipo: '', nivel: '' };
 let PROGRESO = {}; /* { usuario: { cursoIdx: { visto, fecha, aciertos } } } */
 let ytApiLista = false, ytPlayer = null, cursoAbierto = null, pollTimer = null;
 
@@ -2610,28 +2668,46 @@ function renderCursos() {
     const el = document.getElementById('lista-cursos');
     if (!el) return;
     const prog = miProgreso();
-    el.innerHTML = '<div class="grid-cursos">' + CURSOS.map((c, i) => {
+    /* Chips de tipos (se arman de los cursos existentes) */
+    const tiposCaja = document.getElementById('capa-tipos');
+    if (tiposCaja) {
+        const tipos = [...new Set(CURSOS.map(c => c.tipo || 'General'))];
+        tiposCaja.innerHTML = `<span class="prop-chip" style="cursor:pointer;${!FILTRO_CAPA.tipo ? 'background:var(--carmin-suave);color:var(--carmin);font-weight:700;' : ''}" onclick="FILTRO_CAPA.tipo='';renderCursos()">Todos los tipos</span>` +
+            tipos.map(t => `<span class="prop-chip" style="cursor:pointer;${FILTRO_CAPA.tipo === t ? 'background:var(--carmin-suave);color:var(--carmin);font-weight:700;' : ''}" onclick="FILTRO_CAPA.tipo='${t}';renderCursos()">${t}</span>`).join('');
+        const bi = document.getElementById('ruta-inicial'), br = document.getElementById('ruta-repaso');
+        if (bi) bi.style.borderColor = FILTRO_CAPA.nivel === 'inicial' ? 'var(--carmin)' : '';
+        if (br) br.style.borderColor = FILTRO_CAPA.nivel === 'repaso' ? 'var(--carmin)' : '';
+    }
+    const visibles = CURSOS.map((c, i) => ({ c, i })).filter(({ c }) =>
+        (!FILTRO_CAPA.tipo || (c.tipo || 'General') === FILTRO_CAPA.tipo) &&
+        (!FILTRO_CAPA.nivel || (c.nivel || 'ambos') === 'ambos' || (c.nivel || 'ambos') === FILTRO_CAPA.nivel));
+    el.innerHTML = '<div class="grid-cursos">' + visibles.map(({ c, i }) => {
         const p = prog[i];
         const visto = p && p.visto;
+        const repasos = (p && p.repasos ? p.repasos.length : 0);
         return `<div class="curso-holo">
-            <div class="curso-tapa" onclick="abrirCurso(${i})" style="cursor:pointer;">
+            <div class="curso-tapa" onclick="verCursoDetalle(${i})" style="cursor:pointer;" title="Ver la ficha del curso">
                 <img src="https://img.youtube.com/vi/${c.yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.remove()">
                 <span class="curso-estado-chip ${visto ? 'ok' : 'pend'}">${visto ? '✓ Completado' : '● Pendiente'}</span>
-                <div class="curso-play"><span><i class="fi fi-rr-play"></i></span></div>
+                <div class="curso-play"><span><i class="fi fi-rr-info"></i></span></div>
             </div>
             <div class="curso-cuerpo">
-                <b>${c.titulo}</b>
+                <b style="cursor:pointer;" onclick="verCursoDetalle(${i})">${c.titulo}</b>
                 <small>${c.desc}</small>
                 <div class="curso-metas">
-                    <span class="curso-meta">🎬 YouTube</span>
-                    <span class="curso-meta">❓ ${c.checkpoints.length} pregunta/s</span>
-                    ${visto ? `<span class="curso-meta" style="border-color:rgba(46,158,91,.5);color:#7FD8A6;">✓ ${p.fecha}</span>` : ''}
+                    <span class="curso-meta">${c.tipo || 'General'}${c.subtipo ? ' · ' + c.subtipo : ''}</span>
+                    <span class="curso-meta">${NIVELES_CAPA[c.nivel || 'ambos']}</span>
+                    <span class="curso-meta">⏱ ${c.duracion || '—'} · ❓ ${c.checkpoints.length}</span>
+                    ${visto ? `<span class="curso-meta" style="border-color:rgba(46,158,91,.5);color:#7FD8A6;">✓ ${p.fecha}${repasos ? ' · ↻ ' + repasos + ' repaso' + (repasos > 1 ? 's' : '') : ''}</span>` : ''}
                 </div>
                 <div id="curso-zona-${i}"></div>
-                <button class="btn-holo ${visto ? 'visto' : ''}" onclick="abrirCurso(${i})">${visto ? '↻ Volver a ver' : '▶ Iniciar curso'}</button>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn-holo ${visto ? 'visto' : ''}" style="flex:1;" onclick="abrirCurso(${i})">${visto ? '↻ Repasar' : '▶ Iniciar curso'}</button>
+                    <button class="btn-holo visto" style="flex:0 0 auto;width:auto;padding:12px 14px;" onclick="verCursoDetalle(${i})" title="Ficha del curso"><i class="fi fi-rr-info"></i></button>
+                </div>
             </div>
         </div>`;
-    }).join('') + '</div>';
+    }).join('') + '</div>' + (visibles.length ? '' : '<div class="aviso alerta">Ningún curso coincide con ese filtro. Probá con "Todos los tipos".</div>');
     const mp = document.getElementById('capa-mi-progreso');
     if (mp) {
         const vistos = Object.values(prog).filter(x => x.visto).length;
@@ -2648,6 +2724,40 @@ function renderCursos() {
     const alta = document.getElementById('capa-admin-alta'), ctrl = document.getElementById('capa-admin-control');
     if (alta) alta.style.display = puede('admin') ? '' : 'none';
     if (ctrl) ctrl.style.display = (puede('admin') || puede('informes')) ? '' : 'none';
+}
+
+
+function elegirRuta(nivel) {
+    FILTRO_CAPA.nivel = FILTRO_CAPA.nivel === nivel ? '' : nivel;
+    renderCursos();
+}
+/* Ficha interna del curso: objetivo, temario, datos y tu historial */
+function verCursoDetalle(i) {
+    const c = CURSOS[i];
+    const p = miProgreso()[i];
+    const repasos = p && p.repasos ? p.repasos : [];
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <img src="https://img.youtube.com/vi/${c.yt}/hqdefault.jpg" alt="" style="width:100%;border-radius:12px;margin-bottom:10px;" onerror="this.remove()">
+        <h3 class="serif">${c.titulo}</h3>
+        <div class="prop-chips" style="margin:8px 0;">
+            <span class="prop-chip">${c.tipo || 'General'}</span>
+            ${c.subtipo ? `<span class="prop-chip">${c.subtipo}</span>` : ''}
+            <span class="prop-chip">${NIVELES_CAPA[c.nivel || 'ambos']}</span>
+            <span class="prop-chip">⏱ ${c.duracion || '—'}</span>
+            <span class="prop-chip">❓ ${c.checkpoints.length} pregunta/s</span>
+        </div>
+        <div class="etiqueta" style="margin-top:10px;">🎯 Objetivo del contenido</div>
+        <p style="font-size:.86rem;line-height:1.6;">${c.objetivo || c.desc}</p>
+        ${c.temario && c.temario.length ? `<div class="etiqueta" style="margin-top:10px;">📚 Temario</div>
+        ${c.temario.map((t, n) => `<div class="item-lista" style="padding:7px 0;">${n + 1}. ${t}</div>`).join('')}` : ''}
+        <div class="etiqueta" style="margin-top:10px;">📈 Tu historial</div>
+        <div style="font-size:.84rem;line-height:1.7;">
+            ${p && p.visto ? `✓ Completado el <b>${p.fecha}</b> (${p.aciertos} pregunta/s OK)` : '— Todavía no lo hiciste'}
+            ${repasos.length ? `<br>↻ Repasos: <b>${repasos.length}</b> — ${repasos.join(' · ')}` : ''}
+        </div>
+        <button class="btn carmin" onclick="cerrarModal();irA('capa');abrirCurso(${i})"><i class="fi fi-rr-play"></i> ${p && p.visto ? 'Repasar ahora (queda registrado)' : 'Iniciar el curso'}</button>
+        <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
 }
 
 function abrirCurso(i) {
@@ -2721,11 +2831,21 @@ function terminarCurso() {
     const pendientes = c.checkpoints.filter((ck, ki) => c._hechos[ki] !== true).length;
     clearInterval(pollTimer);
     const prog = miProgreso();
-    prog[cursoAbierto] = { visto: pendientes === 0, fecha: hoyISO(), aciertos: c.checkpoints.length - pendientes };
-    if (pendientes === 0) {
-        notificar(`🎓 ${USUARIO.split(' ')[0]} completó "${c.titulo}"`, `${c.checkpoints.length} pregunta/s respondidas · registrado en el control`, true);
-        BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CAPACITACIÓN completada: "${c.titulo}" (${c.checkpoints.length} preguntas OK)` });
-        mostrarPush('🎓 ¡Curso completado y registrado!');
+    const previo = prog[cursoAbierto];
+    if (pendientes === 0 && previo && previo.visto) {
+        /* Ya lo había completado: esto es un REPASO y queda registrado */
+        if (!previo.repasos) previo.repasos = [];
+        previo.repasos.push(hoyISO());
+        notificar(`🔁 ${USUARIO.split(' ')[0]} repasó "${c.titulo}"`, `Repaso N° ${previo.repasos.length} · registrado en su historial`, true);
+        BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `REPASO de capacitación: "${c.titulo}" (repaso N° ${previo.repasos.length})` });
+        mostrarPush('🔁 ¡Repaso completado y registrado!');
+    } else {
+        prog[cursoAbierto] = { visto: pendientes === 0, fecha: hoyISO(), aciertos: c.checkpoints.length - pendientes, repasos: (previo && previo.repasos) || [] };
+        if (pendientes === 0) {
+            notificar(`🎓 ${USUARIO.split(' ')[0]} completó "${c.titulo}"`, `${c.checkpoints.length} pregunta/s respondidas · registrado en el control`, true);
+            BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CAPACITACIÓN completada: "${c.titulo}" (${c.checkpoints.length} preguntas OK)` });
+            mostrarPush('🎓 ¡Curso completado y registrado!');
+        }
     }
     renderCursos();
 }
@@ -2740,7 +2860,14 @@ async function agregarCurso() {
     const preg = document.getElementById('curso-preg').value.trim();
     const ok = await pedirConfirmacion({ titulo: 'Agregar curso', mensaje: `<b>${titulo}</b><br>Video de YouTube · pregunta en el minuto ${minuto}.<br><br>En la versión real, la IA genera un juego de preguntas completo leyendo la transcripción.`, boton: 'Agregar' });
     if (!ok) return;
-    CURSOS.push({ yt, titulo, desc: 'Curso incorporado por ' + USUARIO.split(' ')[0], checkpoints: preg && ops.length >= 2 ? [{ seg: minuto * 60, preg, ops, ok: parseInt(document.getElementById('curso-correcta').value) }] : [] });
+    const extra = await pedirFormulario({ titulo: 'Clasificación del curso', sub: titulo,
+        campos: [
+            { id: 'tipo', label: 'Tipo de capacitación', tipo: 'select', opciones: ['Atención al público', 'Ventas', 'Tasaciones', 'Sistema Portanko', 'Administración', 'Legal', 'Otro'], valor: 'Atención al público' },
+            { id: 'subtipo', label: 'Subtipo (opcional)', placeholder: 'Ej: Comunicación, Cierre de ventas' },
+            { id: 'nivel', label: 'Sugerido para', tipo: 'select', opciones: ['inicial', 'repaso', 'ambos'], valor: 'ambos' },
+            { id: 'objetivo', label: 'Objetivo del contenido (breve)', tipo: 'textarea', placeholder: '¿Qué va a aprender quien lo haga?' }
+        ] }) || {};
+    CURSOS.push({ yt, titulo, desc: 'Curso incorporado por ' + USUARIO.split(' ')[0], tipo: extra.tipo || 'Otro', subtipo: extra.subtipo || '', nivel: extra.nivel || 'ambos', objetivo: extra.objetivo || '', duracion: '—', temario: [], checkpoints: preg && ops.length >= 2 ? [{ seg: minuto * 60, preg, ops, ok: parseInt(document.getElementById('curso-correcta').value) }] : [] });
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `Agregó la capacitación "${titulo}" (YouTube)` });
     notificar(`🎓 Nueva capacitación disponible: ${titulo}`, 'Ya aparece en Cursos para todo el equipo');
     ['curso-url', 'curso-titulo', 'curso-min', 'curso-preg', 'curso-ops'].forEach(id => document.getElementById(id).value = '');
@@ -2753,7 +2880,7 @@ function renderTablaCapa() {
     el.innerHTML = `<div style="overflow-x:auto;"><table class="tabla-capa"><tr><th>Usuario</th>${CURSOS.map(c => `<th>${c.titulo.slice(0, 22)}…</th>`).join('')}</tr>` +
         usuarios.map(u => `<tr><td><b>${u.split(' ')[0]}</b></td>${CURSOS.map((c, i) => {
             const p = (PROGRESO[u] || {})[i];
-            return `<td>${p && p.visto ? '<span style="color:var(--ok);font-weight:700;">✓ ' + p.fecha + '</span>' : '<span style="color:var(--piedra);">—</span>'}</td>`;
+            return `<td>${p && p.visto ? '<span style="color:var(--ok);font-weight:700;">✓ ' + p.fecha + '</span>' + (p.repasos && p.repasos.length ? ' <small style="color:var(--piedra);">↻' + p.repasos.length + '</small>' : '') : '<span style="color:var(--piedra);">—</span>'}</td>`;
         }).join('')}</tr>`).join('') + '</table></div>' +
         '<div style="font-size:.72rem;color:var(--piedra);margin-top:8px;">✓ = curso completado con todas las preguntas respondidas. Los administradores ven quién hizo qué y cuándo.</div>';
 }
