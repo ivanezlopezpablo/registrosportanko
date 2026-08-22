@@ -510,6 +510,18 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
 .prop-match.bajo{background:linear-gradient(135deg,#8B93A0,#5B6472);}
 .prop-fuente{font-size:.64rem;color:var(--piedra);margin-top:4px;}
 
+
+/* ===== Análisis, favoritos y etiquetas de las propiedades ===== */
+.prop-porque{background:#F7F8FA;border-radius:10px;padding:8px 10px;margin-top:6px;font-size:.72rem;line-height:1.55;}
+.prop-porque .si{color:#1F7A4D;} .prop-porque .no{color:#B31226;} .prop-porque .tip{color:#8A6A1B;}
+.fav-btn{position:absolute;bottom:8px;right:8px;border:none;background:#fff;width:34px;height:34px;border-radius:50%;box-shadow:0 2px 8px rgba(18,22,28,.18);cursor:pointer;font-size:1.05rem;color:#B7BDC6;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.fav-btn.activo{color:#B31226;transform:scale(1.08);}
+.prop-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.prop-tag{background:var(--oro-suave);border:1px solid var(--oro);color:#8A6A1B;border-radius:999px;padding:3px 9px;font-size:.64rem;font-weight:700;}
+.prop-tag.fav{background:var(--carmin-suave);border-color:var(--carmin);color:var(--carmin);}
+.prop-url{font-size:.7rem;margin-top:4px;display:inline-flex;align-items:center;gap:4px;color:var(--carmin);font-weight:600;text-decoration:none;}
+.prop-url:hover{text-decoration:underline;}
+
 </style>
 </head>
 <body>
@@ -762,7 +774,7 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
         <div class="encabezado-seccion"><i class="fi fi-rr-search"></i><h2>Búsquedas de Propiedades</h2><div class="filete"></div></div>
         <div class="tarjeta">
             <div class="etiqueta"><i class="fi fi-rr-user-add"></i> Nueva consulta de búsqueda</div>
-            <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;margin-bottom:4px;">Cargá lo que busca la persona: el sistema rastrea los portales (Zonaprop, MercadoLibre, Argenprop) para Neuquén y Río Negro y te muestra las propiedades <b>acá adentro</b> — con foto, precio, ubicación y el <b>% de coincidencia</b> con la búsqueda (solo del 55% para arriba). Demo con cartera de ejemplo; el robot real alimenta estas mismas tarjetas.</p>
+            <p style="font-size:.8rem;color:var(--piedra);line-height:1.5;margin-bottom:4px;">Cargá lo que busca la persona: el sistema rastrea los portales (Zonaprop, MercadoLibre, Argenprop) para Neuquén y Río Negro y te muestra las propiedades <b>acá adentro</b> — con foto, precio, ubicación y el <b>% de coincidencia</b> con la búsqueda (solo del 55% para arriba). Los filtros de abajo son <b>los mismos parámetros que usan los portales</b>: son exactamente lo que el robot de rastreo usará para buscar. Demo con cartera de ejemplo.</p>
             <div class="fila-2">
                 <div><label class="form-lbl">Nombre y apellido</label><input class="form-inp" id="crm-nombre" placeholder="Ej: Sosa Marina"></div>
                 <div><label class="form-lbl">Teléfono</label><input class="form-inp" id="crm-tel" inputmode="tel" placeholder="299 ..."></div>
@@ -773,10 +785,31 @@ input[id^="buscar-"]::placeholder{color:#9AA1AB;}
             </div>
             <div class="fila-2">
                 <div><label class="form-lbl">Zona</label><select class="form-inp" id="crm-zona"><option value="neuquen">Neuquén Capital</option><option value="plottier">Plottier</option><option value="centenario">Centenario</option><option value="cipolletti">Cipolletti (RN)</option><option value="general-roca">General Roca (RN)</option><option value="rio-negro">Río Negro (toda)</option></select></div>
-                <div><label class="form-lbl">Presupuesto máx. ($ o USD)</label><input class="form-inp" id="crm-presu" placeholder="Ej: 450.000 / 65.000 USD"></div>
+                <div><label class="form-lbl">Barrio / referencia (opcional)</label><input class="form-inp" id="crm-barrio" placeholder="Ej: Santa Genoveva, centro"></div>
             </div>
-            <label class="form-lbl">Detalles (dormitorios, mascotas, cochera...)</label>
-            <input class="form-inp" id="crm-detalle" placeholder="Ej: 2 dormitorios, acepta mascotas, con patio">
+            <div class="etiqueta" style="margin-top:12px;"><i class="fi fi-rr-settings-sliders"></i> Filtros de búsqueda (los mismos que usan los portales)</div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Precio desde</label><input class="form-inp" id="crm-pmin" inputmode="numeric" placeholder="0"></div>
+                <div><label class="form-lbl">Precio hasta</label><input class="form-inp" id="crm-pmax" inputmode="numeric" placeholder="Ej: 500.000"></div>
+            </div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Dormitorios</label><select class="form-inp" id="crm-dorm"><option value="">Indistinto</option><option value="0">Monoambiente</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4 o más</option></select></div>
+                <div><label class="form-lbl">Baños (mínimo)</label><select class="form-inp" id="crm-banos"><option value="">Indistinto</option><option value="1">1</option><option value="2">2 o más</option></select></div>
+            </div>
+            <label class="form-lbl">Superficie mínima (m²)</label>
+            <input class="form-inp" id="crm-supmin" inputmode="numeric" placeholder="Ej: 60">
+            <label class="form-lbl">Requisitos (tildá los que pida el cliente)</label>
+            <div class="prop-chips" style="margin-bottom:4px;" id="crm-checks">
+                <label class="prop-chip" style="cursor:pointer;"><input type="checkbox" id="chk-cochera" style="margin-right:4px;">Cochera</label>
+                <label class="prop-chip" style="cursor:pointer;"><input type="checkbox" id="chk-patio" style="margin-right:4px;">Patio/Jardín</label>
+                <label class="prop-chip" style="cursor:pointer;"><input type="checkbox" id="chk-mascota" style="margin-right:4px;">Apto mascotas</label>
+                <label class="prop-chip" style="cursor:pointer;"><input type="checkbox" id="chk-pileta" style="margin-right:4px;">Pileta</label>
+                <label class="prop-chip" style="cursor:pointer;"><input type="checkbox" id="chk-estrenar" style="margin-right:4px;">A estrenar</label>
+                <label class="prop-chip" style="cursor:pointer;"><input type="checkbox" id="chk-parrilla" style="margin-right:4px;">Parrilla/Quincho</label>
+                <label class="prop-chip" style="cursor:pointer;"><input type="checkbox" id="chk-balcon" style="margin-right:4px;">Balcón</label>
+            </div>
+            <label class="form-lbl">Otros detalles (texto libre)</label>
+            <input class="form-inp" id="crm-detalle" placeholder="Ej: planta baja, cerca de escuelas, apto profesional">
             <button class="btn carmin" onclick="guardarConsultaCRM()"><i class="fi fi-rr-search"></i> Registrar y buscar coincidencias ahora</button>
         </div>
         <input class="form-inp" id="buscar-crm" placeholder="Buscar consulta por nombre o teléfono..." oninput="renderCRM()">
@@ -1901,36 +1934,96 @@ const PROPIEDADES = [
     { t: 'departamentos', op: 'venta', ti: 'Monoambiente inversión, renta activa', zona: 'neuquen', ubi: 'Centro Este, Neuquén', precio: 'USD 62.000', pnum: 62000, dorm: 0, m2: 34, extra: ['Monoambiente', 'Alquilado'], portal: 'MercadoLibre', img: 'https://picsum.photos/seed/nqn7/400/260' },
     { t: 'casas', op: 'alquiler', ti: 'Casa chica 2 dorm., Centenario', zona: 'centenario', ubi: 'Centenario centro', precio: '$ 470.000/mes', pnum: 470000, dorm: 2, m2: 75, extra: ['2 dormitorios', 'Patio', 'Reciclada'], portal: 'Argenprop', img: 'https://picsum.photos/seed/cen2/400/260' }
 ];
+function urlDeProp(p) {
+    /* En la demo, el enlace lleva a la sección real del portal para esa
+       zona y tipo; con el robot real, será el aviso puntual publicado. */
+    const zona = p.zona === 'rio-negro' ? 'rio-negro' : p.zona;
+    if (p.portal === 'Zonaprop') return `https://www.zonaprop.com.ar/${p.t}-${p.op}-${zona}.html`;
+    if (p.portal === 'MercadoLibre') return `https://inmuebles.mercadolibre.com.ar/${p.t}/${p.op}/${zona}/`;
+    return `https://www.argenprop.com/${p.t}/${p.op}/${zona}`;
+}
 const ZONAS_VECINAS = { neuquen: ['plottier', 'centenario', 'cipolletti'], plottier: ['neuquen', 'centenario'], centenario: ['neuquen', 'plottier'], cipolletti: ['neuquen', 'general-roca', 'rio-negro'], 'general-roca': ['cipolletti', 'rio-negro'], 'rio-negro': ['cipolletti', 'general-roca'] };
 
-function matchScore(q, p) {
+const NOMBRES_TIPO = { departamentos: 'departamento', casas: 'casa', terrenos: 'terreno', locales: 'local' };
+const PALABRAS_CLAVE = { mascota: 'apto mascotas', patio: 'patio', cochera: 'cochera', balc: 'balcón', parrilla: 'parrilla', jard: 'jardín', pileta: 'pileta', estrenar: 'a estrenar', quincho: 'quincho' };
+
+function matchDetalle(q, p) {
     let pts = 0;
-    if (q.op === p.op) pts += 30; else return 0; /* alquiler vs venta: excluyente */
-    if (q.tipo === p.t) pts += 25;
-    else if ((q.tipo === 'casas' && p.t === 'departamentos') || (q.tipo === 'departamentos' && p.t === 'casas')) pts += 8;
-    if (q.zona === p.zona) pts += 20;
-    else if ((ZONAS_VECINAS[q.zona] || []).includes(p.zona)) pts += 9;
-    else if (q.zona === 'rio-negro' && ['cipolletti', 'general-roca'].includes(p.zona)) pts += 20;
-    const presu = parseFloat((q.presu || '').replace(/[^0-9]/g, '')) || 0;
-    if (presu) { if (p.pnum <= presu) pts += 15; else if (p.pnum <= presu * 1.15) pts += 7; }
-    else pts += 6;
+    const tiene = [], falta = [], extras = [];
+    if (q.op !== p.op) return { score: 0, tiene, falta, extras };
+    pts += 30; tiene.push(q.op === 'alquiler' ? 'es alquiler' : 'está en venta');
+    if (q.tipo === p.t) { pts += 25; tiene.push('es ' + NOMBRES_TIPO[p.t]); }
+    else if ((q.tipo === 'casas' && p.t === 'departamentos') || (q.tipo === 'departamentos' && p.t === 'casas')) { pts += 8; falta.push('pedía ' + NOMBRES_TIPO[q.tipo] + ' y es ' + NOMBRES_TIPO[p.t]); }
+    else falta.push('pedía ' + NOMBRES_TIPO[q.tipo] + ' y es ' + NOMBRES_TIPO[p.t]);
+    if (q.zona === p.zona || (q.zona === 'rio-negro' && ['cipolletti', 'general-roca'].includes(p.zona))) { pts += 20; tiene.push('está en ' + ZONAS_CRM[p.zona]); }
+    else if ((ZONAS_VECINAS[q.zona] || []).includes(p.zona)) { pts += 9; falta.push('está en ' + ZONAS_CRM[p.zona] + ' (zona vecina, no la pedida)'); }
+    else falta.push('está en ' + ZONAS_CRM[p.zona] + ', lejos de lo pedido');
+    /* Rango de precio (filtro de portal: desde-hasta) */
+    const pmax = q.pmax || parseFloat((q.presu || '').replace(/[^0-9]/g, '')) || 0;
+    const pmin = q.pmin || 0;
+    if (pmax) {
+        if (p.pnum >= pmin && p.pnum <= pmax) { pts += 15; tiene.push('entra en el rango de precio'); }
+        else if (p.pnum <= pmax * 1.15 && p.pnum >= pmin) { pts += 7; falta.push('se pasa hasta un 15% del precio tope'); }
+        else if (p.pnum < pmin) falta.push('está por debajo del rango pedido');
+        else falta.push('excede el precio tope');
+    } else pts += 6;
+    /* Dormitorios (select del filtro) o texto libre */
     const det = (q.detalle || '').toLowerCase();
-    const dormBuscado = /(\d)\s*dorm/.exec(det);
-    if (dormBuscado && parseInt(dormBuscado[1]) === p.dorm) pts += 10;
-    else if (dormBuscado && Math.abs(parseInt(dormBuscado[1]) - p.dorm) === 1) pts += 4;
+    let dq = q.dorm !== undefined && q.dorm !== '' ? parseInt(q.dorm) : null;
+    if (dq === null) { const dt = /(\d)\s*dorm/.exec(det); if (dt) dq = parseInt(dt[1]); }
+    if (dq !== null) {
+        const okDorm = dq === 4 ? p.dorm >= 4 : p.dorm === dq;
+        if (okDorm) { pts += 10; tiene.push((p.dorm === 0 ? 'monoambiente' : p.dorm + ' dormitorio' + (p.dorm > 1 ? 's' : '')) + ', como pedía'); }
+        else if (Math.abs(dq - p.dorm) === 1) { pts += 4; falta.push('tiene ' + p.dorm + ' dormitorios (pedía ' + (dq === 0 ? 'monoambiente' : dq) + ')'); }
+        else falta.push('tiene ' + p.dorm + ' dormitorios (pedía ' + (dq === 0 ? 'monoambiente' : dq) + ')');
+    }
+    /* Baños mínimos */
+    const pBanos = p.banos || (p.m2 > 100 ? 2 : 1);
+    if (q.banos) {
+        if (pBanos >= parseInt(q.banos)) { pts += 5; tiene.push(pBanos + ' baño' + (pBanos > 1 ? 's' : '')); }
+        else falta.push('tiene ' + pBanos + ' baño (pedía ' + q.banos + ' mín.)');
+    }
+    /* Superficie mínima */
+    if (q.supmin) {
+        if (p.m2 >= q.supmin) { pts += 8; tiene.push(p.m2 + ' m² (pedía ' + q.supmin + '+ m²)'); }
+        else falta.push('tiene ' + p.m2 + ' m² (pedía mínimo ' + q.supmin + ')');
+    }
+    /* Barrio de referencia */
+    if (q.barrio && (p.ubi.toLowerCase().includes(q.barrio.toLowerCase()) || p.ti.toLowerCase().includes(q.barrio.toLowerCase()))) { pts += 6; tiene.push('en la zona de referencia (' + q.barrio + ')'); }
+    /* Requisitos tildados + texto libre */
     const textoProp = (p.ti + ' ' + p.extra.join(' ')).toLowerCase();
-    ['mascota', 'patio', 'cochera', 'balc', 'parrilla', 'jard', 'pileta', 'estrenar'].forEach(k => {
-        if (det.includes(k) && textoProp.includes(k)) pts += 5;
+    Object.entries(PALABRAS_CLAVE).forEach(([k, nombre]) => {
+        const pidio = (q.checks && q.checks[k]) || det.includes(k) || (k === 'parrilla' && q.checks && q.checks.parrilla) ;
+        const loTiene = textoProp.includes(k) || (k === 'parrilla' && textoProp.includes('quincho'));
+        if (pidio && loTiene) { pts += 5; tiene.push('tiene ' + nombre); }
+        else if (pidio && !loTiene) falta.push('no tiene ' + nombre);
+        else if (!pidio && loTiene) extras.push(nombre);
     });
-    return Math.min(100, pts);
+    return { score: Math.min(100, pts), tiene, falta, extras };
 }
 function coincidenciasDe(q) {
-    return PROPIEDADES.map(p => ({ p, score: matchScore(q, p) }))
+    return PROPIEDADES.map((p, pi) => ({ p, pi, ...matchDetalle(q, p) }))
         .filter(x => x.score >= 55)
         .sort((a, b) => b.score - a.score);
 }
-function tarjetaProp(x) {
+/* ¿Con qué OTROS clientes coincide esta propiedad? */
+function otrosClientesPara(pi, ciExcluir) {
+    return CONSULTAS_CRM.map((c, ci) => ({ c, ci, score: ci === ciExcluir ? 0 : matchDetalle(c, PROPIEDADES[pi]).score }))
+        .filter(x => x.score >= 55)
+        .sort((a, b) => b.score - a.score);
+}
+function tarjetaProp(x, ci) {
     const clase = x.score >= 80 ? 'alto' : x.score >= 65 ? 'medio' : 'bajo';
+    const c = CONSULTAS_CRM[ci];
+    const esFav = (c.favs || []).includes(x.pi);
+    const otros = otrosClientesPara(x.pi, ci).slice(0, 3);
+    const porque = `
+        <div class="prop-porque">
+            <b>¿Por qué ${x.score}%?</b><br>
+            ${x.tiene.length ? `<span class="si">✓ Coincide porque:</span> ${x.tiene.join(', ')}.<br>` : ''}
+            ${x.falta.length ? `<span class="no">✗ Pero:</span> ${x.falta.join('; ')}.<br>` : ''}
+            ${x.extras.length ? `<span class="tip">💡 Consultale a ${c.nombre.split(' ')[0]}:</span> además tiene <b>${x.extras.join(', ')}</b> — no lo pidió, pero quizás le interese.` : ''}
+        </div>`;
     return `<div class="prop-card">
         <img class="prop-img" src="${x.p.img}" alt="" loading="lazy" onerror="this.style.display='none'">
         <div class="prop-info">
@@ -1938,10 +2031,35 @@ function tarjetaProp(x) {
             <b>${x.p.ti}</b>
             <div class="prop-ubi">📍 ${x.p.ubi} · ${x.p.m2} m²</div>
             <div class="prop-chips">${x.p.extra.map(e => `<span class="prop-chip">${e}</span>`).join('')}</div>
-            <div class="prop-fuente">Fuente: ${x.p.portal} · vista dentro del sistema</div>
+            ${porque}
+            <div class="prop-tags">
+                ${esFav ? `<span class="prop-tag fav">❤ Favorita de ${c.nombre.split(' ')[0]}</span>` : ''}
+                ${otros.map(o => `<span class="prop-tag">🏷 También ${o.c.nombre.split(' ')[0]} · ${o.score}%</span>`).join('')}
+            </div>
+            <a class="prop-url" href="${urlDeProp(x.p)}" target="_blank" rel="noopener"><i class="fi fi-rr-link"></i> Ver la publicación en ${x.p.portal} ↗</a>
         </div>
         <span class="prop-match ${clase}">${x.score}%</span>
+        <button class="fav-btn ${esFav ? 'activo' : ''}" onclick="toggleFav(${ci},${x.pi})" title="${esFav ? 'Quitar de favoritas' : 'Guardar como favorita para ' + c.nombre}">${esFav ? '❤' : '♡'}</button>
     </div>`;
+}
+
+/* Favoritas por cliente + aviso de cruce con otros clientes */
+function toggleFav(ci, pi) {
+    const c = CONSULTAS_CRM[ci];
+    if (!c.favs) c.favs = [];
+    const ya = c.favs.indexOf(pi);
+    const p = PROPIEDADES[pi];
+    if (ya >= 0) { c.favs.splice(ya, 1); }
+    else {
+        c.favs.push(pi);
+        const otros = otrosClientesPara(pi, ci);
+        notificar(`❤ Favorita guardada para ${c.nombre}`, p.ti + ' · ' + p.precio);
+        if (otros.length) {
+            notificar(`🏷 Esa propiedad también coincide con ${otros.map(o => o.c.nombre.split(' ')[0] + ' (' + o.score + '%)').join(', ')}`, 'Quedó etiquetada en sus búsquedas también', true);
+        }
+        BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CRM: marcó favorita "${p.ti}" para ${c.nombre}${otros.length ? ' · también coincide con ' + otros.map(o => o.c.nombre).join(', ') : ''}` });
+    }
+    renderCRM(); renderPanelAge();
 }
 
 function portalesPara(q) {
@@ -1955,20 +2073,38 @@ async function guardarConsultaCRM() {
     if (!puede('registrar')) return sinPermiso('cargar consultas del CRM');
     const nombre = document.getElementById('crm-nombre').value.trim();
     if (!nombre) return;
+    const chk = id => document.getElementById(id).checked;
+    const num = id => parseFloat((document.getElementById(id).value || '').replace(/[^0-9]/g, '')) || 0;
     const q = { nombre, tel: document.getElementById('crm-tel').value.trim(),
         op: document.getElementById('crm-op').value, tipo: document.getElementById('crm-tipo').value,
-        zona: document.getElementById('crm-zona').value, presu: document.getElementById('crm-presu').value.trim(),
+        zona: document.getElementById('crm-zona').value, barrio: document.getElementById('crm-barrio').value.trim(),
+        pmin: num('crm-pmin'), pmax: num('crm-pmax'),
+        dorm: document.getElementById('crm-dorm').value, banos: document.getElementById('crm-banos').value,
+        supmin: num('crm-supmin'),
+        checks: { cochera: chk('chk-cochera'), patio: chk('chk-patio'), mascota: chk('chk-mascota'), pileta: chk('chk-pileta'), estrenar: chk('chk-estrenar'), parrilla: chk('chk-parrilla'), balc: chk('chk-balcon') },
         detalle: document.getElementById('crm-detalle').value.trim(), fecha: hoyISO(), usuario: USUARIO, coincidencias: [] };
+    /* compatibilidad con el motor: presupuesto tope */
+    q.presu = q.pmax ? String(q.pmax) : '';
     q.coincidencias = coincidenciasDe(q);
     CONSULTAS_CRM.unshift(q);
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `CRM: cargó consulta de ${nombre} (${q.op} de ${q.tipo} en ${ZONAS_CRM[q.zona]}) · ${q.coincidencias.length} coincidencias ≥55%` });
     notificar(`🔎 ${q.coincidencias.length} propiedades coinciden (≥55%) para ${nombre}`, `La mejor: ${q.coincidencias.length ? q.coincidencias[0].score + '% — ' + q.coincidencias[0].p.ti : '—'}`);
+    /* Cruce: ¿alguna de sus coincidencias ya es favorita de otro cliente? */
+    const cruces = [];
+    q.coincidencias.forEach(x => {
+        CONSULTAS_CRM.forEach(otra => {
+            if (otra !== q && (otra.favs || []).includes(x.pi)) cruces.push(`"${x.p.ti}" (❤ de ${otra.nombre.split(' ')[0]}, para ${nombre.split(' ')[0]} da ${x.score}%)`);
+        });
+    });
+    if (cruces.length) notificar(`🏷 Cruce entre clientes: ${cruces.length} propiedad/es favoritas de otros también le sirven a ${nombre.split(' ')[0]}`, cruces[0], true);
     await pedirConfirmacion({ titulo: '🔎 ¡Coincidencias encontradas!',
         mensaje: `Para <b>${nombre}</b> (${q.op} de ${q.tipo} en ${ZONAS_CRM[q.zona]}) el sistema encontró <b>${q.coincidencias.length} propiedades con 55% o más de coincidencia</b>.` +
             (q.coincidencias.length ? `<br><br>Las mejores:<br>` + q.coincidencias.slice(0, 3).map(x => `• <b>${x.score}%</b> — ${x.p.ti} · ${x.p.precio}`).join('<br>') : '') +
             '<br><br>Se muestran acá abajo, <b>dentro del sistema</b>, con foto, precio y ubicación. El robot sigue buscando y te avisa cuando aparezca algo nuevo.',
         boton: 'Ver los resultados' });
-    ['crm-nombre', 'crm-tel', 'crm-presu', 'crm-detalle'].forEach(id => document.getElementById(id).value = '');
+    ['crm-nombre', 'crm-tel', 'crm-barrio', 'crm-pmin', 'crm-pmax', 'crm-supmin', 'crm-detalle'].forEach(id => document.getElementById(id).value = '');
+    ['chk-cochera', 'chk-patio', 'chk-mascota', 'chk-pileta', 'chk-estrenar', 'chk-parrilla', 'chk-balcon'].forEach(id => document.getElementById(id).checked = false);
+    document.getElementById('crm-dorm').value = ''; document.getElementById('crm-banos').value = '';
     renderCRM();
 }
 function renderPanelAge() {
@@ -1998,13 +2134,13 @@ function renderCRM() {
         const abierta = c.abierta !== false;
         return `<div class="tarjeta">
         <b>${c.nombre}</b> ${c.tel ? '· 📞 ' + c.tel : ''}<br>
-        <small style="color:var(--piedra);">Busca: <b>${c.op}</b> de ${c.tipo} en <b>${ZONAS_CRM[c.zona]}</b>${c.presu ? ' · hasta ' + c.presu : ''}${c.detalle ? ' · ' + c.detalle : ''} · cargado ${c.fecha}</small>
+        <small style="color:var(--piedra);">Busca: <b>${c.op}</b> de ${c.tipo} en <b>${ZONAS_CRM[c.zona]}</b>${c.barrio ? ' (' + c.barrio + ')' : ''}${c.pmax ? ' · $ ' + (c.pmin ? c.pmin.toLocaleString('es-AR') + ' a ' : 'hasta ') + c.pmax.toLocaleString('es-AR') : ''}${c.dorm !== '' && c.dorm !== undefined ? ' · ' + (c.dorm === '0' ? 'monoamb.' : c.dorm + ' dorm.') : ''}${c.banos ? ' · ' + c.banos + '+ baños' : ''}${c.supmin ? ' · ' + c.supmin + '+ m²' : ''}${c.checks ? Object.entries(c.checks).filter(([k, v]) => v).map(([k]) => ' · ' + (PALABRAS_CLAVE[k] || k)).join('') : ''}${c.detalle ? ' · ' + c.detalle : ''} · cargado ${c.fecha}</small>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
             <button class="btn-mini" style="border-color:var(--carmin);color:var(--carmin);" onclick="CONSULTAS_CRM[${i}].abierta=${abierta ? 'false' : 'true'};renderCRM()"><i class="fi fi-rr-${abierta ? 'eye-crossed' : 'eye'}"></i> ${abierta ? 'Ocultar' : 'Ver'} resultados (${c.coincidencias.length})</button>
             <button class="btn-mini" onclick="rebuscarCRM(${i})"><i class="fi fi-rr-refresh"></i> Buscar de nuevo</button>
         </div>
-        ${abierta ? `<div class="etiqueta" style="margin-top:12px;">${c.coincidencias.length} coincidencias del 55% para arriba · dentro del sistema 🔄</div>
-        ${c.coincidencias.length ? c.coincidencias.map(x => tarjetaProp(x)).join('') : '<div class="aviso alerta">Todavía nada con 55% o más para esta búsqueda. El robot sigue rastreando y avisa apenas aparezca.</div>'}` : ''}
+        ${abierta ? `<div class="etiqueta" style="margin-top:12px;">${c.coincidencias.length} coincidencias del 55% para arriba${(c.favs || []).length ? ' · ❤ ' + c.favs.length + ' favorita/s' : ''} · dentro del sistema 🔄</div>
+        ${c.coincidencias.length ? [...c.coincidencias].sort((a, b) => ((c.favs || []).includes(b.pi) ? 1 : 0) - ((c.favs || []).includes(a.pi) ? 1 : 0) || b.score - a.score).map(x => tarjetaProp(x, i)).join('') : '<div class="aviso alerta">Todavía nada con 55% o más para esta búsqueda. El robot sigue rastreando y avisa apenas aparezca.</div>'}` : ''}
     </div>`;
     }).join('') || '<div class="tarjeta" style="text-align:center;color:var(--piedra);font-size:.9rem;">Sin consultas cargadas. Registrá la primera búsqueda arriba.</div>';
 }
