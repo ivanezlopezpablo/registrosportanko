@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
 <title>Portanko · Administración de Fideicomisos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -10,8 +10,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<link rel="stylesheet" href="https://cesium.com/downloads/zip/v1.110/Build/Cesium/Widgets/widgets.css">
-<script src="https://cesium.com/downloads/zip/v1.110/Build/Cesium/Cesium.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@r128/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
 <style>
 :root{
   --carmin:#A31621; --carmin-prof:#7A0E17; --carmin-suave:#F3E2E4;
@@ -20,9 +20,9 @@
   --ok:#2F6B4F; --ok-suave:#E3EFE8; --alerta:#B45309; --alerta-suave:#FDF0DC;
   --rojo-error:#B91C1C; --rojo-suave:#FBE9E9;
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;min-height:100%;}
-body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:13px;zoom:75%;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;}
+html,body{width:100%;min-height:100%;overflow-x:hidden;}
+body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:13px;zoom:75%;-webkit-user-zoom:fixed;-moz-user-zoom:fixed;-ms-user-zoom:fixed;-o-user-zoom:fixed;user-zoom:fixed;}
 .serif{font-family:'Space Grotesk',sans-serif;}
 i.fi{display:inline-flex;vertical-align:middle;}
 ::-webkit-scrollbar{display:none;}
@@ -44,8 +44,11 @@ i.fi{display:inline-flex;vertical-align:middle;}
 .login-desde{font-size:.64rem;letter-spacing:3.5px;color:var(--oro);font-weight:600;text-transform:uppercase;}
 .login-sub{font-size:.8rem;color:var(--piedra);margin:10px 0 20px 0;line-height:1.5;}
 .login-lbl{display:block;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--piedra);font-weight:600;margin:12px 0 5px 2px;}
-.login-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:12px;font-family:'Inter';font-size:.92rem;color:var(--tinta);outline:none;}
+.login-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:12px;font-family:'Inter';font-size:.92rem;color:var(--tinta);outline:none;-webkit-user-zoom:auto;-moz-user-zoom:auto;}
 .login-inp:focus{border-color:var(--carmin);}
+@supports (-webkit-touch-callout: none) {
+    .login-inp { font-size: 16px; }
+}
 .btn-ingresar{width:100%;margin-top:18px;background:var(--carmin);color:#fff;border:none;border-radius:3px;padding:14px;font-family:'Inter';font-size:.9rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
 .btn-ingresar:hover{background:var(--carmin-prof);}
 .login-roles{display:flex;gap:8px;margin-top:14px;}
@@ -134,7 +137,10 @@ background-size:auto,auto,44px 44px,44px 44px;background-attachment:fixed;}
 
 /* Formularios */
 .form-lbl{display:block;font-size:.75rem;letter-spacing:1.4px;text-transform:uppercase;color:var(--piedra);font-weight:600;margin:11px 0 5px 1px;}
-.form-inp,select.form-inp,textarea.form-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:13px 14px;font-family:'Inter';font-size:1rem;color:var(--tinta);outline:none;}
+.form-inp,select.form-inp,textarea.form-inp{width:100%;border:1px solid var(--linea);background:var(--marfil);border-radius:3px;padding:13px 14px;font-family:'Inter';font-size:1rem;color:var(--tinta);outline:none;-webkit-user-zoom:auto;}
+@supports (-webkit-touch-callout: none) {
+    input.form-inp, select.form-inp, textarea.form-inp { font-size: 16px; }
+}
 .form-inp:focus{border-color:var(--carmin);background:var(--papel);}
 .fila-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .btn{width:100%;border:none;border-radius:3px;padding:13px;font-family:'Inter';font-size:.86rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-top:14px;transition:all .2s;}
@@ -758,12 +764,35 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
 .btn.carmin{box-shadow:0 4px 18px rgba(179,18,38,.3);}
 .btn.carmin:hover{box-shadow:0 4px 26px rgba(179,18,38,.45);}
 .etiqueta{border-left:3px solid var(--oro);padding-left:8px;}
+
+/* ====== RESPONSIVIDAD ====== */
+/* Móvil pequeño (320px - 480px) */
+@media(max-width:480px){
+  body{zoom:75%;}
+  #app{max-width:100vw;padding-bottom:80px;}
+  .topbar{padding:10px 12px;gap:8px;}
+  .login-caja{max-width:95vw;padding:28px 20px 22px 20px;}
+  .tarjeta{padding:12px;}
+}
+
+/* Tablet (481px - 900px) */
+@media(min-width:481px) and (max-width:899px){
+  body{zoom:80%;}
+  #app{max-width:100vw;}
+}
+
+/* Desktop (900px+) */
 @media(min-width:900px){
   .topbar{border-bottom:1px solid rgba(201,162,75,.35);box-shadow:0 1px 0 rgba(201,162,75,.15), 0 6px 24px rgba(0,0,0,.35);}
   .sidebar{border-right:1px solid rgba(201,162,75,.25);}
   .sidebar .nav-item.activo{box-shadow:inset 3px 0 0 var(--oro), 0 0 16px rgba(201,162,75,.12);}
 }
-.tabs-abajo{border-top:1px solid rgba(201,162,75,.3);box-shadow:0 -4px 20px rgba(18,22,28,.12);}
+
+/* Landscape vs Portrait */
+@media(orientation:landscape){
+  body{zoom:65%;}
+  #app{padding-bottom:60px;}
+}
 
 </style>
 </head>
@@ -2352,85 +2381,170 @@ function renderMapa2D(fid) {
 
 function renderMapa3D(fid) {
     const mapDiv = document.getElementById('mapa-3d-' + fid);
-    if (!mapDiv) return;
-    
-    // Esperar a que Cesium cargue si aún no está disponible
-    if (!window.Cesium) {
-        setTimeout(() => renderMapa3D(fid), 1000);
-        mapDiv.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Cargando vista 3D...</div>';
+    if (!mapDiv || !window.THREE) {
+        setTimeout(() => renderMapa3D(fid), 500);
+        if (mapDiv) mapDiv.innerHTML = '<div style="padding:20px;text-align:center;color:#999;">Cargando vista 3D...</div>';
         return;
     }
     
-    if (MAPAS_CESIUM[fid]) { 
-        try { MAPAS_CESIUM[fid].destroy(); } catch(e) {}
+    // Limpiar viewer anterior
+    if (MAPAS_CESIUM[fid]) {
+        try { 
+            const old = mapDiv.querySelector('canvas');
+            if (old) old.remove();
+            mapDiv.innerHTML = '';
+        } catch(e) {}
     }
     
-    // Limpiar el div antes de crear el viewer
-    mapDiv.innerHTML = '';
-    
     try {
-        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZDYyNzg1YS01NjU0LTQ0ZTItODg2YS04MDg5Y2FmYTgyMDAiLCJpZCI6MTc3MzU2LCJpYXQiOjE3MjAwNzc5MDh9.zyeSOHDmfJXDzqCPg9wYa7xg0x-KYXvNi_IFDDNfUCw';
-        
-        const viewer = new Cesium.Viewer(mapDiv, {
-            terrainProvider: Cesium.CesiumTerrainProvider.fromUrl(Cesium.IonResource.fromAssetId(1), {requestVertexNormals: true}),
-            imageryProvider: Cesium.ArcGisMapServerImageryProvider.fromUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'),
-            animation: false,
-            timeline: false,
-            fullscreenButton: false,
-            homeButton: false,
-            navigationHelpButton: false,
-            infoBox: false
-        });
-        
-        viewer.scene.globe.enableLighting = true;
-        
         const geo = GEOS[fid];
-        let centerLat = -38.95, centerLng = -68.07;
         
+        // Scene, Camera, Renderer
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87CEEB); // cielo azul
+        scene.fog = new THREE.Fog(0x87CEEB, 5000, 20000);
+        
+        const width = mapDiv.clientWidth;
+        const height = mapDiv.clientHeight;
+        const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 10000);
+        camera.position.set(0, 800, 1200);
+        camera.lookAt(0, 0, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        mapDiv.appendChild(renderer.domElement);
+        
+        // Controles de orbit
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.autoRotate = false;
+        controls.autoRotateSpeed = 2;
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = true;
+        controls.zoomSpeed = 1.0;
+        
+        // Luces
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(500, 1000, 500);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+        
+        // Calcular centro de todos los lotes
+        let centerLat = -38.95, centerLng = -68.07;
         if (geo.perimetro && geo.perimetro.length > 0) {
-            centerLat = (geo.perimetro.reduce((a, p) => a + p[0], 0) / geo.perimetro.length);
-            centerLng = (geo.perimetro.reduce((a, p) => a + p[1], 0) / geo.perimetro.length);
+            centerLat = geo.perimetro.reduce((a, p) => a + p[0], 0) / geo.perimetro.length;
+            centerLng = geo.perimetro.reduce((a, p) => a + p[1], 0) / geo.perimetro.length;
         }
         
-        /* Dibujar lotes en 3D */
+        // Función para convertir lat/lng a coordenadas 3D
+        const latLngToXZ = (lat, lng) => {
+            const scale = 10000; // escala de visualización
+            const x = (lng - centerLng) * scale * Math.cos(centerLat * Math.PI / 180);
+            const z = (lat - centerLat) * scale;
+            return { x, z };
+        };
+        
+        // Dibujar lotes como polígonos 3D
         geo.lotes.forEach(g => {
             const l = LOTES.find(x => x.fid === fid && x.mza === g.mza && x.nro === g.lote);
             const estado = l ? l.estado : g.estadoKml;
             const estilo = COLORES_MAPA[estado] || COLORES_MAPA.disponible;
             
-            const coords = g.coords.map(([lat, lng]) => Cesium.Cartesian3.fromDegrees(lng, lat, 20));
+            // Convertir color hex a THREE.Color
+            const colorHex = estilo.fillColor.replace('#', '0x');
+            const color = new THREE.Color(parseInt(colorHex, 16));
             
-            viewer.entities.add({
-                polygon: {
-                    hierarchy: new Cesium.PolygonHierarchy(coords),
-                    material: Cesium.Color.fromCssColorString(estilo.fillColor),
-                    outline: true,
-                    outlineColor: Cesium.Color.fromCssColorString(estilo.color),
-                    outlineWidth: 2
-                }
+            // Crear geometría del polígono
+            const points = g.coords.map(coord => {
+                const pos = latLngToXZ(coord[0], coord[1]);
+                return new THREE.Vector2(pos.x, pos.z);
             });
+            
+            try {
+                const geometry = new THREE.ShapeGeometry(new THREE.Shape(points));
+                geometry.setAttribute('position', geometry.getAttribute('position'));
+                
+                // Crear material y mesh
+                const material = new THREE.MeshPhongMaterial({
+                    color: color,
+                    emissive: new THREE.Color(color).multiplyScalar(0.3),
+                    shininess: 20
+                });
+                
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.rotation.x = -Math.PI / 2.5;
+                mesh.position.y = Math.random() * 50; // pequeña altura aleatoria
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                scene.add(mesh);
+                
+                // Agregar borde del lote
+                const edges = new THREE.EdgesGeometry(geometry);
+                const lineColor = estilo.color.replace('#', '0x');
+                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
+                    color: parseInt(lineColor, 16),
+                    linewidth: 2
+                }));
+                line.rotation.x = -Math.PI / 2.5;
+                line.position.y = mesh.position.y + 2;
+                scene.add(line);
+            } catch(e) {
+                console.warn('Error dibujando lote:', e);
+            }
         });
         
-        /* Volar a la ubicación - zoom mucho más cercano */
-        setTimeout(() => {
-            try {
-                viewer.camera.flyTo({
-                    destination: Cesium.Cartesian3.fromDegrees(centerLng, centerLat, 400),
-                    duration: 2,
-                    pitch: Cesium.Math.toRadians(-35),
-                    complete: () => {
-                        viewer.scene.requestRender();
-                    }
-                });
-            } catch(e) {
-                console.error('Error en flyTo:', e);
-            }
-        }, 400);
+        // Piso de referencia
+        const groundGeometry = new THREE.PlaneGeometry(30000, 30000);
+        const groundMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xd4c5a0,
+            emissive: 0x9a8976,
+            shininess: 10
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        ground.position.y = -50;
+        scene.add(ground);
         
-        MAPAS_CESIUM[fid] = viewer;
+        // Loop de animación
+        const animate = () => {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        };
+        animate();
+        
+        // Redimensionar
+        const handleResize = () => {
+            const w = mapDiv.clientWidth;
+            const h = mapDiv.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        };
+        window.addEventListener('resize', handleResize);
+        
+        // Guardar referencia
+        MAPAS_CESIUM[fid] = { 
+            scene, 
+            camera, 
+            renderer, 
+            controls,
+            cleanup: () => {
+                window.removeEventListener('resize', handleResize);
+                renderer.dispose();
+            }
+        };
+        
     } catch (error) {
-        console.error('Error al cargar Cesium 3D:', error);
-        mapDiv.innerHTML = '<div style="padding:20px;text-align:center;color:#999;font-size:0.9rem;"><i class="fi fi-rr-exclamation"></i> Cesium 3D no disponible.<br>Verifica tu conexión a internet.</div>';
+        console.error('Error al cargar Three.js 3D:', error);
+        mapDiv.innerHTML = '<div style="padding:20px;text-align:center;color:#999;"><i class="fi fi-rr-exclamation"></i> Error cargando vista 3D.<br>Verifica la consola.</div>';
     }
 }
 
@@ -2448,6 +2562,13 @@ function cambiarVistaM(fid, vista) {
         div2d.style.visibility = 'visible';
         div3d.style.display = 'none';
         div3d.style.visibility = 'hidden';
+        // Limpiar Three.js si existe
+        if (MAPAS_CESIUM[fid] && MAPAS_CESIUM[fid].renderer) {
+            try { 
+                MAPAS_CESIUM[fid].cleanup?.();
+                MAPAS_CESIUM[fid] = null;
+            } catch(e) {}
+        }
         setTimeout(() => {
             if (MAPAS_VIVOS[fid]) MAPAS_VIVOS[fid].invalidateSize();
         }, 100);
@@ -2458,12 +2579,8 @@ function cambiarVistaM(fid, vista) {
         div2d.style.visibility = 'hidden';
         div3d.style.display = 'block';
         div3d.style.visibility = 'visible';
-        if (!MAPAS_CESIUM[fid]) {
+        if (!MAPAS_CESIUM[fid] || !MAPAS_CESIUM[fid].renderer) {
             renderMapa3D(fid);
-        } else {
-            try {
-                MAPAS_CESIUM[fid].scene.requestRender();
-            } catch(e) {}
         }
     }
 }
@@ -5661,6 +5778,39 @@ if (document.readyState === 'loading') {
 } else {
     if (typeof iniciarSplash === 'function') iniciarSplash();
 }
+
+/* ============ DESABILITAR ZOOM EN MÓVIL ============ */
+(function() {
+    // Bloquear zoom con pinch en todos los navegadores
+    document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+    
+    // Bloquear doble tap zoom
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, { passive: false });
+    
+    // Bloquear zoom con teclado (Ctrl/Cmd + +/-)
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '0')) {
+            e.preventDefault();
+        }
+    });
+    
+    // Asegurar que el zoom CSS se mantenga
+    document.documentElement.style.zoom = '75%';
+    window.addEventListener('resize', () => {
+        document.documentElement.style.zoom = '75%';
+    });
+})();
 </script>
 </body>
 </html>
