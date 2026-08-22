@@ -221,6 +221,8 @@ background-size:auto,auto,44px 44px,44px 44px;background-attachment:fixed;}
     #vista-jgastos > .tarjeta,
     #vista-informes > .tarjeta{grid-column:auto;}
     #tarjeta-alertas-g{grid-column:1 / -1;}
+    #vista-inicio > .tarjeta, #vista-jinicio > .tarjeta, #vista-ainicio > .tarjeta{grid-column:auto;}
+    #vista-inicio > .tarjeta:first-of-type, #vista-jinicio > .tarjeta:last-child, #vista-ainicio > .tarjeta:last-child{grid-column:1 / -1;}
     #vista-informes > .tarjeta:last-child{grid-column:1 / -1;}
     #vista-jgastos > .tarjeta:last-child{grid-column:1 / -1;}
 
@@ -2721,6 +2723,8 @@ function renderCursos() {
         </div>`;
     }
     renderTablaCapa();
+    /* Badge: cuántos cursos te faltan completar */
+    ponerBadge('nav-capa', CURSOS.filter((c, i) => !(prog[i] && prog[i].visto)).length, false);
     const alta = document.getElementById('capa-admin-alta'), ctrl = document.getElementById('capa-admin-control');
     if (alta) alta.style.display = puede('admin') ? '' : 'none';
     if (ctrl) ctrl.style.display = (puede('admin') || puede('informes')) ? '' : 'none';
@@ -2888,6 +2892,12 @@ function renderTablaCapa() {
 function renderPanelAge() {
     const k = document.getElementById('age-kpis');
     if (!k) return;
+    /* Aviso al entrar al área si hay coincidencias esperando gestión */
+    const coincTotal = CONSULTAS_CRM.reduce((a, c) => a + c.coincidencias.length, 0);
+    if (AREA === 'age' && coincTotal && !window.avisoAgeMostrado) {
+        window.avisoAgeMostrado = true;
+        setTimeout(() => mostrarPush(`🔎 ${coincTotal} coincidencias esperando en Búsquedas`), 800);
+    }
     const tasHoy = BITACORA.filter(b => b.accion.includes('presupuesto de tasación')).length;
     k.innerHTML = `
         <div class="kpi"><div class="valor serif">${CONSULTAS_CRM.length}</div><div class="nombre">Búsquedas activas</div></div>
@@ -2947,6 +2957,8 @@ function renderCRM() {
         ${c.coincidencias.length ? [...c.coincidencias].sort((a, b) => ((c.favs || []).includes(b.pi) ? 1 : 0) - ((c.favs || []).includes(a.pi) ? 1 : 0) || b.score - a.score).map(x => tarjetaProp(x, i)).join('') : '<div class="aviso alerta">Todavía nada con 55% o más para esta búsqueda. El robot sigue rastreando y avisa apenas aparezca.</div>'}` : ''}
     </div>`;
     }).join('') || '<div class="tarjeta" style="text-align:center;color:var(--piedra);font-size:.9rem;">Sin consultas cargadas. Registrá la primera búsqueda arriba.</div>';
+    /* Badge de movimientos: coincidencias ≥55% vivas en todas las búsquedas */
+    ponerBadge('nav-crm', CONSULTAS_CRM.reduce((a, c) => a + c.coincidencias.length, 0), true);
 }
 function rebuscarCRM(i) {
     const c = CONSULTAS_CRM[i];
@@ -4147,6 +4159,25 @@ function renderStatsPersonas() {
    Todo lo que el Estudio debe repartir de casos ya cobrados: a quién,
    cuánto, y hace cuántos días espera. El badge rojo late en la
    navegación mientras haya deudas internas. */
+
+/* Badge numerado en cualquier pestaña de navegación (como Pagar/Gastos) */
+function ponerBadge(navId, n, conZoom) {
+    const nav = document.getElementById(navId);
+    if (!nav) return;
+    let badge = nav.querySelector('.tab-badge');
+    if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'tab-badge' + (conZoom ? ' zoom' : '');
+        badge.style.position = 'static';
+        badge.style.marginLeft = '4px';
+        nav.appendChild(badge);
+    }
+    badge.innerText = n;
+    badge.style.display = n ? 'inline-flex' : 'none';
+    const icono = nav.querySelector('i');
+    if (icono) icono.style.animation = n ? 'iconoLatido 1.2s ease-in-out infinite' : '';
+}
+
 function todosLosRepartos() {
     const hoy = new Date();
     const filas = [];
