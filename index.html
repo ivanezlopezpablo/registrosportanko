@@ -10,6 +10,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cesium.com/downloads/zip/v1.110/Build/Cesium/Widgets/widgets.css">
+<script src="https://cesium.com/downloads/zip/v1.110/Build/Cesium/Cesium.js"></script>
 <style>
 :root{
   --carmin:#A31621; --carmin-prof:#7A0E17; --carmin-suave:#F3E2E4;
@@ -20,7 +22,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;min-height:100%;}
-body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:16px;}
+body{font-family:'Inter',sans-serif;background:var(--marfil);color:var(--tinta);display:flex;justify-content:center;font-size:13px;}
 .serif{font-family:'Space Grotesk',sans-serif;}
 i.fi{display:inline-flex;vertical-align:middle;}
 ::-webkit-scrollbar{display:none;}
@@ -342,6 +344,46 @@ body{font-size:17px;line-height:1.6;}
 .lote-label span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85), 0 0 2px rgba(0,0,0,.6);pointer-events:none;white-space:nowrap;}
 .leaflet-tooltip{font-family:'Inter',sans-serif;font-size:.88rem;border-radius:10px;border:1.5px solid var(--tinta);padding:8px 12px;line-height:1.5;}
 .leaflet-container{font-family:'Inter',sans-serif;border-radius:0 0 0 0;}
+
+/* ====== MAPAS 2D/3D ====== */
+.mapa-vista-control{position:absolute;top:12px;right:12px;z-index:100;display:flex;gap:6px;background:rgba(255,255,255,.95);border:1px solid var(--linea);border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.btn-vista{background:var(--papel);border:1px solid transparent;color:var(--piedra);font-family:'Inter';font-size:.75rem;padding:8px 12px;cursor:pointer;border-radius:3px;font-weight:600;letter-spacing:.5px;transition:all .2s;text-transform:uppercase;}
+.btn-vista.activo{background:var(--carmin);color:#fff;border-color:var(--carmin);}
+.btn-vista:hover{background:var(--marfil);border-color:var(--piedra);}
+.cesium-container{width:100%;height:100%;border-radius:0;}
+.mapa-contenedor{position:relative;overflow:hidden;}
+
+/* ====== NOTIFICACIONES TOAST ====== */
+.toast-container{position:fixed;top:60px;right:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{background:var(--papel);border:1.2px solid var(--linea);border-radius:6px;padding:14px 16px;box-shadow:0 8px 24px rgba(0,0,0,.15);display:flex;align-items:center;gap:10px;font-size:.88rem;animation:slideIn .3s ease-out;pointer-events:all;max-width:320px;}
+.toast.exito{border-left:4px solid var(--ok);background:var(--ok-suave);}
+.toast.error{border-left:4px solid var(--rojo-error);background:var(--rojo-suave);}
+.toast.info{border-left:4px solid var(--oro);background:var(--oro-suave);}
+.toast i{font-size:1.3rem;}
+.toast.exito i{color:var(--ok);}
+.toast.error i{color:var(--rojo-error);}
+.toast.info i{color:var(--oro);}
+@keyframes slideIn{from{transform:translateX(360px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* ====== ICONOS DINÁMICOS CON ANIMACIONES ====== */
+.icon-animated{display:inline-flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(0.34, 1.56, 0.64, 1);}
+.icon-pulse{animation:pulse 2s ease-in-out infinite;}
+.icon-bounce{animation:bounce .6s ease-in-out;}
+.icon-spin{animation:spin .8s linear infinite;}
+.icon-flip{animation:flip .6s ease-in-out;}
+.icon-float{animation:float 3s ease-in-out infinite;}
+.icon-pulse-glow{animation:pulseGlow 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:.8;}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes flip{0%{transform:rotateY(0deg);}50%{transform:rotateY(90deg);}100%{transform:rotateY(0deg);}}
+@keyframes float{0%,100%{transform:translateY(0px);}50%{transform:translateY(-6px);}}
+@keyframes pulseGlow{0%,100%{filter:drop-shadow(0 0 0px currentColor);}50%{filter:drop-shadow(0 0 8px currentColor);}}
+
+/* Hover interactivo en iconos */
+.icon-hover:hover{transform:scale(1.2) rotate(5deg);}
+i.fi{transition:all .3s ease;}
+button:hover i.fi,a:hover i.fi{transform:scale(1.15);}
 
 /* Escritorio: la letra de la barra lateral y espacios, a la altura */
 @media (min-width:1024px){
@@ -779,10 +821,10 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
             </div>
         </div>
         <label class="login-lbl">Correo</label>
-        <input type="email" class="login-inp" id="login-email" placeholder="tu@portanko.com" autocomplete="username">
+        <input type="email" class="login-inp" id="login-email" placeholder="tu@portanko.com" autocomplete="username" onkeypress="if(event.key==='Enter') ingresar()">
         <label class="login-lbl">Contraseña</label>
         <div style="position:relative;">
-            <input type="password" class="login-inp" id="login-pass" placeholder="••••••••" style="padding-right:46px;" autocomplete="current-password">
+            <input type="password" class="login-inp" id="login-pass" placeholder="••••••••" style="padding-right:46px;" autocomplete="current-password" onkeypress="if(event.key==='Enter') ingresar()">
             <button type="button" id="ojo-clave" onclick="toggleClave()" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:none;cursor:pointer;color:var(--piedra);padding:8px;font-size:1.05rem;" title="Mostrar contraseña"><i class="fi fi-rr-eye"></i></button>
         </div>
         <button class="btn-ingresar" onclick="ingresar()"><i class="fi fi-rr-lock" style="margin-right:6px;"></i>Ingresar</button>
@@ -791,6 +833,9 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
         <div class="sello-proto">Prototipo · Datos de demostración</div>
     </div>
 </div>
+
+<!-- ============ CONTENEDOR DE NOTIFICACIONES ============ -->
+<div id="toast-container" class="toast-container"></div>
 
 <!-- ============ CARGADOR ============ -->
 <div id="cargador">
@@ -981,7 +1026,10 @@ box-shadow:0 0 50px rgba(201,162,75,.1), 0 30px 80px rgba(0,0,0,.65);}
         </div>
 
         <div class="chips-filtro" id="chips-cli"></div>
-        <input class="form-inp" id="buscar-cli" placeholder="Buscar por nombre, DNI o lote..." oninput="renderClientes()">
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+            <input class="form-inp" id="buscar-cli" placeholder="Buscar por nombre, DNI o lote..." oninput="renderClientes()" style="flex:1;">
+            <button class="btn oro" onclick="abrirBuscadorClientes()" title="Búsqueda rápida y avanzada"><i class="fi fi-rr-search"></i> Búsqueda rápida</button>
+        </div>
         <div id="lista-clientes" style="margin-top:10px;"></div>
     </div>
 
@@ -1498,15 +1546,15 @@ function estadoInicial() {
 estadoInicial();
 
 let CLIENTES = [
-    { fid:'AER', nombre:'G. José Manuel', dni:'26.458.xxx', mza:'C', lote:13, valor:26820, pagado:26820, cuotas:36, vCuota:427, estado:'PAGADO', ultPago:'2025-07-10', vendedor:'Belén B.' },
-    { fid:'AER', nombre:'S. Coronel Anita Paula', dni:'34.812.xxx', mza:'C', lote:23, valor:16800, pagado:16800, cuotas:0, vCuota:0, estado:'PAGADO', ultPago:'2022-10-24', vendedor:'Sergio A.', obs:'Pago Contado USD', detalles:'Lote confirmado en la mensura oficial: 300 m² (25×12). El polígono del mapa fue reconstruido por el sistema (no estaba dibujado en My Maps).' },
-    { fid:'AER', nombre:'C. Sergio Daniel', dni:'35.885.xxx', mza:'C', lote:15, valor:23000, pagado:13000, cuotas:60, vCuota:250, estado:'FINANCIA', ultPago:'2026-08-05', vendedor:'Sergio A.' },
-    { fid:'AER', nombre:'R. Laura Daniela', dni:'30.116.xxx', mza:'C', lote:1, valor:23000, pagado:13750, cuotas:60, vCuota:250, estado:'FINANCIA', ultPago:'2026-06-11', vendedor:'Sergio A.' },
-    { fid:'AER', nombre:'F. y F. Romero', dni:'27.912.xxx', mza:'D', lote:10, valor:32000, pagado:19500, cuotas:55, vCuota:500, estado:'FINANCIA', ultPago:'2026-08-14', vendedor:'Pablo I.' },
-    { fid:'AER', nombre:'R. V. Nery Hernán', dni:'36.840.xxx', mza:'D', lote:14, valor:27000, pagado:5500, cuotas:60, vCuota:300, estado:'FINANCIA', ultPago:'2026-05-02', vendedor:'Pablo I.' },
-    { fid:'DG', nombre:'V. Ignacia Irene', dni:'5.580.xxx', mza:'A', lote:11, valor:87000, pagado:76850, cuotas:60, vCuota:800, estado:'FINANCIA', ultPago:'2026-08-08', vendedor:'—' },
-    { fid:'DG', nombre:'F. José B.', dni:'33.503.xxx', mza:'A', lote:1, valor:180330, pagado:71130, cuotas:60, vCuota:1500, estado:'FINANCIA', ultPago:'2026-07-30', vendedor:'Sergio A.' },
-    { fid:'DG', nombre:'L. Juan Pablo y A.', dni:'23.168.xxx', mza:'C', lote:2, valor:47000, pagado:47000, cuotas:0, vCuota:0, estado:'PAGADO', ultPago:'2024-04-15', vendedor:'Sergio A.' }
+    { fid:'AER', nombre:'G. José Manuel', dni:'26.458.xxx', mza:'C', lote:13, valor:26820, pagado:26820, cuotas:36, vCuota:427, estado:'PAGADO', ultPago:'2025-07-10', vendedor:'Belén B.', atenciones:[{fecha:'2026-08-19 14:30', usuario:'María', tipo:'Pago', desc:'Pago de cuota via transferencia'}] },
+    { fid:'AER', nombre:'S. Coronel Anita Paula', dni:'34.812.xxx', mza:'C', lote:23, valor:16800, pagado:16800, cuotas:0, vCuota:0, estado:'PAGADO', ultPago:'2022-10-24', vendedor:'Sergio A.', obs:'Pago Contado USD', detalles:'Lote confirmado en la mensura oficial: 300 m² (25×12). El polígono del mapa fue reconstruido por el sistema (no estaba dibujado en My Maps).', atenciones:[{fecha:'2022-10-24 09:15', usuario:'Lucía', tipo:'Venta', desc:'Venta completada pago contado'}] },
+    { fid:'AER', nombre:'C. Sergio Daniel', dni:'35.885.xxx', mza:'C', lote:15, valor:23000, pagado:13000, cuotas:60, vCuota:250, estado:'FINANCIA', ultPago:'2026-08-05', vendedor:'Sergio A.', atenciones:[{fecha:'2025-03-10 11:00', usuario:'Sergio A.', tipo:'Registro', desc:'Cliente registrado - búsqueda de lotes en Mza C'}, {fecha:'2026-08-05 10:45', usuario:'María', tipo:'Pago', desc:'Cuota 15/60 pagada'}] },
+    { fid:'AER', nombre:'R. Laura Daniela', dni:'30.116.xxx', mza:'C', lote:1, valor:23000, pagado:13750, cuotas:60, vCuota:250, estado:'FINANCIA', ultPago:'2026-06-11', vendedor:'Sergio A.', atenciones:[{fecha:'2025-05-20 15:30', usuario:'Sergio A.', tipo:'Registro', desc:'Cliente registrado'}, {fecha:'2026-06-11 09:20', usuario:'María', tipo:'Pago', desc:'Cuota 14/60 pagada'}] },
+    { fid:'AER', nombre:'F. y F. Romero', dni:'27.912.xxx', mza:'D', lote:10, valor:32000, pagado:19500, cuotas:55, vCuota:500, estado:'FINANCIA', ultPago:'2026-08-14', vendedor:'Pablo I.', atenciones:[{fecha:'2025-11-08 13:45', usuario:'Pablo I.', tipo:'Registro', desc:'Pareja registrada'}, {fecha:'2026-08-14 11:00', usuario:'María', tipo:'Pago', desc:'Cuota 10/55 pagada'}] },
+    { fid:'AER', nombre:'R. V. Nery Hernán', dni:'36.840.xxx', mza:'D', lote:14, valor:27000, pagado:5500, cuotas:60, vCuota:300, estado:'FINANCIA', ultPago:'2026-05-02', vendedor:'Pablo I.', atenciones:[{fecha:'2025-02-15 10:30', usuario:'Pablo I.', tipo:'Registro', desc:'Cliente registrado'}] },
+    { fid:'DG', nombre:'V. Ignacia Irene', dni:'5.580.xxx', mza:'A', lote:11, valor:87000, pagado:76850, cuotas:60, vCuota:800, estado:'FINANCIA', ultPago:'2026-08-08', vendedor:'—', atenciones:[{fecha:'2025-06-22 14:00', usuario:'Lucía', tipo:'Registro', desc:'Cliente registrado'}, {fecha:'2026-08-08 10:15', usuario:'María', tipo:'Pago', desc:'Cuota 54/60 pagada'}] },
+    { fid:'DG', nombre:'F. José B.', dni:'33.503.xxx', mza:'A', lote:1, valor:180330, pagado:71130, cuotas:60, vCuota:1500, estado:'FINANCIA', ultPago:'2026-07-30', vendedor:'Sergio A.', atenciones:[{fecha:'2025-01-30 11:45', usuario:'Sergio A.', tipo:'Registro', desc:'Cliente registrado - lote importante'}, {fecha:'2026-07-30 09:00', usuario:'María', tipo:'Pago', desc:'Cuota 47/60 pagada'}] },
+    { fid:'DG', nombre:'L. Juan Pablo y A.', dni:'23.168.xxx', mza:'C', lote:2, valor:47000, pagado:47000, cuotas:0, vCuota:0, estado:'PAGADO', ultPago:'2024-04-15', vendedor:'Sergio A.', atenciones:[{fecha:'2023-08-10 15:20', usuario:'Sergio A.', tipo:'Registro', desc:'Pareja registrada'}, {fecha:'2024-04-15 10:30', usuario:'María', tipo:'Pago', desc:'Pago final completado'}] }
 ];
 
 let CUENTAS = [
@@ -1517,8 +1565,8 @@ let CUENTAS = [
 ];
 
 let MOVIMIENTOS = [
-    { fid:'DG', fecha:'2026-08-18', tipo:'Depósito en banco', detalle:'USD 5.000 de Caja Fuerte a CAU$', monto:5000, usuario:'Lucía' },
-    { fid:'AER', fecha:'2026-08-12', tipo:'Pago de gasto de obra', detalle:'Mano de obra red de agua · Factura 214', monto:2140, usuario:'Lucía' }
+    { fid:'DG', fecha:'2026-08-18', tipo:'Depósito en banco', detalle:'USD 5.000 de Caja Fuerte a CAU$', monto:5000, usuario:'Lucía', documentos:[{nombre:'Comprobante transferencia bancaria', tipo:'PDF', tamaño:'245 KB'}, {nombre:'Ticket Banco CAU$', tipo:'PDF', tamaño:'128 KB'}] },
+    { fid:'AER', fecha:'2026-08-12', tipo:'Pago de gasto de obra', detalle:'Mano de obra red de agua · Factura 214', monto:2140, usuario:'Lucía', documentos:[{nombre:'Factura 214 - Empresa Construcciones SA', tipo:'PDF', tamaño:'312 KB'}, {nombre:'Foto comprobante de pago', tipo:'JPG', tamaño:'2.8 MB'}] }
 ];
 
 let NOVEDADES = [
@@ -1738,9 +1786,9 @@ const VISTAS_ROL = {
 const VISTAS_JUR = ['jinicio', 'casos', 'jcobrar', 'jpagar', 'jgastos', 'jbitacora'];
 const VISTAS_AGE = ['ainicio', 'crm', 'atasaciones', 'capa'];
 const AREAS_INFO = {
-    inm: { nombre: 'Fideicomisos', icono: '🏛', desc: 'Aeroparque · Don Guarino · lotes, clientes y cobranzas' },
-    age: { nombre: 'Inmobiliaria', icono: '🏢', desc: 'Atención al público · búsquedas en portales · tasaciones' },
-    jur: { nombre: 'Estudio Jurídico', icono: '⚖️', desc: 'Casos, cobros, cascada de reparto y gastos' }
+    inm: { nombre: 'Fideicomisos', icono: '<i class="fi fi-rr-building icon-animated icon-bounce" style="color:var(--oro);"></i>', desc: 'Aeroparque · Don Guarino · lotes, clientes y cobranzas' },
+    age: { nombre: 'Inmobiliaria', icono: '<i class="fi fi-rr-home icon-animated icon-float" style="color:var(--carmin);"></i>', desc: 'Atención al público · búsquedas en portales · tasaciones' },
+    jur: { nombre: 'Estudio Jurídico', icono: '<i class="fi fi-rr-scale icon-animated icon-pulse" style="color:var(--tinta);"></i>', desc: 'Casos, cobros, cascada de reparto y gastos' }
 };
 const NAV_DEF = {
     inicio: ['fi-rr-bank', 'Inicio'], lotes: ['fi-rr-map', 'Lotes'], clientes: ['fi-rr-users-alt', 'Clientes'],
@@ -1767,7 +1815,7 @@ function iniciarApp() {
             cambio.onclick = cambiarArea;
             document.querySelector('.topbar .der').appendChild(cambio);
         }
-        cambio.innerText = '⇄ Áreas · ' + AREAS_INFO[AREA].icono;
+        cambio.innerHTML = '<i class="fi fi-rr-right-left icon-hover" style="margin-right:6px;"></i>Áreas · ' + AREAS_INFO[AREA].icono;
     } else if (cambio) { cambio.remove(); }
 
     const nav = document.getElementById('nav');
@@ -2130,21 +2178,51 @@ const COLORES_MAPA = {
     conflicto:  { color: '#FFFFFF', fillColor: '#E11D2E', fillOpacity: 0.75, weight: 2.6, dashArray: '7 5', lineJoin: 'round' }
 };
 
+let VISTAS_ACTIVAS = { AER: '2d', DG: '2d' };
+let MAPAS_CESIUM = { AER: null, DG: null };
+
 function initMapaVivo(fid) {
     const div = document.getElementById('mapa-lf-' + fid);
     if (!div || !window.L) return;
+    
+    /* Limpiar mapa anterior */
     if (MAPAS_VIVOS[fid]) { MAPAS_VIVOS[fid].remove(); MAPAS_VIVOS[fid] = null; }
-    const mapa = L.map(div, { scrollWheelZoom: true });
+    if (MAPAS_CESIUM[fid]) { MAPAS_CESIUM[fid].destroy(); MAPAS_CESIUM[fid] = null; }
+    
+    /* Agregar botones de cambio de vista */
+    div.innerHTML = `<div style="position:relative;width:100%;height:100%;">
+        <div class="mapa-vista-control">
+            <button class="btn-vista activo" onclick="cambiarVistaM('${fid}', '2d')"><i class="fi fi-rr-map"></i> 2D</button>
+            <button class="btn-vista" onclick="cambiarVistaM('${fid}', '3d')"><i class="fi fi-rr-globe"></i> 3D</button>
+        </div>
+        <div id="mapa-2d-${fid}" style="width:100%;height:100%;"></div>
+        <div id="mapa-3d-${fid}" style="width:100%;height:100%;display:none;"></div>
+    </div>`;
+    
+    renderMapa2D(fid);
+}
+
+function renderMapa2D(fid) {
+    const mapDiv = document.getElementById('mapa-2d-' + fid);
+    if (!mapDiv) return;
+    
+    if (MAPAS_VIVOS[fid]) { MAPAS_VIVOS[fid].remove(); }
+    const mapa = L.map(mapDiv, { scrollWheelZoom: true, attributionControl: false });
     MAPAS_VIVOS[fid] = mapa;
+    
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 20, attribution: 'Imágenes © Esri'
     }).addTo(mapa);
 
     const geo = GEOS[fid];
+    let bounds = null;
+    
     if (geo.perimetro) {
-        L.polygon(geo.perimetro, { color: '#B08D3E', weight: 3, fill: false, dashArray: '10 6' }).addTo(mapa);
-        mapa.fitBounds(L.polygon(geo.perimetro).getBounds(), { padding: [12, 12] });
+        const perimPoly = L.polygon(geo.perimetro, { color: '#B08D3E', weight: 3, fill: false, dashArray: '10 6' });
+        perimPoly.addTo(mapa);
+        bounds = perimPoly.getBounds();
     }
+    
     geo.especiales.forEach((e, ei) => {
         const esVerde = e.destino === 'verde';
         const pol = L.polygon(e.coords, { color: '#FFFFFF', fillColor: esVerde ? '#4E8F5C' : '#7B8494', fillOpacity: 0.55, weight: 2, dashArray: esVerde ? null : '6 4' }).addTo(mapa);
@@ -2152,19 +2230,18 @@ function initMapaVivo(fid) {
         pol.on('click', () => verEspecial(fid, ei));
         const c = pol.getBounds().getCenter();
         L.marker(c, { interactive: false, icon: L.divIcon({ className: 'lote-label', html: `<span>${esVerde ? '🌳' : 'R.F.'}</span>`, iconSize: [0, 0] }) }).addTo(mapa);
+        if (!bounds) bounds = pol.getBounds(); else bounds.extend(pol.getBounds());
     });
-    /* Los colores salen del ESTADO ACTUAL del sistema, no del dibujo */
+    
     geo.lotes.forEach(g => {
         const l = LOTES.find(x => x.fid === fid && x.mza === g.mza && x.nro === g.lote);
         const estado = l ? l.estado : g.estadoKml;
         const estilo = COLORES_MAPA[estado] || COLORES_MAPA.disponible;
         const pol = L.polygon(g.coords, { ...estilo, smoothFactor: 0.6 }).addTo(mapa);
 
-        /* Número del lote centrado sobre la parcela (como los planos comerciales) */
         const centro = pol.getBounds().getCenter();
         L.marker(centro, { interactive: false, icon: L.divIcon({ className: 'lote-label', html: `<span>${g.lote}</span>`, iconSize: [0, 0] }) }).addTo(mapa);
 
-        /* Tooltip con medidas informadas y, si está vendido, el cliente */
         const cli = CLIENTES.find(c => c.fid === fid && c.mza === g.mza && c.lote === g.lote);
         const rotulo = estado === 'conflicto' ? '⚠ A REGULARIZAR' : estado.charAt(0).toUpperCase() + estado.slice(1);
         pol.bindTooltip(`<b>Mza ${g.mza} · Lote ${g.lote}</b><br>` +
@@ -2173,7 +2250,86 @@ function initMapaVivo(fid) {
             (cli ? `<br>👤 <b>Comprado por: ${cli.nombre}</b><br>Pagó ${usd(cli.pagado)} de ${usd(cli.valor)}${cli.valor > cli.pagado ? ' · debe ' + usd(cli.valor - cli.pagado) : ' · al día ✓'}` : '') +
             `<br><span style="color:#8A8378;font-size:.76rem;">${cli ? 'Tocá para ver el cliente, sus pagos y constancias' : 'Tocá para abrir la ficha'}</span>`, { sticky: true });
         pol.on('click', () => verLote(fid, g.mza, g.lote));
+        if (!bounds) bounds = pol.getBounds(); else bounds.extend(pol.getBounds());
     });
+    
+    /* FitBounds mejorado: espera a que cargue el mapa */
+    setTimeout(() => {
+        if (bounds && bounds.isValid()) {
+            mapa.fitBounds(bounds, { padding: [80, 80], maxZoom: 15, zoom: 14 });
+        }
+    }, 300);
+}
+
+function renderMapa3D(fid) {
+    const mapDiv = document.getElementById('mapa-3d-' + fid);
+    if (!mapDiv || !window.Cesium) return;
+    
+    if (MAPAS_CESIUM[fid]) { MAPAS_CESIUM[fid].destroy(); }
+    
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ZDYyNzg1YS01NjU0LTQ0ZTItODg2YS04MDg5Y2FmYTgyMDAiLCJpZCI6MTc3MzU2LCJpYXQiOjE3MjAwNzc5MDh9.zyeSOHDmfJXDzqCPg9wYa7xg0x-KYXvNi_IFDDNfUCw';
+    
+    const viewer = new Cesium.Viewer(mapDiv, {
+        terrainProvider: Cesium.CesiumTerrainProvider.fromUrl(Cesium.IonResource.fromAssetId(1),{requestVertexNormals: true}),
+        imageryProvider: Cesium.ArcGisMapServerImageryProvider.fromUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'),
+        animation: false, timeline: false
+    });
+    viewer.scene.globe.enableLighting = true;
+    
+    const geo = GEOS[fid];
+    let centerLat = -38.95, centerLng = -68.07;
+    
+    if (geo.perimetro && geo.perimetro.length > 0) {
+        centerLat = (geo.perimetro.reduce((a, p) => a + p[0], 0) / geo.perimetro.length);
+        centerLng = (geo.perimetro.reduce((a, p) => a + p[1], 0) / geo.perimetro.length);
+    }
+    
+    /* Dibujar lotes en 3D */
+    geo.lotes.forEach(g => {
+        const l = LOTES.find(x => x.fid === fid && x.mza === g.mza && x.nro === g.lote);
+        const estado = l ? l.estado : g.estadoKml;
+        const estilo = COLORES_MAPA[estado] || COLORES_MAPA.disponible;
+        
+        const coords = g.coords.map(([lat, lng]) => Cesium.Cartesian3.fromDegrees(lng, lat, 20));
+        const polygon = Cesium.Cartesian3.fromDegreesArray(g.coords.flatMap(([lat, lng]) => [lng, lat]));
+        
+        viewer.entities.add({
+            polygon: {
+                hierarchy: new Cesium.PolygonHierarchy(coords),
+                material: Cesium.Color.fromCssColorString(estilo.fillColor),
+                outline: true, outlineColor: Cesium.Color.fromCssColorString(estilo.color)
+            }
+        });
+    });
+    
+    viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(centerLng, centerLat, 2500),
+        duration: 2
+    });
+    
+    MAPAS_CESIUM[fid] = viewer;
+}
+
+function cambiarVistaM(fid, vista) {
+    VISTAS_ACTIVAS[fid] = vista;
+    const btn2d = event.target.parentElement.querySelector('[onclick*="2d"]');
+    const btn3d = event.target.parentElement.querySelector('[onclick*="3d"]');
+    const div2d = document.getElementById('mapa-2d-' + fid);
+    const div3d = document.getElementById('mapa-3d-' + fid);
+    
+    if (vista === '2d') {
+        btn2d.classList.add('activo');
+        btn3d.classList.remove('activo');
+        div2d.style.display = 'block';
+        div3d.style.display = 'none';
+        if (MAPAS_VIVOS[fid]) MAPAS_VIVOS[fid].invalidateSize();
+    } else {
+        btn2d.classList.remove('activo');
+        btn3d.classList.add('activo');
+        div2d.style.display = 'none';
+        div3d.style.display = 'block';
+        if (!MAPAS_CESIUM[fid]) renderMapa3D(fid);
+    }
 }
 
 function renderMapaVivo() {
@@ -3558,13 +3714,16 @@ async function darAltaCliente() {
     const boleto = (document.getElementById('alta-boleto').files || []).length;
     const comps = (document.getElementById('alta-comprobantes').files || []).length;
     if (window.conversionReserva) { delete l.reserva; window.conversionReserva = null; }
+    const newClienteIdx = CLIENTES.length;
     CLIENTES.push({ fid, nombre, dni, mza, lote: nro, valor, pagado: contado ? valor : entrega, docBoleto: boleto, docComprobantes: comps,
         cuotas, vCuota, estado: contado ? 'PAGADO' : 'FINANCIA',
         ultPago: document.getElementById('alta-fecha').value || hoyISO(), vendedor,
         tipoLote: document.getElementById('alta-tipo').value, obs,
         entrega, entregaFinal: eFinal, fecha1c: document.getElementById('alta-f1c').value,
         cotizacion: document.getElementById('alta-cotiz').value, detalles: document.getElementById('alta-detalles').value,
-        fechaInicio: document.getElementById('alta-fecha').value || hoyISO(), comision: Math.round(valor * 0.05 * 100) / 100 });
+        fechaInicio: document.getElementById('alta-fecha').value || hoyISO(), comision: Math.round(valor * 0.05 * 100) / 100, atenciones: [] });
+    registrarAtencion(newClienteIdx, 'Registro', `Cliente registrado - ${obs} - Mza ${mza} Lote ${nro}`);
+    mostrarNotificacion(`Cliente ${nombre} registrado con éxito`, 'exito', 4000);
     l.estado = 'vendido';
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`,
         accion: `ALTA de cliente ${nombre} (DNI ${dni}) · Mza ${mza} Lote ${nro} ${FIDEICOMISOS[fid].nombre} · ${obs} · ${usd(valor)} · vendedor ${vendedor}` });
@@ -3704,6 +3863,15 @@ function fichaCliente(idx) {
     const filas = pagos.length ? pagos.map(p =>
         `<div class="recibo-fila"><span>${p.fecha} · ${p.detalle} · Recibo ${p.recibo}</span><b>${usd(p.monto)} <small>📎${p.constancias}</small></b></div>`).join('')
         : '<div class="item-lista">Sin pagos registrados aún.</div>';
+    
+    const atenciones = (c.atenciones || []).map(a => {
+        const iconos = { 'Pago': '💰', 'Venta': '🏠', 'Registro': '📝', 'Llamada': '📞', 'Email': '📧' };
+        return `<div class="item-lista" style="border-left:3px solid var(--oro);padding-left:10px;">
+            <small style="color:var(--piedra);">${a.fecha} · ${a.usuario}</small><br>
+            <b>${iconos[a.tipo] || '·'} ${a.tipo}</b> · ${a.desc}
+        </div>`;
+    }).join('');
+    
     document.getElementById('modal-doc-caja').innerHTML = `
         <h3 class="serif">${c.nombre}</h3>
         <div style="font-size:.78rem;color:var(--piedra);letter-spacing:.5px;margin-bottom:8px;">DNI ${c.dni} · Mza ${c.mza} Lote ${c.lote} · ${FIDEICOMISOS[c.fid].nombre}${c.tipoLote ? ' · ' + c.tipoLote : ''}</div>
@@ -3724,6 +3892,8 @@ function fichaCliente(idx) {
         <div class="recibo-fila"><span>🧾 Comprobantes de entrega</span><b>${c.docComprobantes ? c.docComprobantes + ' archivo/s ✓' : '⚠ Pendientes'}</b></div>
         <div class="etiqueta" style="margin-top:16px;">Historial de pagos (${pagos.length}) · con constancias 📎</div>
         ${filas}
+        <div class="etiqueta" style="margin-top:16px;">Historial de atenciones (${c.atenciones ? c.atenciones.length : 0})</div>
+        ${atenciones || '<div class="item-lista">Sin atenciones registradas.</div>'}
         <button class="btn carmin" onclick="pdfInformeCliente(${idx})"><i class="fi fi-rr-document"></i> Informe de Pagos (PDF con membrete)</button>
         <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
     document.getElementById('modal-doc').style.display = 'flex';
@@ -3822,6 +3992,7 @@ async function registrarCobro() {
     const nroRecibo = 119 + COBROS.length - 2;
     const reciboFisico = document.getElementById('cobro-recibo-fisico').value.trim();
     const talonario = document.getElementById('cobro-talonario').value.trim();
+    const clienteIdx = CLIENTES.indexOf(c);
     c.pagado += monto;
     c.ultPago = hoyISO();
     /* Si con este cobro completó el valor del lote, el sistema lo pasa
@@ -3833,6 +4004,9 @@ async function registrarCobro() {
         BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${PERSONA.rotulo})`, accion: `🎉 ${c.nombre} COMPLETÓ EL PAGO de Mza ${c.mza} Lote ${c.lote} (${FIDEICOMISOS[c.fid].nombre}) · pasó a PAGADO automáticamente` });
     }
     COBROS.unshift({ fid: c.fid, fecha: hoyISO(), cliente: c.nombre, monto, recibo: nroRecibo, reciboFisico, talonario, usuario: USUARIO });
+    registrarAtencion(clienteIdx, 'Pago', `Cobro registrado ${usd(monto)} · Recibo ${nroRecibo} · ${medio}`);
+    mostrarNotificacion(`Cobro de ${usd(monto)} registrado`, 'exito', 3000);
+    if (saldoCompleto) mostrarNotificacion(`${c.nombre} completó el pago del lote`, 'exito', 4000);
     notificar(`💵 Cobro registrado: ${usd(monto)} a ${c.nombre}`, `Por ${USUARIO} · Recibo ${nroRecibo}`);
     if (saldoCompleto) notificar(`🎉 ${c.nombre} saldó su lote Mza ${c.mza} L${c.lote}`, FIDEICOMISOS[c.fid].nombre);
     const cuentaCaja = CUENTAS.find(x => x.fid === c.fid && x.moneda === 'USD');
@@ -3887,10 +4061,62 @@ function registrarMovimiento() {
     renderMovimientos(); renderBitacora();
 }
 function renderMovimientos() {
-    document.getElementById('lista-movimientos').innerHTML = enFid(MOVIMIENTOS).map(m =>
-        `<div class="item-lista"><b>${m.tipo}</b> · <span class="monto-usd">${usd(m.monto)}</span>
-        <button class="btn-mini rojo" style="float:right;margin:0;" onclick="anularMovimiento(${MOVIMIENTOS.indexOf(m)})"><i class="fi fi-rr-trash"></i></button>
-        <small>${m.fecha} · ${m.detalle} · por ${m.usuario} · ${FIDEICOMISOS[m.fid].nombre}</small></div>`).join('') || '<div class="item-lista">Sin movimientos.</div>';
+    document.getElementById('lista-movimientos').innerHTML = enFid(MOVIMIENTOS).map((m, idx) =>
+        `<div class="item-lista item-interactivo" style="cursor:pointer;transition:all .2s;" onclick="verDetalleMovimiento(${MOVIMIENTOS.indexOf(m)})" onmouseover="this.style.background='var(--oro-suave);this.style.transform='translateX(4px)'" onmouseout="this.style.background='transparent';this.style.transform='translateX(0)'">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <b>${m.tipo}</b> · <span class="monto-usd">${usd(m.monto)}</span>
+                    <small style="display:block;margin-top:4px;">${m.fecha} · ${m.detalle} · por ${m.usuario} · ${FIDEICOMISOS[m.fid].nombre}</small>
+                </div>
+                <div style="text-align:right;">
+                    ${m.documentos && m.documentos.length ? `<span class="sello oro" style="font-size:.65rem;margin-right:8px;"><i class="fi fi-rr-document"></i> ${m.documentos.length}</span>` : ''}
+                    <button class="btn-mini rojo" style="margin:0;" onclick="event.stopPropagation();anularMovimiento(${MOVIMIENTOS.indexOf(m)})"><i class="fi fi-rr-trash"></i></button>
+                </div>
+            </div>
+        </div>`).join('') || '<div class="item-lista">Sin movimientos.</div>';
+}
+
+function verDetalleMovimiento(idx) {
+    const m = MOVIMIENTOS[idx];
+    if (!m) return;
+    const docsHTML = m.documentos && m.documentos.length ? 
+        `<div class="etiqueta" style="margin-top:14px;">Documentos adjuntados (${m.documentos.length})</div>
+        ${m.documentos.map(d => `
+            <div class="item-lista" style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-left:3px solid var(--oro);">
+                <div>
+                    <b>${d.nombre}</b><br>
+                    <small style="color:var(--piedra);">${d.tipo} · ${d.tamaño}</small>
+                </div>
+                <button class="btn-mini" onclick="descargarDocumento('${d.nombre}', '${d.tipo}')" title="Descargar documento">
+                    <i class="fi fi-rr-download"></i>
+                </button>
+            </div>
+        `).join('')}` : '<div class="aviso alerta" style="margin-top:10px;">Sin documentos adjuntados.</div>';
+    
+    document.getElementById('modal-doc-caja').innerHTML = `
+        <h3 class="serif">Detalle del Movimiento</h3>
+        <div style="margin-top:12px;">
+            <div class="recibo-fila"><span>Tipo</span><b>${m.tipo}</b></div>
+            <div class="recibo-fila"><span>Monto</span><b>${usd(m.monto)}</b></div>
+            <div class="recibo-fila"><span>Descripción</span><b>${m.detalle}</b></div>
+            <div class="recibo-fila"><span>Fecha</span><b>${m.fecha}</b></div>
+            <div class="recibo-fila"><span>Registrado por</span><b>${m.usuario}</b></div>
+            <div class="recibo-fila"><span>Fideicomiso</span><b>${FIDEICOMISOS[m.fid].nombre}</b></div>
+        </div>
+        ${docsHTML}
+        <button class="btn borde" onclick="cerrarModal()" style="margin-top:14px;width:100%;">Cerrar</button>`;
+    document.getElementById('modal-doc').style.display = 'flex';
+}
+
+function descargarDocumento(nombre, tipo) {
+    mostrarNotificacion(`Descargando ${nombre}...`, 'info', 2000);
+    setTimeout(() => {
+        const elemento = document.createElement('a');
+        elemento.href = '#';
+        elemento.download = nombre + '.' + tipo.toLowerCase();
+        documento.click();
+        mostrarNotificacion(`${nombre} descargado`, 'exito', 2000);
+    }, 500);
 }
 
 async function anularMovimiento(i) {
@@ -4883,6 +5109,78 @@ async function descargarContable(tipo) {
 
 const hoyISO = () => new Date().toISOString().slice(0, 10);
 const ahora = () => hoyISO() + ' ' + new Date().toTimeString().slice(0, 5);
+
+/* ====== NOTIFICACIONES TOAST ====== */
+function mostrarNotificacion(mensaje, tipo = 'exito', duracion = 3000) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    const iconos = { 
+        exito: '<i class="fi fi-rr-check-circle icon-bounce" style="font-size:1.3rem;"></i>', 
+        error: '<i class="fi fi-rr-circle-xmark icon-bounce" style="font-size:1.3rem;"></i>', 
+        info: '<i class="fi fi-rr-info icon-pulse" style="font-size:1.3rem;"></i>' 
+    };
+    toast.innerHTML = `${iconos[tipo]}<span>${mensaje}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'slideOut .3s ease-in';
+        toast.style.transform = 'translateX(360px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, duracion);
+}
+
+/* ====== REGISTRO DE ATENCIONES ====== */
+function registrarAtencion(clienteIdx, tipo, descripcion) {
+    if (!CLIENTES[clienteIdx]) return;
+    if (!CLIENTES[clienteIdx].atenciones) CLIENTES[clienteIdx].atenciones = [];
+    CLIENTES[clienteIdx].atenciones.unshift({
+        fecha: ahora(),
+        usuario: USUARIO,
+        tipo: tipo,
+        desc: descripcion
+    });
+}
+
+/* ====== BÚSQUEDA RÁPIDA DE CLIENTES ====== */
+function abrirBuscadorClientes() {
+    const html = `
+        <div style="margin-bottom:16px;">
+            <input type="text" id="busca-cliente-inp" placeholder="Buscar por nombre, DNI o lote..." 
+                   style="width:100%;border:1.2px solid var(--linea);padding:10px 12px;border-radius:4px;font-family:'Inter';font-size:.95rem;"
+                   oninput="filtrarClientesBusca()">
+        </div>
+        <div style="max-height:400px;overflow-y:auto;border:1px solid var(--linea);border-radius:4px;padding:8px;">
+            <div id="busca-resultados" style="font-size:.85rem;">Escribí para buscar...</div>
+        </div>
+        <button class="btn borde" onclick="cerrarModal()" style="margin-top:12px;width:100%;">Cerrar</button>`;
+    document.getElementById('modal-doc-caja').innerHTML = html;
+    document.getElementById('modal-doc').style.display = 'flex';
+    setTimeout(() => document.getElementById('busca-cliente-inp').focus(), 100);
+}
+
+function filtrarClientesBusca() {
+    const q = document.getElementById('busca-cliente-inp').value.toLowerCase();
+    const resultDiv = document.getElementById('busca-resultados');
+    if (q.length < 1) { resultDiv.innerHTML = 'Escribí para buscar...'; return; }
+    const resultados = CLIENTES.filter(c => 
+        c.nombre.toLowerCase().includes(q) || 
+        c.dni.toLowerCase().includes(q) || 
+        `${c.mza}${c.lote}`.toLowerCase().includes(q)
+    );
+    if (resultados.length === 0) {
+        resultDiv.innerHTML = '<div class="item-lista">Sin resultados.</div>';
+        return;
+    }
+    resultDiv.innerHTML = resultados.map((c, idx) => {
+        const clienteIdx = CLIENTES.indexOf(c);
+        return `<div class="item-lista" style="cursor:pointer;padding:10px;border-radius:3px;transition:all .15s;" onclick="fichaCliente(${clienteIdx});mostrarNotificacion('Cliente ${c.nombre} abierto','info',2000);" onmouseover="this.style.background='var(--oro-suave)'" onmouseout="this.style.background='transparent'">
+            <b>${c.nombre}</b><br>
+            <small style="color:var(--piedra);">DNI ${c.dni} · Mza ${c.mza} Lote ${c.lote} · ${FIDEICOMISOS[c.fid].nombre}</small><br>
+            <small>${c.estado === 'PAGADO' ? '✓ Pagado' : 'En financiación'} · Deuda ${usd(Math.max(0, c.valor - c.pagado))}</small>
+        </div>`;
+    }).join('');
+}
 </script>
 </body>
 </html>
