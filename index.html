@@ -399,6 +399,69 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
 .modal-x:hover{background:var(--carmin);transform:scale(1.08);}
 @media (min-width:1024px){ .modal-envoltura{max-width:640px;} #popup-conf .modal-envoltura{max-width:410px;} }
 
+
+/* ============================================================
+   MÓVIL v5 — experiencia de app grande (estilo ML / fintech)
+   Fondo gris app, tarjetas blancas flotantes, barra inferior
+   blanca con indicador, accesos rápidos circulares, chips
+   segmentados e inputs rellenos. El escritorio no se toca.
+   ============================================================ */
+/* Accesos rápidos (todas las pantallas, brillan en el celu) */
+.acciones-rapidas{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:2px 0 16px 0;}
+.accion-r{border:none;background:none;font-family:'Inter';font-size:.68rem;font-weight:600;color:#3A414C;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;padding:4px 0;}
+.accion-circ{width:56px;height:56px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(18,22,28,.1);display:flex;align-items:center;justify-content:center;color:var(--carmin);font-size:1.35rem;transition:all .15s;}
+.accion-r:active .accion-circ{transform:scale(.94);}
+.accion-r:hover .accion-circ{box-shadow:0 4px 16px rgba(179,18,38,.18);transform:translateY(-2px);}
+@media (min-width:1024px){ .acciones-rapidas{max-width:420px;} }
+
+@media (max-width:1023px){
+    /* Fondo de app y tarjetas flotantes sin borde */
+    body{background:#EFF1F4;}
+    .tarjeta,.kpi{border:none;box-shadow:0 1px 4px rgba(18,22,28,.07);border-radius:16px;}
+    .plano{border:none;box-shadow:0 1px 4px rgba(18,22,28,.07);border-radius:16px;}
+    .vista{padding:14px 14px 20px 14px;}
+    .encabezado-seccion h2{font-size:1.55rem;}
+    .encabezado-seccion{margin:4px 0 12px 0;}
+
+    /* Barra superior compacta */
+    .topbar{padding:10px 14px;}
+    .topbar .titulo{font-size:1.15rem;}
+
+    /* Selector de fideicomiso como chips segmentados */
+    .selector-fid{padding:12px 14px 2px 14px;gap:8px;}
+    .fid-btn{border-radius:999px;padding:10px 4px;font-size:.72rem;border:none;background:#fff;box-shadow:0 1px 3px rgba(18,22,28,.08);color:#5B6472;}
+    .fid-btn.activo{background:var(--tinta);color:#fff;box-shadow:0 3px 10px rgba(18,22,28,.22);}
+
+    /* BARRA INFERIOR BLANCA estilo Mercado Libre */
+    .nav-inferior{background:#FFFFFF;border-top:1px solid #E6E8EB;box-shadow:0 -4px 16px rgba(18,22,28,.06);padding:6px 2px calc(8px + env(safe-area-inset-bottom)) 2px;}
+    .nav-it{color:#8B93A0;font-size:.6rem;font-weight:600;letter-spacing:.2px;gap:3px;position:relative;padding:7px 2px 4px 2px;border-radius:12px;text-transform:none;}
+    .nav-it i{font-size:1.4rem;}
+    .nav-it.activo{color:var(--carmin);}
+    .nav-it.activo::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:26px;height:3px;border-radius:0 0 4px 4px;background:var(--carmin);}
+    .nav-it.activo i{animation:none;}
+    .tab-badge{border:2px solid #fff;}
+
+    /* Inputs rellenos estilo fintech */
+    .form-inp,select.form-inp,textarea.form-inp{background:#F2F3F5;border:1.5px solid transparent;border-radius:12px;}
+    .form-inp:focus{background:#fff;border-color:var(--carmin);}
+    .login-inp{background:#F2F3F5;border:1.5px solid transparent;border-radius:12px;}
+    .login-inp:focus{background:#fff;border-color:var(--carmin);}
+
+    /* Botones cómodos al pulgar */
+    .btn{border-radius:13px;padding:16px;font-size:.92rem;}
+    .btn-mini{border-radius:11px;padding:11px 14px;background:#F2F3F5;border:none;}
+    .btn-mini.rojo{background:var(--carmin-suave);}
+    .pill-pagado{border-radius:999px;}
+    .modal-caja{border-radius:18px;}
+    .modal-x{top:-10px;right:-4px;}
+    .kpi .valor{font-size:1.85rem;}
+    .chart-caja{height:200px;}
+    .item-lista{font-size:.95rem;}
+    .lote{border-radius:11px;}
+    .usuario-pill{border-radius:999px;}
+    .area-switch{border-radius:999px;}
+}
+
 </style>
 </head>
 <body>
@@ -457,6 +520,7 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
     <!-- INICIO -->
     <div class="vista activa" id="vista-inicio">
         <div class="encabezado-seccion"><i class="fi fi-rr-bank"></i><h2 id="titulo-inicio">Tablero</h2><div class="filete"></div></div>
+        <div class="acciones-rapidas" id="acciones-rapidas"></div>
         <div class="kpi-grid" id="kpis"></div>
         <div class="tarjeta" id="tarjeta-cobranza-mes" style="margin-top:13px;">
             <div class="etiqueta">Cobranza mensual · USD</div>
@@ -490,6 +554,7 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <span><span class="cubo v"></span>Vendido</span>
             <span><span class="cubo x"></span>⚠ A regularizar</span>
         </div>
+        <div class="tarjeta" id="tarjeta-valores"></div>
         <div class="tarjeta" id="tarjeta-mapa-vivo" style="padding:0;overflow:hidden;">
             <div style="padding:16px 16px 10px 16px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;">
                 <div class="etiqueta" style="margin:0;"><i class="fi fi-rr-map-marker" style="color:var(--carmin);"></i> Mapa satelital interactivo <span id="mapa-nombre"></span></div>
@@ -511,6 +576,10 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <div class="fila-2">
                 <div><label class="form-lbl">Operación</label><select class="form-inp" id="asig-op"><option value="reservado">Reservar</option><option value="vendido">Vender</option></select></div>
                 <div><label class="form-lbl">Valor del lote (USD)</label><input class="form-inp" id="asig-valor" inputmode="numeric" placeholder="Ej: 27000"></div>
+            </div>
+            <div class="fila-2">
+                <div><label class="form-lbl">Vendedor</label><select class="form-inp" id="asig-vendedor"></select></div>
+                <div><label class="form-lbl">Motivo / observación</label><input class="form-inp" id="asig-motivo" placeholder="Ej: seña verbal · espera transferencia"></div>
             </div>
             <button class="btn tinta" onclick="probarAsignacion()">Verificar y cargar</button>
             <div id="asig-resultado"></div>
@@ -538,7 +607,7 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
                 <div><label class="form-lbl">Lote (solo disponibles)</label><select class="form-inp" id="alta-lote"></select></div>
             </div>
             <div class="fila-2">
-                <div><label class="form-lbl">Es Cliente de (vendedor · comisión 5%)</label><input class="form-inp" id="alta-vendedor" placeholder="Ej: Sergio Araya"></div>
+                <div><label class="form-lbl">Es Cliente de (vendedor · comisión 5%)</label><select class="form-inp" id="alta-vendedor"></select></div>
                 <div><label class="form-lbl">Tipo de lote</label><select class="form-inp" id="alta-tipo"><option>Residencial</option><option>Comercial</option></select></div>
             </div>
             <div class="fila-2">
@@ -590,7 +659,11 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <div id="cobro-transf" style="display:none;">
                 <label class="check-linea"><input type="checkbox" id="check-impacto"><span>Verifiqué que la transferencia <b>impactó</b> en la cuenta del fideicomiso antes de registrar este cobro.</span></label>
             </div>
-            <label class="form-lbl">Comprobantes (fotos del dinero, recibo o transferencia · máx. 5)</label>
+            <div class="fila-2">
+                <div><label class="form-lbl">Nro. de recibo físico</label><input class="form-inp" id="cobro-recibo-fisico" inputmode="numeric" placeholder="El del talonario en papel"></div>
+                <div><label class="form-lbl">Talonario</label><input class="form-inp" id="cobro-talonario" placeholder="Ej: Talonario A · Oficina"></div>
+            </div>
+            <label class="form-lbl">Comprobantes (fotos del dinero, del recibo físico o transferencia · máx. 5)</label>
             <div class="fotos-zona" id="fotos-zona">
                 <label class="foto-add" id="foto-add"><i class="fi fi-rr-camera"></i>Agregar<input type="file" accept="image/*" multiple style="display:none;" onchange="agregarFotos(this)"></label>
             </div>
@@ -680,6 +753,12 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
             <button class="btn-mini" onclick="descargarContable('clientes')"><i class="fi fi-rr-download"></i> Cuentas Corrientes de Clientes</button>
             <button class="btn-mini" onclick="descargarContable('avisos')"><i class="fi fi-rr-download"></i> Registro de Avisos de Deuda</button>
             <div id="contable-resultado"></div>
+        </div>
+        <div class="tarjeta">
+            <div class="etiqueta"><i class="fi fi-rr-users-alt"></i> Administración · Equipo de vendedores</div>
+            <p style="font-size:.82rem;color:var(--piedra);line-height:1.55;margin-bottom:6px;">El Directorio administra el catálogo: en toda la app el vendedor se elige de esta lista (comisiones sin errores de tipeo). En la versión real, cada vendedor tendrá su propio usuario y clave única, con sesión abierta en todos sus dispositivos a la vez.</p>
+            <div id="lista-vendedores"></div>
+            <button class="btn-mini" onclick="nuevoVendedor()"><i class="fi fi-rr-user-add"></i> Dar de alta vendedor</button>
         </div>
         <div class="tarjeta">
             <div class="etiqueta">Bitácora de emisiones y auditoría</div>
@@ -806,9 +885,28 @@ body{background:linear-gradient(165deg,#FAFBFC 0%,#F1F4F8 60%,#EAEEF4 100%) fixe
    Ocupación de manzanas tomada de los registros reales (anonimizados).
    ================================================================ */
 const FIDEICOMISOS = {
-    AER: { nombre: 'Aeroparque', manzanas: { 'C': 24, 'D': 18 } },
-    DG:  { nombre: 'Don Guarino', manzanas: { 'A': 20, 'B': 14, 'C': 8 } }
+    AER: { nombre: 'Aeroparque', manzanas: { 'C': 24, 'D': 18 },
+        comercial: { m2Res: 75, m2Com: 83.5, financiacion: 'Entrega mínima + saldo hasta 60 cuotas fijas en dólares billete', cuotaProm: 350, entregaMin: 2000,
+            servicios: 'Luz, agua y apertura de calles en ejecución · Zona de alto crecimiento junto a la Autovía Neuquén–Plottier' } },
+    DG:  { nombre: 'Don Guarino', manzanas: { 'A': 20, 'B': 14, 'C': 8 },
+        comercial: { m2Res: 110, m2Com: 125, financiacion: 'Financiaciones con mínima entrega + saldo hasta 60 cuotas fijas en dólares billete', cuotaProm: 800, entregaMin: 7000,
+            servicios: 'Luz, gas, agua, cloacas y cordón cuneta · Calles de ripio de 15 m · Huerta Orgánica y Plaza · Ecovilla' } }
 };
+/* Vendedores habilitados (catálogo administrable por el Directorio).
+   Nombres reales tomados de la columna "Es Cliente de" de los Excels:
+   con el catálogo, se elige de la lista y nunca más variantes tipeadas. */
+let VENDEDORES = ['Sergio Araya', 'Belén Bruno Portanko', 'Lucía Bruno Portanko', 'Pablo Ivañez Lopez', 'Adrián Barrionuevo', 'Lorena Carcamo'];
+
+/* El DESARROLLADOR de cada loteo es el fideicomiso (Portanko solo
+   comercializa): los recibos del sistema se emiten a su nombre. */
+const DATOS_FID = {
+    AER: { razon: 'Fideicomiso Aeroparque', cuit: 'CUIT a completar', rol: 'Desarrollador del loteo' },
+    DG:  { razon: 'Fideicomiso Don Guarino', cuit: '33-71703755-9', rol: 'Desarrollador del loteo' }
+};
+
+/* Lotes COMERCIALES según las capas del mapa oficial */
+const COMERCIALES = { AER: { D: [11,12,13,14,15,16,17,18,19,20,21,22] }, DG: { A: [1,2,3,4,5,6,7] } };
+const tipoDeLote = (fid, mza, nro) => ((COMERCIALES[fid] || {})[mza] || []).includes(nro) ? 'Comercial' : 'Residencial';
 
 /* ====== GEOGRAFÍA REAL DE AEROPARQUE ======
    Polígonos exactos extraídos del KML oficial de Portanko (My Maps),
@@ -1119,7 +1217,7 @@ let chartCobranza = null, chartEstados = null;
 function renderTodo() {
     if (AREA === 'jur') { renderJur(); return; }
     renderInicio(); renderPlanos(); renderClientes(); renderMovimientos();
-    renderNovedades(); renderDocs(); renderBitacora(); renderCuentas(); poblarSelects();
+    renderNovedades(); renderDocs(); renderBitacora(); renderCuentas(); renderVendedores(); poblarSelects();
 }
 
 function renderInicio() {
@@ -1133,6 +1231,16 @@ function renderInicio() {
 
     const esD = ROL === 'duenio';
     document.getElementById('titulo-inicio').innerText = esD ? 'Tablero del Directorio' : 'Panel de Trabajo';
+    /* Accesos rápidos con el pulgar (estilo app de finanzas) */
+    const acciones = [
+        { v: 'cobrar', i: 'fi-rr-hand-holding-usd', t: 'Cobrar' },
+        { v: 'clientes', i: 'fi-rr-user-add', t: 'Clientes' },
+        { v: 'lotes', i: 'fi-rr-map', t: 'Lotes' },
+        esD ? { v: 'informes', i: 'fi-rr-document', t: 'Informes' } : { v: 'novedades', i: 'fi-rr-book-open-cover', t: 'Libro' }
+    ];
+    const ar = document.getElementById('acciones-rapidas');
+    if (ar) ar.innerHTML = acciones.map(a =>
+        `<button class="accion-r" onclick="irA('${a.v}')"><span class="accion-circ"><i class="fi ${a.i}"></i></span>${a.t}</button>`).join('');
     let kpis = `
         <div class="kpi tinta"><div class="valor serif">${vendidos}</div><div class="nombre">Vendidos</div></div>
         <div class="kpi oro"><div class="valor serif">${reservados}</div><div class="nombre">Reservados</div></div>
@@ -1252,7 +1360,19 @@ function renderMapaVivo() {
     fids.forEach(f => setTimeout(() => initMapaVivo(f), 60));
 }
 
+function renderTarjetaValores() {
+    const cont = document.getElementById('tarjeta-valores');
+    if (!cont) return;
+    const fids = FID === 'ALL' ? ['AER', 'DG'] : [FID];
+    cont.innerHTML = '<div class="etiqueta"><i class="fi fi-rr-usd-circle"></i> Valores y financiación</div>' + fids.map(f => {
+        const c = FIDEICOMISOS[f].comercial;
+        return `<div class="item-lista"><b>${FIDEICOMISOS[f].nombre}</b> — m² Residencial: <b>USD ${c.m2Res}</b> · m² Comercial: <b>USD ${c.m2Com}</b><br>
+        <small>${c.financiacion} · Entrega desde USD ${c.entregaMin.toLocaleString('es-AR')} · Cuota promedio: USD ${c.cuotaProm} · ${c.servicios}</small></div>`;
+    }).join('');
+}
+
 function renderPlanos() {
+    renderTarjetaValores();
     renderMapaVivo();
     const cont = document.getElementById('planos');
     const fids = FID === 'ALL' ? ['AER', 'DG'] : [FID];
@@ -1279,8 +1399,20 @@ function renderPlanos() {
 function verLote(fid, mza, nro) {
     const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
     const cli = CLIENTES.find(c => c.fid === fid && c.mza === mza && c.lote === nro);
+    const tipo = tipoDeLote(fid, mza, nro);
+    const conf = FIDEICOMISOS[fid].comercial;
+    const m2num = parseFloat(String(l.m2 || '').replace(/\./g, '').replace(',', '.')) || 0;
+    const precioM2 = tipo === 'Comercial' ? conf.m2Com : conf.m2Res;
+    const valorEst = m2num ? Math.round(m2num * precioM2) : 0;
     let cuerpo = `<h3 class="serif">Mza ${mza} · Lote ${nro}</h3>
-        <div style="font-size:.72rem;color:var(--piedra);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Fideicomiso ${FIDEICOMISOS[fid].nombre}${l.m2 ? ' · ' + l.m2 + ' m²' : ''}</div>`;
+        <div style="font-size:.72rem;color:var(--piedra);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Fideicomiso ${FIDEICOMISOS[fid].nombre}</div>
+        <div style="margin-bottom:10px;">
+            <div class="recibo-fila"><span>Superficie</span><b>${l.m2 ? l.m2 + ' m²' : 'A cargar por agrimensura'}</b></div>
+            <div class="recibo-fila"><span>Tipo de lote</span><b>${tipo}</b></div>
+            <div class="recibo-fila"><span>Valor m² de referencia</span><b>USD ${precioM2}</b></div>
+            ${valorEst ? `<div class="recibo-fila"><span>Valor estimado del lote</span><b>${usd(valorEst)}</b></div>` : ''}
+            <div class="recibo-fila"><span>Financiación</span><b style="font-size:.82rem;">${conf.financiacion}</b></div>
+        </div>`;
     if (l.estado === 'conflicto') {
         cuerpo += `<span class="sello error">⚠ Superposición</span>
             <p style="font-size:.82rem;margin-top:12px;line-height:1.55;">Este lote figura asignado a <b>dos clientes</b> en los registros históricos (caso real detectado en la auditoría de los Excels). El sistema lo marca para regularizar: hasta que el Directorio resuelva a quién pertenece, <b>bloquea nuevos pagos y asignaciones</b> sobre este lote.</p>`;
@@ -1296,16 +1428,212 @@ function verLote(fid, mza, nro) {
             <div class="recibo-fila"><span>Vendedor (comisión 5%)</span><b>${cli.vendedor}</b></div></div>
             <button class="btn carmin" onclick="fichaCliente(${CLIENTES.indexOf(cli)})"><i class="fi fi-rr-user"></i> Ver cliente completo: datos, pagos y deuda</button>`;
     } else if (l.estado === 'reservado') {
-        cuerpo += `<span class="sello oro">Reservado</span><p style="font-size:.82rem;margin-top:12px;">Reserva sin cliente asignado aún.</p>
-        <button class="btn-mini rojo" onclick="liberarReserva('${fid}','${mza}',${nro})"><i class="fi fi-rr-trash"></i> Liberar la reserva</button>`;
+        const r = l.reserva;
+        cuerpo += `<span class="sello oro">Reservado</span>
+            <div style="margin-top:12px;">` + (r ? `
+            <div class="recibo-fila"><span>Reservado para</span><b>${r.cliente}</b></div>
+            <div class="recibo-fila"><span>Motivo</span><b style="font-size:.84rem;">${r.motivo}</b></div>
+            <div class="recibo-fila"><span>Vendedor</span><b>${r.vendedor}</b></div>
+            <div class="recibo-fila"><span>Fecha · cargó</span><b>${r.fecha} · ${r.usuario}</b></div>` :
+            `<div class="aviso alerta">Reserva del mapa oficial <b>sin datos cargados</b>: tocá Modificar para completar quién la reserva, el motivo y el vendedor.</div>`) + `
+            </div>
+            <button class="btn-mini" onclick="modificarReserva('${fid}','${mza}',${nro})"><i class="fi fi-rr-pencil"></i> Modificar reserva</button>
+            <button class="btn-mini" style="border-color:var(--carmin);color:var(--carmin);" onclick="convertirReservaEnVenta('${fid}','${mza}',${nro})"><i class="fi fi-rr-badge-check"></i> Convertir en venta</button>
+            <button class="btn-mini rojo" onclick="liberarReserva('${fid}','${mza}',${nro})"><i class="fi fi-rr-trash"></i> Liberar</button>`;
     } else {
         cuerpo += `<span class="sello ok">Disponible</span><p style="font-size:.82rem;margin-top:12px;">Lote libre para la venta.</p>`;
     }
-    cuerpo += `<button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
+    cuerpo += `<button class="btn carmin" onclick="fichaLotePDF('${fid}','${mza}',${nro})"><i class="fi fi-rr-document"></i> Ficha Comercial del Lote (PDF con planos 2D y 3D)</button>
+    <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
     document.getElementById('modal-doc-caja').innerHTML = cuerpo;
     document.getElementById('modal-doc').style.display = 'flex';
 }
+
+/* ===== FICHA COMERCIAL DEL LOTE (PDF con planos 2D y 3D) =====
+   Los planos se dibujan desde los polígonos reales del KML:
+   - Plano de ubicación: todo el loteo con el lote destacado.
+   - Vista 2D: la parcela con LA MEDIDA DE CADA LADO en metros
+     (calculada por distancia geográfica real) y puntos cardinales.
+   - Vista 3D: proyección isométrica volumétrica con medidas. */
+function metrosEntre(a, b) {
+    const R = 6371000, rad = Math.PI / 180;
+    const dLat = (b[0] - a[0]) * rad, dLng = (b[1] - a[1]) * rad;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+}
+function proyectar(coords, escala) {
+    const latM = coords.reduce((s, p) => s + p[0], 0) / coords.length * Math.PI / 180;
+    return coords.map(p => [p[1] * Math.cos(latM) * 111320 * escala, -p[0] * 110574 * escala]);
+}
+function normalizar(pts, ancho, alto, margen) {
+    const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+    const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const k = Math.min((ancho - 2 * margen) / (maxX - minX || 1), (alto - 2 * margen) / (maxY - minY || 1));
+    return { pts: pts.map(p => [margen + (p[0] - minX) * k, margen + (p[1] - minY) * k]), k };
+}
+function rosaCardinal(x, y) {
+    return `<g transform="translate(${x},${y})" font-family="Inter" font-size="10" fill="#12161C">
+        <circle r="17" fill="#fff" stroke="#12161C" stroke-width="1.2"/>
+        <path d="M0,-13 L4,4 L0,1 L-4,4 Z" fill="#B31226"/>
+        <text y="-20" text-anchor="middle" font-weight="700">N</text>
+        <text y="30" text-anchor="middle">S</text><text x="24" y="4">E</text><text x="-24" y="4" text-anchor="end">O</text></g>`;
+}
+function svgPlanoLoteo(fid, mzaSel, nroSel) {
+    const geo = GEOS[fid], W = 640, H = 360;
+    const todos = geo.lotes.flatMap(l => l.coords).concat(geo.perimetro || []);
+    const plano = proyectar(todos, 1);
+    const { pts } = normalizar(plano, W, H, 22);
+    let i = 0; const tomar = n => pts.slice(i, i += n);
+    const polys = geo.lotes.map(l => ({ l, p: tomar(l.coords.length) }));
+    const per = geo.perimetro ? tomar(geo.perimetro.length) : null;
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;background:#F3F5F8;border:1px solid #E2E6EC;border-radius:8px;">
+        ${per ? `<polygon points="${per.map(p => p.join(',')).join(' ')}" fill="none" stroke="#C9A24B" stroke-width="2.5" stroke-dasharray="8 5"/>` : ''}
+        ${polys.map(({ l, p }) => {
+            const sel = l.mza === mzaSel && l.lote === nroSel;
+            return `<polygon points="${p.map(q => q.join(',')).join(' ')}" fill="${sel ? '#B31226' : '#C9CFD8'}" stroke="#fff" stroke-width="1.3"/>` +
+                (sel ? `<text x="${p.reduce((s, q) => s + q[0], 0) / p.length}" y="${p.reduce((s, q) => s + q[1], 0) / p.length + 3}" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="11" fill="#fff">${l.lote}</text>` : '');
+        }).join('')}
+        ${rosaCardinal(W - 42, 42)}
+    </svg>`;
+}
+function svgLote2D(coords) {
+    const W = 420, H = 320;
+    const { pts } = normalizar(proyectar(coords, 1), W, H, 55);
+    const n = pts.length - (pts[0][0] === pts[pts.length - 1][0] && pts[0][1] === pts[pts.length - 1][1] ? 1 : 0);
+    let medidas = '';
+    for (let i = 0; i < n; i++) {
+        const a = pts[i], b = pts[(i + 1) % n];
+        const m = metrosEntre(coords[i], coords[(i + 1) % n]);
+        if (m < 1) continue;
+        const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+        const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
+        const ox = -dy / len * 16, oy = dx / len * 16;
+        medidas += `<rect x="${mx + ox - 24}" y="${my + oy - 9}" width="48" height="16" rx="8" fill="#12161C"/>
+            <text x="${mx + ox}" y="${my + oy + 3}" text-anchor="middle" font-family="Inter" font-size="9.5" font-weight="600" fill="#fff">${m.toFixed(1)} m</text>`;
+    }
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;background:#fff;border:1px solid #E2E6EC;border-radius:8px;">
+        <polygon points="${pts.slice(0, n).map(p => p.join(',')).join(' ')}" fill="#FBEAEC" stroke="#B31226" stroke-width="2.5"/>
+        ${medidas}${rosaCardinal(W - 40, 40)}
+    </svg>`;
+}
+function svgLote3D(coords, m2) {
+    const W = 460, H = 300, h = 46;
+    const plano = proyectar(coords, 1);
+    const iso = plano.map(p => [(p[0] - p[1]) * 0.866, (p[0] + p[1]) * 0.5]);
+    const { pts } = normalizar(iso, W, H - h, 55);
+    const top = pts.map(p => [p[0], p[1]]);
+    const base = pts.map(p => [p[0], p[1] + h]);
+    const n = top.length - (top[0][0] === top[top.length - 1][0] && top[0][1] === top[top.length - 1][1] ? 1 : 0);
+    let caras = '';
+    for (let i = 0; i < n; i++) {
+        const j = (i + 1) % n;
+        caras += `<polygon points="${top[i].join(',')} ${top[j].join(',')} ${base[j].join(',')} ${base[i].join(',')}" fill="#8A0D1C" stroke="#fff" stroke-width="1" opacity="${0.55 + 0.35 * ((top[j][0] - top[i][0]) > 0 ? 1 : 0)}"/>`;
+    }
+    let medidas = '';
+    for (let i = 0; i < n; i++) {
+        const m = metrosEntre(coords[i], coords[(i + 1) % n]);
+        if (m < 1) continue;
+        const a = top[i], b = top[(i + 1) % n];
+        medidas += `<text x="${(a[0] + b[0]) / 2}" y="${(a[1] + b[1]) / 2 - 6}" text-anchor="middle" font-family="Inter" font-size="9.5" font-weight="700" fill="#12161C" stroke="#fff" stroke-width="3" paint-order="stroke">${m.toFixed(1)} m</text>`;
+    }
+    return `<svg viewBox="0 0 ${W} ${H + 10}" xmlns="http://www.w3.org/2000/svg" style="width:100%;background:linear-gradient(#F8FAFC,#EDF1F6);border:1px solid #E2E6EC;border-radius:8px;">
+        <g transform="translate(0,6)">${caras}
+        <polygon points="${top.slice(0, n).map(p => p.join(',')).join(' ')}" fill="#B31226" stroke="#fff" stroke-width="2"/>
+        ${medidas}
+        ${m2 ? `<text x="${top.reduce((s, p) => s + p[0], 0) / top.length}" y="${top.reduce((s, p) => s + p[1], 0) / top.length + 4}" text-anchor="middle" font-family="Space Grotesk" font-size="13" font-weight="700" fill="#fff">${m2} m²</text>` : ''}
+        </g>${rosaCardinal(W - 40, 44)}
+    </svg>`;
+}
+
+async function fichaLotePDF(fid, mza, nro) {
+    const motivo = await pedirMotivo(`Ficha Comercial · Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre})`);
+    if (motivo === null) return;
+    const g = GEOS[fid].lotes.find(x => x.mza === mza && x.lote === nro);
+    const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
+    const conf = FIDEICOMISOS[fid].comercial;
+    const tipo = tipoDeLote(fid, mza, nro);
+    const m2num = parseFloat(String(g.m2 || '').replace(/\./g, '').replace(',', '.')) || 0;
+    const precioM2 = tipo === 'Comercial' ? conf.m2Com : conf.m2Res;
+    const valorEst = m2num ? Math.round(m2num * precioM2) : 0;
+    const cuotaEj = valorEst ? Math.round((valorEst - conf.entregaMin) / 60) : conf.cuotaProm;
+    const w = window.open('', '_blank');
+    w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Ficha · Mza ${mza} Lote ${nro}</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>@page{margin:130px 48px 90px 48px;}
+body{font-family:'Inter',sans-serif;color:#12161C;margin:0;font-size:12.5px;line-height:1.55;}
+.membrete-arriba{position:fixed;top:-110px;left:0;right:0;display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #B31226;padding-bottom:12px;}
+.membrete-abajo{position:fixed;bottom:-70px;left:0;right:0;border-top:1px solid #C9A24B;padding-top:8px;font-size:9.5px;color:#5B6472;display:flex;justify-content:space-between;}
+.logo-p{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 28%, #C4142B, #B31226 55%, #8A0D1C);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:28px;}
+.m-nombre{font-family:'Space Grotesk';font-size:25px;font-weight:700;line-height:1;}
+.m-sub{font-size:9.5px;letter-spacing:3px;color:#C9A24B;text-transform:uppercase;font-weight:600;margin-top:4px;}
+h1{font-family:'Space Grotesk';font-size:22px;margin:0 0 4px 0;}
+.etq{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#5B6472;font-weight:600;margin:16px 0 6px 0;}
+.datos{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;border:1.2px solid #12161C;border-radius:8px;padding:12px 14px;}
+.datos div{display:flex;justify-content:space-between;border-bottom:1px dashed #E2E6EC;padding:3px 0;}
+.fin{background:#FBEAEC;border-radius:8px;padding:12px 14px;font-size:12px;}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.pie-emision{margin-top:18px;font-size:10px;color:#5B6472;border-top:1px dashed #E2E6EC;padding-top:8px;}
+</style></head><body>
+<div class="membrete-arriba"><div class="logo-p">P</div>
+<div><div class="m-nombre">Portanko Inmobiliaria</div><div class="m-sub">Fideicomiso ${FIDEICOMISOS[fid].nombre} · Desde 1971</div></div></div>
+<div class="membrete-abajo"><span>Portanko Inmobiliaria · Neuquén · 299 611 8080</span><span>Ficha Comercial del Lote</span><span>www.portankoinmobiliaria.com.ar</span></div>
+<h1>Manzana ${mza} · Lote ${nro}</h1>
+<div class="etq">Características</div>
+<div class="datos">
+    <div><span>Superficie</span><b>${g.m2 ? g.m2 + ' m²' : 'A confirmar por mensura'}</b></div>
+    <div><span>Tipo de lote</span><b>${tipo}</b></div>
+    <div><span>Estado</span><b>${l.estado === 'disponible' ? 'DISPONIBLE' : l.estado.toUpperCase()}</b></div>
+    <div><span>Valor m² de referencia</span><b>USD ${precioM2}</b></div>
+    ${valorEst ? `<div><span>Valor estimado</span><b>USD ${valorEst.toLocaleString('es-AR')}</b></div>` : ''}
+    <div><span>Servicios y entorno</span><b style="font-size:10.5px;text-align:right;max-width:200px;">${conf.servicios}</b></div>
+</div>
+<div class="etq">Formas de financiación</div>
+<div class="fin"><b>${conf.financiacion}.</b><br>
+Entrega desde <b>USD ${conf.entregaMin.toLocaleString('es-AR')}</b> · Cuota promedio del loteo: <b>USD ${conf.cuotaProm}</b>${valorEst ? ` · Plan de ejemplo para este lote: entrega USD ${conf.entregaMin.toLocaleString('es-AR')} + 60 cuotas de ≈ <b>USD ${cuotaEj.toLocaleString('es-AR')}</b>` : ''}. Valores orientativos sujetos a confirmación de la inmobiliaria.</div>
+<div class="etq">Ubicación en el loteo · con puntos cardinales</div>
+${svgPlanoLoteo(fid, mza, nro)}
+<div class="etq">Plano del lote — 2D con medidas reales · Vista volumétrica 3D</div>
+<div class="dos">${svgLote2D(g.coords)}${svgLote3D(g.coords, g.m2)}</div>
+<div class="pie-emision">Solicitado por <b>${USUARIO}</b> · Motivo: ${motivo} · Emitido el ${ahora()} hs · Registrado en bitácora.<br>Medidas calculadas sobre el plano digital oficial; las definitivas surgen de la mensura. Membrete provisorio de demostración.</div>
+<script>setTimeout(() => window.print(), 700);<\\/script>
+</body></html>`);
+    w.document.close();
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Emitió Ficha Comercial de Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) · Motivo: ${motivo}` });
+    renderBitacora();
+}
+
 function cerrarModal() { document.getElementById('modal-doc').style.display = 'none'; }
+
+async function modificarReserva(fid, mza, nro) {
+    const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
+    const r = l.reserva || {};
+    const cliente = prompt('¿Quién reserva? (apellido y nombre):', r.cliente || ''); if (cliente === null) return;
+    const motivo = prompt('¿Por qué? (motivo de la reserva):', r.motivo || ''); if (motivo === null) return;
+    const nroV = prompt('Vendedor:\n' + VENDEDORES.map((v, i) => (i + 1) + '. ' + v).join('\n') + '\n(escribí el número)', String(Math.max(1, VENDEDORES.indexOf(r.vendedor) + 1)));
+    if (nroV === null) return;
+    const vendedor = VENDEDORES[parseInt(nroV) - 1] || r.vendedor || VENDEDORES[0];
+    const ok = await pedirConfirmacion({ titulo: 'Modificar reserva',
+        mensaje: `<b>Mza ${mza} Lote ${nro}</b> · ${FIDEICOMISOS[fid].nombre}<br>Reservado para: <b>${cliente || '—'}</b><br>Motivo: <b>${motivo || '—'}</b><br>Vendedor: <b>${vendedor}</b>`, boton: 'Guardar reserva' });
+    if (!ok) return;
+    l.reserva = { cliente: cliente || 'Sin nombre', motivo: motivo || 'Sin motivo indicado', vendedor, fecha: r.fecha || hoyISO(), usuario: USUARIO };
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Modificó la reserva de Mza ${mza} Lote ${nro}: ${cliente} · ${motivo} · vendedor ${vendedor}` });
+    cerrarModal(); renderTodo();
+}
+
+async function convertirReservaEnVenta(fid, mza, nro) {
+    const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
+    const r = l.reserva || {};
+    const valor = parseFloat((prompt('Valor del lote (USD):', '') || '').replace(/\./g, '')) || 0;
+    const ok = await pedirConfirmacion({ titulo: 'Convertir reserva en venta',
+        mensaje: `<b>Mza ${mza} Lote ${nro}</b> pasará a <b>VENDIDO</b> a nombre de <b>${r.cliente || 'Cliente a completar'}</b>${valor ? ' por <b>' + usd(valor) + '</b>' : ''} (vendedor: ${r.vendedor || '—'}).<br><br>Después completá el resto de sus datos desde Clientes → Legajo.`, boton: 'Confirmar venta' });
+    if (!ok) return;
+    l.estado = 'vendido';
+    CLIENTES.push({ fid, nombre: r.cliente || 'Cliente a completar', dni: 'a completar', mza, lote: nro, valor, pagado: 0,
+        cuotas: 0, vCuota: 0, estado: 'FINANCIA', ultPago: hoyISO(), vendedor: r.vendedor || VENDEDORES[0], detalles: r.motivo ? 'Origen: reserva — ' + r.motivo : '' });
+    delete l.reserva;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Convirtió la reserva de Mza ${mza} Lote ${nro} en VENTA a ${r.cliente || 's/n'}${valor ? ' · ' + usd(valor) : ''}` });
+    cerrarModal(); renderTodo();
+}
 
 async function liberarReserva(fid, mza, nro) {
     const ok = await confirmarDoble('Liberar reserva',
@@ -1313,7 +1641,7 @@ async function liberarReserva(fid, mza, nro) {
         `El lote Mza ${mza} Lote ${nro} volverá a estado <b>Disponible</b> para la venta.`);
     if (!ok) return;
     const l = LOTES.find(x => x.fid === fid && x.mza === mza && x.nro === nro);
-    if (l) l.estado = 'disponible';
+    if (l) { l.estado = 'disponible'; delete l.reserva; }
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Liberó la reserva de Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) · doble confirmación` });
     cerrarModal(); renderTodo();
 }
@@ -1365,6 +1693,10 @@ function poblarSelects() {
         actualizarCuotaCobro();
     }
     poblarAltaLotes();
+    ['alta-vendedor', 'asig-vendedor'].forEach(id => {
+        const s = document.getElementById(id);
+        if (s) { const previo = s.value; s.innerHTML = VENDEDORES.map(v => `<option>${v}</option>`).join(''); if (previo) s.value = previo; }
+    });
     const selO = document.getElementById('mov-origen');
     if (selO) selO.innerHTML = enFid(CUENTAS).map(c => `<option>${c.nombre} · ${FIDEICOMISOS[c.fid].nombre}</option>`).join('');
 }
@@ -1398,11 +1730,16 @@ async function probarAsignacion() {
     });
     if (!ok) return;
 
+    const vendedorSel = document.getElementById('asig-vendedor').value;
+    const motivoRes = document.getElementById('asig-motivo').value.trim();
     l.estado = op;
+    if (op === 'reservado') {
+        l.reserva = { cliente: nuevo, motivo: motivoRes || 'Sin motivo indicado', vendedor: vendedorSel, fecha: hoyISO(), usuario: USUARIO };
+    }
     if (op === 'vendido') {
         /* La venta carga al cliente y el mapa dinámico lo refleja al instante */
         CLIENTES.push({ fid, nombre: nuevo, dni: 'a completar', mza, lote: nro, valor: valor || 0, pagado: 0,
-            cuotas: 0, vCuota: 0, estado: 'FINANCIA', ultPago: hoyISO(), vendedor: USUARIO });
+            cuotas: 0, vCuota: 0, estado: 'FINANCIA', ultPago: hoyISO(), vendedor: vendedorSel });
     }
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `${op === 'vendido' ? 'VENDIÓ' : 'Reservó'} Mza ${mza} Lote ${nro} (${FIDEICOMISOS[fid].nombre}) ${op === 'vendido' ? 'a' : 'para'} ${nuevo}${valor ? ' · ' + usd(valor) : ''}` });
     res.innerHTML = `<div class="aviso ok">✅ Lote libre verificado. Mza ${mza} Lote ${nro} quedó <b>${op === 'vendido' ? 'VENDIDO a ' + nuevo + ' — miralo pintado en carmín en el mapa de arriba' : 'reservado para ' + nuevo + ' — ya está en oro en el mapa'}</b>. Asentado en la bitácora.</div>`;
@@ -1719,26 +2056,30 @@ function registrarCobro() {
         return;
     }
     const nroRecibo = 119 + COBROS.length - 2;
+    const reciboFisico = document.getElementById('cobro-recibo-fisico').value.trim();
+    const talonario = document.getElementById('cobro-talonario').value.trim();
     c.pagado += monto;
-    COBROS.unshift({ fid: c.fid, fecha: hoyISO(), cliente: c.nombre, monto, recibo: nroRecibo, usuario: USUARIO });
+    COBROS.unshift({ fid: c.fid, fecha: hoyISO(), cliente: c.nombre, monto, recibo: nroRecibo, reciboFisico, talonario, usuario: USUARIO });
     const cuentaCaja = CUENTAS.find(x => x.fid === c.fid && x.moneda === 'USD');
     if (cuentaCaja && !medio.includes('Transferencia')) cuentaCaja.saldo += monto;
-    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Cobró ${usd(monto)} a ${c.nombre} · Recibo ${nroRecibo} · ${medio} · ${fotosCobro.length} comprobante/s` });
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Cobró ${usd(monto)} a ${c.nombre} · Recibo sistema ${nroRecibo}${reciboFisico ? ' · Recibo físico ' + reciboFisico + (talonario ? ' (' + talonario + ')' : '') : ''} · ${medio} · ${fotosCobro.length} comprobante/s` });
     res.innerHTML = `<div class="aviso ok">✅ Cobro registrado con ${fotosCobro.length} comprobante/s.</div>`;
     /* Recibo institucional */
+    const df = DATOS_FID[c.fid];
     document.getElementById('modal-doc-caja').innerHTML = `
         <div class="recibo">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <div class="marca-p mini"><span>P</span></div>
-                <div><b class="serif" style="font-size:1.2rem;">Portanko Inmobiliaria</b><div style="font-size:.6rem;letter-spacing:2px;color:var(--oro);text-transform:uppercase;">Recibo de pago · Nro. ${nroRecibo}</div></div>
+            <div style="margin-bottom:12px;border-bottom:2px solid var(--tinta);padding-bottom:10px;">
+                <b class="serif" style="font-size:1.25rem;">${df.razon}</b>
+                <div style="font-size:.62rem;letter-spacing:2px;color:var(--piedra);text-transform:uppercase;margin-top:2px;">${df.rol} · CUIT ${df.cuit}</div>
+                <div style="font-size:.66rem;letter-spacing:1.5px;color:var(--oro);text-transform:uppercase;margin-top:4px;font-weight:700;">Recibo de pago · Nro. ${nroRecibo}${reciboFisico ? ' · Físico Nro. ' + reciboFisico : ''}</div>
             </div>
-            <div class="recibo-fila"><span>Fideicomiso</span><b>${FIDEICOMISOS[c.fid].nombre}</b></div>
             <div class="recibo-fila"><span>Cliente</span><b>${c.nombre}</b></div>
             <div class="recibo-fila"><span>Lote</span><b>Mza ${c.mza} Lote ${c.lote}</b></div>
             <div class="recibo-fila"><span>Importe</span><b>${usd(monto)}</b></div>
             <div class="recibo-fila"><span>Medio</span><b>${medio}</b></div>
+            ${reciboFisico ? `<div class="recibo-fila"><span>Recibo físico</span><b>Nro. ${reciboFisico}${talonario ? ' · ' + talonario : ''}</b></div>` : ''}
             <div class="recibo-fila"><span>Saldo restante</span><b>${usd(Math.max(0, c.valor - c.pagado))}</b></div>
-            <div class="pie-auditoria">Emitido por ${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'}) · ${ahora()} hs<br>Comprobantes adjuntos: ${fotosCobro.length} · Documento registrado en bitácora</div>
+            <div class="pie-auditoria">Emitido por ${USUARIO} · ${ahora()} hs · Comprobantes adjuntos: ${fotosCobro.length} · Registrado en bitácora<br>Comercializa: Portanko Inmobiliaria · Documento de gestión interna del fideicomiso (no fiscal)</div>
         </div>
         <button class="btn carmin" onclick="cerrarModal()"><i class="fi fi-rr-comment"></i> Enviar al cliente por WhatsApp</button>
         <button class="btn borde" onclick="cerrarModal()">Cerrar</button>`;
@@ -1747,6 +2088,7 @@ function registrarCobro() {
     document.querySelectorAll('.foto-mini').forEach(x => x.remove());
     document.getElementById('foto-add').style.display = 'flex';
     document.getElementById('check-impacto').checked = false;
+    document.getElementById('cobro-recibo-fisico').value = ''; document.getElementById('cobro-talonario').value = '';
     renderTodo();
 }
 
@@ -1826,6 +2168,38 @@ async function descargarDoc(nombre) {
     BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (${ROL === 'duenio' ? 'Dueño' : 'Personal'})`, accion: `Descargó "${nombre}" · Motivo: ${motivo}` });
     renderBitacora();
 }
+function renderVendedores() {
+    const el = document.getElementById('lista-vendedores');
+    if (el) el.innerHTML = VENDEDORES.map((v, i) =>
+        `<div class="reparto-fila"><b>${v}</b><span>
+        <button class="btn-mini" style="margin:0 4px 0 0;" onclick="modificarVendedor(${i})"><i class="fi fi-rr-pencil"></i></button>
+        <button class="btn-mini rojo" style="margin:0;" onclick="eliminarVendedor(${i})"><i class="fi fi-rr-trash"></i></button></span></div>`).join('');
+}
+async function nuevoVendedor() {
+    const n = prompt('Nombre completo del vendedor:'); if (!n) return;
+    const ok = await pedirConfirmacion({ titulo: 'Alta de vendedor', mensaje: `Se agregará <b>${n}</b> al equipo de ventas. Aparecerá en todos los selectores de vendedor de la app.`, boton: 'Dar de alta' });
+    if (!ok) return;
+    VENDEDORES.push(n);
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Dio de alta al vendedor ${n}` });
+    renderVendedores(); renderBitacora(); poblarSelects();
+}
+async function modificarVendedor(i) {
+    const n = prompt('Nombre del vendedor:', VENDEDORES[i]); if (!n) return;
+    const ok = await pedirConfirmacion({ titulo: 'Modificar vendedor', mensaje: `<b>${VENDEDORES[i]}</b> pasará a llamarse <b>${n}</b>.`, boton: 'Guardar' });
+    if (!ok) return;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `Modificó al vendedor ${VENDEDORES[i]} → ${n}` });
+    VENDEDORES[i] = n;
+    renderVendedores(); renderBitacora(); poblarSelects();
+}
+async function eliminarVendedor(i) {
+    const v = VENDEDORES[i];
+    const ok = await confirmarDoble('Eliminar vendedor', `¿Quitar a <b>${v}</b> del equipo de ventas?`, `Se quitará a ${v} de los selectores (sus ventas y comisiones históricas se conservan).`);
+    if (!ok) return;
+    BITACORA.unshift({ fecha: ahora(), usuario: `${USUARIO} (Dueño)`, accion: `ELIMINÓ al vendedor ${v} del catálogo · doble confirmación` });
+    VENDEDORES.splice(i, 1);
+    renderVendedores(); renderBitacora(); poblarSelects();
+}
+
 function renderBitacora() {
     const el = document.getElementById('lista-bitacora');
     if (el) el.innerHTML = BITACORA.slice(0, 12).map(b =>
